@@ -1,13 +1,13 @@
-
-
 # Hangman Game
-=====image.placeholder==============
+
+![home](https://user-images.githubusercontent.com/85977511/221026684-44df1ad5-509c-4d95-bf1b-f78d5bca6135.PNG)
+
 
 ## About Hangman
 
 Hangman is a game basically about guessing words. The words can be guessed from the number of letters in that word. Every wrong guess takes you closer to the gallows. Pick the correct letters and you will win. Otherwise you will lose.
 
-Click here to play the 👉 <a href="xxx" target="_blank">the Hangman Game </a>.
+Click here to play the 👉 <a href="https://ruxy1212.github.io/hangmanjs" target="_blank">the Hangman Game </a>.
 
 ## How to Play
 
@@ -38,4 +38,4 @@ Bonuses are awarded when you play inside arenas or when you don't hit any wrong 
 
 Enjoy!
 
-<i><p>This game is coded and maintained on this <a href="https://github.com/ruxy1212/hangman" target="_blank">Github repo</a>. Kindly give me a star on <a href="https://github.com/ruxy1212" target="_blank">Github</a> or <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a>.</p></i>
+<i><p>This game is coded and maintained on this <a href="https://github.com/ruxy1212/hangmanjs" target="_blank">Github repo</a>. Kindly give me a star on <a href="https://github.com/ruxy1212" target="_blank">Github</a> or <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a>.</p></i>
