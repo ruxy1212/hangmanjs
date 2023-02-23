@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+    <link rel="icon" href="img/rlogo.png"/>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <link rel="stylesheet" href="sty.css">
+    <link rel="stylesheet" href="ctm/ctm.css">
+    <!-- <link rel="icon" href="img/rlogo.png"/> -->
+    <script src="sweetalert2@9.js"></script>
+</head>
+<body>
+    <div class="home ">
+        <div>
+            <div>
+                <div class="btn">
+                    <button class="btnn" onclick="startGame();">Play</button>
+                    <button class="btnn" onclick="showHelp();">About</button>
+                </div>
+            </div>
+            <footer><div>Ruxy©2023 | <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a></div></footer>
+        </div>
+    </div>
+    <div class="help unsee">
+        <div>
+            <div>
+                <div class="close" onclick="hideHelp();">&times;</div>
+                <h4>About Hangman</h4>
+                <p>Hangman is a game basically about guessing words. The words can be guessed from the number of letters in that word. Every wrong guess takes you closer to the gallows. <br /> Pick the correct letters and you will win.<br /> Otherwise you will lose.</p>
+                <h4>How to Play</h4>
+                <h5 class="helph5">Game Modes</h5>
+                <p><b>Slingshot:</b> This a single game mode. Based on the difficulty, points will be awarded to you if you get the word correctly.</p>
+                <p>
+                    <b>Arcadian:</b> This is an arcade game mode, where you will be tested in 20 different arenas. Based on the difficulty selected, points will be compounded when you win that level, as well as divided when you lose. 
+                    <br>
+                    For example, on the Immortal difficulty level, each game is awarded 120 Points; when you play 5 games correctly, that is 120 + 240 + 360 + 480 + 600 = 1800 points, if you lose your sixth game, you will receive 1800/6 = 300 points. Total reward for Immortal difficulty level after level 20 is 23,600 points, More risk More reward!
+                </p>
+                <h5 class="helph5">Difficulty Levels</h5>
+                <p>
+                    <b>Magician:</b> Each game is awarded 8 points. There is word hint after first wrong guess.
+                    <br>
+                    <b>Viserion:</b> Each game is awarded 20 points. There is word hint after the fifth wrong guess.
+                    <br>
+                    <b>Inferno:</b> Each game is awarded 50 points. There is no word hint for this level.
+                    <br>
+                    <b>Immortal:</b> Each game is awarded 120 points. There is no word hint for this level as well, and there is a timer to make an input which will make the game fail if the time elapses.
+                </p>
+                <h5 class="helph5">Bonuses</h5>
+                <p>
+                    Bonuses are awarded when you play inside arenas or when you don't hit any wrong letters. Bonuses are awarded after completing each game(i.e. all arcade stages must be completed to get the bonus for that game).
+                    <br>
+                    <b>Arena:</b> Play Arcadian or Slingshot in a complex background arena and earn 10 points bonus.
+                    <b>Flawless:</b> Complete the word guess without failing any letter to earn 20 points bonus.
+                </p>
+                <p>Enjoy!</p>
+                <br>
+                <i><p>This game is coded and maintained on this <a href="https://github.com/ruxy1212/hangman" target="_blank">Github repo</a>. Kindly give me a star on <a href="https://github.com/ruxy1212" target="_blank">Github</a> or <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a>.</p></i>
+            </div>
+        </div>
+    </div>
+    <div class="modal unsee">
+        <div>
+            <h3>GAME SETTINGS</h3>
+            <div class="flexrow">
+                <div>
+                    <label class="rowlabel lbl">Mode:</label>
+                    <div class="cnt flexst">
+                        <label class="container">Slingshot
+                            <input type="radio" checked="checked" name="mode" class="moderad">
+                            <span class="checkmark radiocheckmark radioafter"></span>
+                        </label>
+                        <label class="container">Arcadian
+                            <input type="radio" name="mode" class="moderad">
+                            <span class="checkmark radiocheckmark radioafter"></span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="rowlabel lbl">Difficulty:</label>
+                    <div class="custom-select cnt">
+                        <select>
+                            <option value="0">Magician</option>
+                            <option value="1">Viserion</option>
+                            <option value="2">Inferno</option>
+                            <option value="3">Immortal</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="rowlabel lbl">Sound:</label>
+                    <div class="cnt">
+                        <label class="switch">
+                            <input type="checkbox" class="chkswitch snd" onclick="switchAud();">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="rowlabel lbl">Arena:</label>
+                    <div class="cnt">
+                        <label class="switch">
+                            <input type="checkbox" class="chkswitch arn">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <br>
+                <div class="lscont">
+                    <label class="container">
+                        <input type="checkbox" class="chkinput">
+                        <span class="checkmark chkboxafter"></span>
+                        Don't ask next time
+                    </label>
+                </div>
+                <div class="lscont">
+                    <button onclick="saveSetting();" class="btn">Play</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="verdict unsee" data="false">
+        <div>
+            <div class="close" onclick="hideVerdict();">&times;</div>
+            <div class="vwrap">
+                <div>
+                    <p>Congratulations!</p>
+                    <p>Your game was good</p>
+                    <p>Thank YOu</p>
+                    <button class="btn" onclick="startGame();">Play Again</button>
+                    <br><br>
+                    <a href="javascript:void(0);" onclick="toSettings();">Change Game Settings</a>
+                    <div>
+                        <p>Total Points: <span class="tp1">0</span></p>
+                        <p>Words Found: <span class="tp3">0</span></p>
+                        <p>Words Failed: <span class="tp4">0</span></p>
+                        <p>Total Games: <span class="tp2">0</span></p>
+                        <p>Flawless Games: <span class="tp6">0</span></p>
+                        <p>Highest Score: <span class="tp5">0</span></p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="footer"><div >Ruxy©2023 | <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a></div></div>
+        </div>
+    </div>
+    <div class="word"></div>
+    <div class="penalty aspect">
+        <div class="phold">
+            <div style="background-image: url(img/f1.png);"></div>
+        </div>
+    </div>
+    <div class="keyarea">
+        <div class="divider">
+            <div></div>
+        </div>
+        <div class="keyboard"></div>
+    </div>
+    <div class="gclose" onclick="toHome();">&times;</div>
+    <div class="gtimer ptimer unsee">05</div>
+    <div class="gpercent"><span>Arcadian</span> (<span>0</span>%)</div>
+    <script src="scr.js"></script>
+    <script src="ctm/ctm.js"></script>
+</body>
+</html>
