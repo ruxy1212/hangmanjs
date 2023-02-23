@@ -7,7 +7,7 @@
 
 Hangman is a game basically about guessing words. The words can be guessed from the number of letters in that word. Every wrong guess takes you closer to the gallows. Pick the correct letters and you will win. Otherwise you will lose.
 
-Click here to play the 👉 <a href="https://ruxy1212.github.io/hangmanjs" target="_blank">the Hangman Game </a>.
+Click here to play 👉 <a href="https://ruxy1212.github.io/hangmanjs" target="_blank">the Hangman Game </a>.
 
 ## How to Play
 
