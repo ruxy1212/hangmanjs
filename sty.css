@@ -399,3 +399,12 @@ h2#swal2-title{
 div#swal2-html-container{
     font-size: 14px;
 }
+
+@media only screen and (max-width: 500px){
+    .key{
+        width: 32px;
+    }
+    .keyarea {
+        padding: 15px 15px;
+    }
+}

@@ -326,7 +326,7 @@ function chrCheck(k) {
                 if (chrLeft.length == 0) {
                     var gb = getBonus();
                     (localSetting.difficulty == 3)?clearInt():"";
-                    qSel('.key.hint', false, 0).className = "key hint unsee";
+                    
                     if(!localSetting.mode){
                         gpoint = gpoint + (gscore[localSetting.difficulty]*arclevel);
                         ( arclevel < 20 ) ? playGame() : gameEnd(true, gb);
@@ -382,6 +382,7 @@ function makeHappy(){
 }
 function newGame() {
     qSel('.gpercent span:nth-child(2)', false, 0).innerHTML = "0";
+    qSel('.key.hint', false, 0).className = "key hint unsee";
     clearKeys();
     clearPty();
     createWord();
