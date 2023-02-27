@@ -1,0 +1,51 @@
+
+.main{
+	height:100vh;
+	width:100vw;
+	background-color:lime;
+	position:absolute;
+	top: 0;
+	left: 0;
+	z-index: 15;
+	display:grid;
+	place-items:center;
+	overflow:hidden;
+	background: linear-gradient(45deg, #ea84ff , #ce84ff , #848dff , #84d5ff , #84ffc0 , #b3ff84 ,  #ffde84, #ffad84, #ff8484, #ff84cd);
+	background-size: 500% 100%;
+	animation: anim 10s linear alternate infinite;
+  }
+	@keyframes anim {
+	  0% {
+		background-position: 0%
+	  }
+	  100% {
+		background-position: 100%
+	  }
+	}
+
+	
+.circ {
+    background: red; 
+    /* height: 100px;  */
+    width: 30%; 
+    border-radius: 50%; 
+    overflow:hidden; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    z-index: 99;
+}
+.circ div {
+    height: 100vh; 
+    width: 100vw; 
+    background-color: rgb(226, 222, 215); 
+    background-image: url(img/home.png);
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed;
+}
+@media only screen and (max-width: 600px){
+    .circ{
+        width: 50%;
+    }
+}

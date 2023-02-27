@@ -8,10 +8,15 @@
     <title>Hangman Game</title>
     <link rel="stylesheet" href="sty.css">
     <link rel="stylesheet" href="ctm/ctm.css">
-    <!-- <link rel="icon" href="img/rlogo.png"/> -->
+    <script src="preload.js"></script>
     <script src="sweetalert2@9.js"></script>
-</head>
-<body>
+    <link rel="stylesheet" href="preload.css">
+    </head>
+    <body>	
+        <div class="main" style="opacity: 1;"></div>
+        <div class="circ aspect">
+            <div></div>
+        </div>  
     <div class="home ">
         <div>
             <div>
@@ -161,6 +166,7 @@
     <div class="gclose" onclick="toHome();">&times;</div>
     <div class="gtimer ptimer unsee">05</div>
     <div class="gpercent"><span>Arcadian</span> (<span>0</span>%)</div>
+    <script src="anim.js"></script>
     <script src="scr.js"></script>
     <script src="ctm/ctm.js"></script>
 </body>

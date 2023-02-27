@@ -136,7 +136,6 @@ var word = [
     ["SHEET", "Thin layer for covering or writing", "The thing that covers the bed, and ghosts use to scare people."],
     ["LEAF", "Green and photosynthetic part of a plant", "The thing that falls off trees in autumn, and gets stuck in gutters"],
 ];
-
 var res1 = ["Way to Go!", "Oops!"], res2 = ["You found the word", 'The word was "'], res3 = [" Points", "Better luck next time"];
 var gbgs = ["255, 255, 255", "222, 222, 222", "231, 218, 218", "231, 225, 218", "231, 231, 218", "224, 231, 218", "218, 231, 223", "218, 231, 230", "218, 222, 231", "224, 218, 231", "231, 218, 230", "216, 180, 180", "216, 199, 180", "215, 216, 180", "194, 216, 180", "180, 216, 193", "180, 208, 216", "180, 186, 216", "192, 180, 216", "216, 180, 211"];
 audioFiles = ["AftertheRain.mp3", "ThroughtheArbor.mp3", "SundialDreams.mp3", "TheEnchantedGarden.mp3", "Butterfly.mp3", "StrawHats.mp3", "AnotherRealm.mp3", "WaterLillies.mp3", "FairyWings.mp3", "PaperClouds.mp3"]
@@ -155,7 +154,24 @@ if(localSetting.sound){ playAudio(); qSel('.chkswitch.snd', false, 0).checked = 
 else { pauseAudio(); qSel('.chkswitch.snd', false, 0).checked = true; }
 qSel('.chkinput', false, 0).checked = (localSetting.set) ? true : false ; 
 
+function fader(fadee){
+    var fadeOut = setInterval(function(){
+        if(!fadee.style.opacity) fadee.style.opacity = 1;
+        if(fadee.style.opacity > 0) fadee.style.opacity -= 0.15;
+        else { 
+            clearInterval(fadeOut); 
+            fadee.style.display = "none"; 
+            document.querySelector('.circ').style.display = "none"; }
+    }, 50);
+}
+function preLoader(){
+    fader(document.querySelector('.main')); 
+    rstate = false;
+}
+
 window.onload = function () {
+    preLoader();
+
     qSel('.divider', false, 0).addEventListener(
           'touchmove',
           function (e) {
@@ -177,7 +193,7 @@ window.onload = function () {
     createHint();
 };
 function initMsc(){
-    audio.volume = 0.2;
+    audio.volume = 0.15;
 
     audio.addEventListener('canplaythrough', () => {
         audio.play().catch(e => {
@@ -209,12 +225,12 @@ function pauseAudio(){
 }
 function audClick(){
     let clk = new Audio("msc/click.mp3");
-    clk.volume = 0.3;
+    clk.volume = 0.2;
     clk.play();
 }
 function audWarn(){
     let wrn = new Audio("msc/warn.mp3");
-    wrn.volume = 0.3;
+    wrn.volume = 0.15;
     wrn.play();
 }
 function audBoo(){

@@ -120,7 +120,7 @@ body{
     /* -webkit-filter: drop-shadow(var(--dr-sdw));
     filter: drop-shadow(var(--dr-sdw)); */
 }
-.penalty > div div, .verdict {
+.penalty > div div {
     height: 100%;
     width: 100%;
     position: absolute;
@@ -128,7 +128,7 @@ body{
     left: 0;
     background-size: cover;
 }
-.home, .modal, .help {
+.home, .modal, .help, .verdict {
     height: 100%;
     width: 100%;
     position: fixed;
