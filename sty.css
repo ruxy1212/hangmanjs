@@ -162,6 +162,13 @@ body{
     text-align: center;
     align-items: flex-end;
     color: white;
+    height: 100%;
+}
+.vwrap > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100%;
 }
 .verdict[data="true"]{
     background:rgba(0, 19, 54, 0.671); 
@@ -172,13 +179,16 @@ body{
 .verdict .vwrap > div > p:nth-child(1){
     font-size: 40px;
     font-weight: 700;
+    margin: 0;
 }
 .verdict[data="true"] .vwrap > div > p:nth-child(2), .verdict[data="false"] .vwrap > div > p:nth-child(3){
     font-size: 18px;
+    margin: 0;
 }
 .verdict[data="true"] .vwrap > div > p:nth-child(3), .verdict[data="false"] .vwrap > div > p:nth-child(2){
     font-size: 30px;
     font-weight: 550;
+    margin: 0;
 }
 .verdict .btn, .home .btnn {
     padding: 10px 20px;
@@ -199,7 +209,7 @@ body{
     color: navy;
 }
 .verdict .vwrap > div div {
-    margin-top: 100px;
+    margin-bottom: 40px;
     text-align: center;
     line-height: 1.2;
     font-weight: bold;
@@ -259,7 +269,12 @@ footer div, footer a, footer a:hover {
     text-decoration: none;
     color: navy;
 }
-.footer div, .footer a, .footer a:hover, .verdict a, .verdict a:hover {
+.verdict a{
+    color: #f55;
+    text-align: center;
+    text-decoration: none;
+}
+.footer div, .footer a, .footer a:hover, .verdict a:hover {
     text-align: center;
     text-decoration: none;
     color: #ddd;

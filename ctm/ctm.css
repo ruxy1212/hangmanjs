@@ -234,6 +234,10 @@
 .flexst {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+}
+.flexst > label {
+    margin: 0;
 }
 .lscont{
     justify-content: center;

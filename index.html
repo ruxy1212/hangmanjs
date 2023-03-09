@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
     <link rel="icon" href="img/rlogo.png"/>
-<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +12,13 @@
     <script src="sweetalert2@9.js"></script>
     <link rel="stylesheet" href="preload.css">
     </head>
-    <body>	
-        <div class="main" style="opacity: 1;"></div>
+    <body>
+        <div class="main"></div>
+        <!-- <div class="mainv"></div> -->
         <div class="circ aspect">
             <div></div>
-        </div>  
+        </div>
+        <script src="anim.js"></script>
     <div class="home ">
         <div>
             <div>
@@ -133,8 +135,8 @@
                 <div>
                     <p>Congratulations!</p>
                     <p>Your game was good</p>
-                    <p>Thank YOu</p>
-                    <button class="btn" onclick="startGame();">Play Again</button>
+                    <p>Thank You</p>
+                    <span><button class="btn" onclick="startGame();">Play Again</button></span>
                     <br><br>
                     <a href="javascript:void(0);" onclick="toSettings();">Change Game Settings</a>
                     <div>
@@ -166,8 +168,8 @@
     <div class="gclose" onclick="toHome();">&times;</div>
     <div class="gtimer ptimer unsee">05</div>
     <div class="gpercent"><span>Arcadian</span> (<span>0</span>%)</div>
-    <script src="anim.js"></script>
     <script src="scr.js"></script>
     <script src="ctm/ctm.js"></script>
+    <script src="ctm/hid.js"></script>
 </body>
 </html>
