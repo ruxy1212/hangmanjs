@@ -222,7 +222,7 @@ body{
 .home {
     z-index: 10;
     background-color: rgb(226, 222, 215);
-    background-image: url(img/home.png);
+    background-image: url(img/home.webp);
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -270,7 +270,7 @@ footer div, footer a, footer a:hover {
     color: navy;
 }
 .verdict a{
-    color: #f55;
+    color: #80caff; /* #f55; */
     text-align: center;
     text-decoration: none;
 }
@@ -296,6 +296,7 @@ footer div, footer a, footer a:hover {
     border: 1px solid bisque;
     border-radius: 15px;
     padding: 10px 10px 30px;
+    position: relative;
 }
 .modal h3 {
     font-family: Arial;
@@ -323,7 +324,7 @@ footer div, footer a, footer a:hover {
     border-radius: 5px;
     position: relative;
 }
-.help .close {
+.help .close, .modal .close {
     background-color: #f55;
     border-radius: 50%;
     box-shadow: 1px 1px 4px #888;
@@ -380,7 +381,7 @@ footer div, footer a, footer a:hover {
     width: 200px;
     text-align: center;
 }
-.help .close:hover, .verdict .close:hover, .gclose:hover {
+.help .close:hover, .verdict .close:hover, .gclose:hover, .modal .close:hover {
     color: rgb(126, 126, 126);
 }
 .help > div > div p {

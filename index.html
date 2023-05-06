@@ -14,7 +14,6 @@
     </head>
     <body>
         <div class="main"></div>
-        <!-- <div class="mainv"></div> -->
         <div class="circ aspect">
             <div></div>
         </div>
@@ -23,7 +22,7 @@
         <div>
             <div>
                 <div class="btn">
-                    <button class="btnn" onclick="startGame();">Play</button>
+                    <button class="btnn" onclick="startGame(); lastPage('.home');">Play</button>
                     <button class="btnn" onclick="showHelp();">About</button>
                 </div>
             </div>
@@ -40,9 +39,9 @@
                 <h5 class="helph5">Game Modes</h5>
                 <p><b>Slingshot:</b> This a single game mode. Based on the difficulty, points will be awarded to you if you get the word correctly.</p>
                 <p>
-                    <b>Arcadian:</b> This is an arcade game mode, where you will be tested in 20 different arenas. Based on the difficulty selected, points will be compounded when you win that level, as well as divided when you lose. 
+                    <b>Arcadian:</b> This is an arcade game mode, where you will be tested in 20 different stages. Based on the difficulty selected, points will be compounded when you win that stage, as well as divided when you lose. 
                     <br>
-                    For example, on the Immortal difficulty level, each game is awarded 120 Points; when you play 5 games correctly, that is 120 + 240 + 360 + 480 + 600 = 1800 points, if you lose your sixth game, you will receive 1800/6 = 300 points. Total reward for Immortal difficulty level after level 20 is 23,600 points, More risk More reward!
+                    For example, on the Immortal difficulty level, each game is awarded 120 Points; when you play the first 5 games correctly, that is 120 + 240 + 360 + 480 + 600 = 1800 points, if you lose your sixth game, you will receive 1800/6 = 300 points. Total reward for Immortal difficulty level after level 20 is 23,600 points, More risk More reward!
                 </p>
                 <h5 class="helph5">Difficulty Levels</h5>
                 <p>
@@ -52,23 +51,24 @@
                     <br>
                     <b>Inferno:</b> Each game is awarded 50 points. There is no word hint for this level.
                     <br>
-                    <b>Immortal:</b> Each game is awarded 120 points. There is no word hint for this level as well, and there is a timer to make an input which will make the game fail if the time elapses.
+                    <b>Immortal:</b> Each game is awarded 120 points. There is no word hint for this level as well, and also there is a timer to make an input which will make the game fail if the time elapses.
                 </p>
                 <h5 class="helph5">Bonuses</h5>
                 <p>
-                    Bonuses are awarded when you play inside arenas or when you don't hit any wrong letters. Bonuses are awarded after completing each game(i.e. all arcade stages must be completed to get the bonus for that game).
+                    Bonuses are awarded when you play inside arenas or when you don't hit any wrong letters. Bonuses are awarded after completing each game (i.e. all arcade stages must be completed to get the bonus for that game).
                     <br>
                     <b>Arena:</b> Play Arcadian or Slingshot in a complex background arena and earn 10 points bonus.
                     <b>Flawless:</b> Complete the word guess without failing any letter to earn 20 points bonus.
                 </p>
                 <p>Enjoy!</p>
                 <br>
-                <i><p>This game is coded and maintained on this <a href="https://github.com/ruxy1212/hangman" target="_blank">Github repo</a>. Kindly give me a star on <a href="https://github.com/ruxy1212" target="_blank">Github</a> or <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a>.</p></i>
+                <i><p>This game is built and maintained on this <a href="https://github.com/ruxy1212/hangman" target="_blank">Github repo</a>. Kindly give me a star on <a href="https://github.com/ruxy1212" target="_blank">Github</a> or <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a>.</p></i>
             </div>
         </div>
     </div>
     <div class="modal unsee">
         <div>
+            <div class="close" onclick="hideSetting();">&times;</div>
             <h3>GAME SETTINGS</h3>
             <div class="flexrow">
                 <div>
@@ -136,9 +136,9 @@
                     <p>Congratulations!</p>
                     <p>Your game was good</p>
                     <p>Thank You</p>
-                    <span><button class="btn" onclick="startGame();">Play Again</button></span>
+                    <span><button class="btn" onclick="startGame(); lastPage('.verdict');">Play Again</button></span>
                     <br><br>
-                    <a href="javascript:void(0);" onclick="toSettings();">Change Game Settings</a>
+                    <a href="javascript:void(0);" onclick="toSettings(); lastPage('.verdict');">Change Game Settings</a>
                     <div>
                         <p>Total Points: <span class="tp1">0</span></p>
                         <p>Words Found: <span class="tp3">0</span></p>
@@ -168,8 +168,9 @@
     <div class="gclose" onclick="toHome();">&times;</div>
     <div class="gtimer ptimer unsee">05</div>
     <div class="gpercent"><span>Arcadian</span> (<span>0</span>%)</div>
+    <span class="about-span">msc/secph.txt</span>
     <script src="scr.js"></script>
     <script src="ctm/ctm.js"></script>
-    <script src="ctm/hid.js"></script>
+    <script src="ctm/clk.js"></script>
 </body>
 </html>

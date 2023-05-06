@@ -18,12 +18,12 @@ var _0x350a=["\x63\x6F\x6E\x74\x65\x78\x74\x6D\x65\x6E\x75","\x70\x72\x65\x76\x6
 
 // if (document.addEventListener) {
 //     document.addEventListener('contextmenu', function(e) {
-//       alert("This function has been disabled to prevent you from stealing my code!");
+//       alert("This function has been disabled to prevent you from cheating!");
 //       e.preventDefault();
 //     }, false);
 //   } else {
 //     document.attachEvent('oncontextmenu', function() {
-//       alert("This function has been disabled to prevent you from stealing my code!");
+//       alert("This function has been disabled to prevent you from cheating!");
 //       window.event.returnValue = false;
 //     });
 //   }
@@ -42,3 +42,51 @@ var _0x350a=["\x63\x6F\x6E\x74\x65\x78\x74\x6D\x65\x6E\x75","\x70\x72\x65\x76\x6
 //             console.log(element);
              
 //         }, 1000);
+
+
+
+
+
+
+
+
+document.addEventListener("contextmenu", event => {
+    event.preventDefault();
+  });
+  document.onkeydown = function (event) {
+    if (event.keyCode == 123) {
+      return false;
+    }
+    ;
+    if (event.ctrlKey && event.shiftKey && event.keyCode == "I".charCodeAt(0)) {
+      return false;
+    }
+    ;
+    if (event.ctrlKey && event.shiftKey && event.keyCode == "C".charCodeAt(0)) {
+      return false;
+    }
+    ;
+    if (event.ctrlKey && event.shiftKey && event.keyCode == "J".charCodeAt(0)) {
+      return false;
+    }
+    ;
+    if (event.ctrlKey && event.keyCode == "U".charCodeAt(0)) {
+      return false;
+    }
+  };
+
+  (function () {
+    var _z = console;
+    Object.defineProperty(window, "console", {
+        get: function () {
+            if ((window && window._z && window._z._commandLineAPI) || {}) {
+                 throw "trick! but still not permitted!";
+            }
+            return _z;
+        }, 
+        set: function (val) {
+            _z = val;
+        }
+    });
+  })();
+  
