@@ -1,1 +1,460 @@
-var _0xd89d=["\x4D\x61\x67\x69\x63\x69\x61\x6E","\x56\x69\x73\x65\x72\x69\x6F\x6E","\x49\x6E\x66\x65\x72\x6E\x6F","\x49\x6D\x6D\x6F\x72\x74\x61\x6C","\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4A\x4B\x4C\x4D\x4E\x4F\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5A","\x3C\x64\x69\x76\x20\x73\x74\x79\x6C\x65\x3D\x22\x62\x61\x63\x6B\x67\x72\x6F\x75\x6E\x64\x2D\x69\x6D\x61\x67\x65\x3A\x20\x75\x72\x6C\x28\x69\x6D\x67\x2F","\x2E\x77\x65\x62\x70\x29\x3B\x22\x3E\x3C\x2F\x64\x69\x76\x3E","\x57\x61\x79\x20\x74\x6F\x20\x47\x6F\x21","\x4F\x6F\x70\x73\x21","\x59\x6F\x75\x20\x66\x6F\x75\x6E\x64\x20\x74\x68\x65\x20\x77\x6F\x72\x64","\x54\x68\x65\x20\x77\x6F\x72\x64\x20\x77\x61\x73\x20\x22","\x20\x50\x6F\x69\x6E\x74\x73","\x42\x65\x74\x74\x65\x72\x20\x6C\x75\x63\x6B\x20\x6E\x65\x78\x74\x20\x74\x69\x6D\x65","\x32\x35\x35\x2C\x20\x32\x35\x35\x2C\x20\x32\x35\x35","\x32\x32\x32\x2C\x20\x32\x32\x32\x2C\x20\x32\x32\x32","\x32\x33\x31\x2C\x20\x32\x31\x38\x2C\x20\x32\x31\x38","\x32\x33\x31\x2C\x20\x32\x32\x35\x2C\x20\x32\x31\x38","\x32\x33\x31\x2C\x20\x32\x33\x31\x2C\x20\x32\x31\x38","\x32\x32\x34\x2C\x20\x32\x33\x31\x2C\x20\x32\x31\x38","\x32\x31\x38\x2C\x20\x32\x33\x31\x2C\x20\x32\x32\x33","\x32\x31\x38\x2C\x20\x32\x33\x31\x2C\x20\x32\x33\x30","\x32\x31\x38\x2C\x20\x32\x32\x32\x2C\x20\x32\x33\x31","\x32\x32\x34\x2C\x20\x32\x31\x38\x2C\x20\x32\x33\x31","\x32\x33\x31\x2C\x20\x32\x31\x38\x2C\x20\x32\x33\x30","\x32\x31\x36\x2C\x20\x31\x38\x30\x2C\x20\x31\x38\x30","\x32\x31\x36\x2C\x20\x31\x39\x39\x2C\x20\x31\x38\x30","\x32\x31\x35\x2C\x20\x32\x31\x36\x2C\x20\x31\x38\x30","\x31\x39\x34\x2C\x20\x32\x31\x36\x2C\x20\x31\x38\x30","\x31\x38\x30\x2C\x20\x32\x31\x36\x2C\x20\x31\x39\x33","\x31\x38\x30\x2C\x20\x32\x30\x38\x2C\x20\x32\x31\x36","\x31\x38\x30\x2C\x20\x31\x38\x36\x2C\x20\x32\x31\x36","\x31\x39\x32\x2C\x20\x31\x38\x30\x2C\x20\x32\x31\x36","\x32\x31\x36\x2C\x20\x31\x38\x30\x2C\x20\x32\x31\x31","\x41\x66\x74\x65\x72\x74\x68\x65\x52\x61\x69\x6E\x2E\x6D\x70\x33","\x54\x68\x72\x6F\x75\x67\x68\x74\x68\x65\x41\x72\x62\x6F\x72\x2E\x6D\x70\x33","\x53\x75\x6E\x64\x69\x61\x6C\x44\x72\x65\x61\x6D\x73\x2E\x6D\x70\x33","\x54\x68\x65\x45\x6E\x63\x68\x61\x6E\x74\x65\x64\x47\x61\x72\x64\x65\x6E\x2E\x6D\x70\x33","\x42\x75\x74\x74\x65\x72\x66\x6C\x79\x2E\x6D\x70\x33","\x53\x74\x72\x61\x77\x48\x61\x74\x73\x2E\x6D\x70\x33","\x41\x6E\x6F\x74\x68\x65\x72\x52\x65\x61\x6C\x6D\x2E\x6D\x70\x33","\x57\x61\x74\x65\x72\x4C\x69\x6C\x6C\x69\x65\x73\x2E\x6D\x70\x33","\x46\x61\x69\x72\x79\x57\x69\x6E\x67\x73\x2E\x6D\x70\x33","\x50\x61\x70\x65\x72\x43\x6C\x6F\x75\x64\x73\x2E\x6D\x70\x33","\x2E\x61\x62\x6F\x75\x74\x2D\x73\x70\x61\x6E","\x73\x70\x61\x6E","\x70\x61\x72\x73\x65","\x72\x65\x6D\x6F\x76\x65\x43\x68\x69\x6C\x64","\x70\x61\x72\x65\x6E\x74\x4E\x6F\x64\x65","\x74\x68\x65\x6E","\x74\x65\x78\x74","\x69\x6E\x6E\x65\x72\x48\x54\x4D\x4C","\x6D\x73\x63\x2F","\x68\x6E\x67\x73\x65\x74","\x67\x65\x74\x49\x74\x65\x6D","\x73\x74\x72\x69\x6E\x67\x69\x66\x79","\x73\x65\x74\x49\x74\x65\x6D","\x73\x6F\x75\x6E\x64","\x63\x68\x65\x63\x6B\x65\x64","\x2E\x63\x68\x6B\x73\x77\x69\x74\x63\x68\x2E\x73\x6E\x64","\x2E\x63\x68\x6B\x69\x6E\x70\x75\x74","\x73\x65\x74","\x6F\x70\x61\x63\x69\x74\x79","\x73\x74\x79\x6C\x65","\x64\x69\x73\x70\x6C\x61\x79","\x6E\x6F\x6E\x65","\x2E\x63\x69\x72\x63","\x71\x75\x65\x72\x79\x53\x65\x6C\x65\x63\x74\x6F\x72","\x2E\x6D\x61\x69\x6E","\x6F\x6E\x6C\x6F\x61\x64","\x74\x6F\x75\x63\x68\x6D\x6F\x76\x65","\x69\x6E\x6E\x65\x72\x48\x65\x69\x67\x68\x74","\x63\x6C\x69\x65\x6E\x74\x59","\x74\x6F\x75\x63\x68\x65\x73","\x2E\x6B\x65\x79\x61\x72\x65\x61","\x6F\x66\x66\x73\x65\x74\x48\x65\x69\x67\x68\x74","\x62\x6F\x74\x74\x6F\x6D","\x70\x78","\x61\x64\x64\x45\x76\x65\x6E\x74\x4C\x69\x73\x74\x65\x6E\x65\x72","\x2E\x64\x69\x76\x69\x64\x65\x72","\x76\x6F\x6C\x75\x6D\x65","\x63\x61\x6E\x70\x6C\x61\x79\x74\x68\x72\x6F\x75\x67\x68","\x63\x6C\x69\x63\x6B","\x70\x6C\x61\x79","\x63\x61\x74\x63\x68","\x65\x6E\x64\x65\x64","\x6C\x65\x6E\x67\x74\x68","\x73\x72\x63","\x6D\x75\x74\x65\x64","\x6D\x73\x63\x2F\x63\x6C\x69\x63\x6B\x2E\x6D\x70\x33","\x6D\x73\x63\x2F\x77\x61\x72\x6E\x2E\x6D\x70\x33","\x6D\x73\x63\x2F\x62\x6F\x6F\x2E\x6D\x70\x33","\x6D\x73\x63\x2F\x63\x68\x65\x65\x72\x2E\x6D\x70\x33","\x6D\x73\x63\x2F\x67\x61\x6C\x6C\x6F\x77\x73\x2E\x6D\x70\x33","\x2E\x6B\x65\x79\x62\x6F\x61\x72\x64","","\x63\x72\x65\x61\x74\x65\x45\x6C\x65\x6D\x65\x6E\x74","\x63\x6C\x61\x73\x73\x4E\x61\x6D\x65","\x6B\x65\x79","\x69\x6E\x6E\x65\x72\x54\x65\x78\x74","\x64\x61\x74\x61","\x73\x65\x74\x41\x74\x74\x72\x69\x62\x75\x74\x65","\x6F\x6E\x63\x6C\x69\x63\x6B","\x61\x70\x70\x65\x6E\x64\x43\x68\x69\x6C\x64","\x6B\x65\x79\x20\x68\x69\x6E\x74\x20\x75\x6E\x73\x65\x65","\x69","\x72\x61\x6E\x64\x6F\x6D","\x66\x6C\x6F\x6F\x72","\x48\x69\x6E\x74\x3A","\x66\x69\x72\x65","\x2E\x77\x6F\x72\x64","\x69\x6E\x64\x65\x78\x4F\x66","\x70\x75\x73\x68","\x74\x6F\x55\x70\x70\x65\x72\x43\x61\x73\x65","\x6C","\x20","\x20\x6C\x73","\x26\x6E\x62\x73\x70","\x2E\x6B\x65\x79","\x2E\x70\x68\x6F\x6C\x64","\x66\x31","\x2E\x67\x74\x69\x6D\x65\x72","\x6C\x6F\x67","\x67\x74\x69\x6D\x65\x72\x20\x70\x74\x69\x6D\x65\x72\x20\x75\x6E\x73\x65\x65","\x67\x74\x69\x6D\x65\x72\x20\x70\x74\x69\x6D\x65\x72","\x67\x74\x69\x6D\x65\x72","\x67\x65\x74\x41\x74\x74\x72\x69\x62\x75\x74\x65","\x64\x69\x66\x66\x69\x63\x75\x6C\x74\x79","\x6D\x6F\x64\x65","\x73\x70\x6C\x69\x63\x65","\x2E\x6C","\x2E\x6B\x65\x79\x2E\x68\x69\x6E\x74","\x6B\x65\x79\x20\x68\x69\x6E\x74","\x67\x61\x6C\x6C\x6F\x77\x2D\x6F\x66\x66","\x6B\x6E\x65\x6C\x6C","\x66\x31\x30\x62","\x67\x61\x6C\x6C\x6F\x77\x2D\x6F\x6E","\x66\x31\x30\x61","\x66","\x63","\x2E\x67\x70\x65\x72\x63\x65\x6E\x74\x20\x73\x70\x61\x6E\x3A\x6E\x74\x68\x2D\x63\x68\x69\x6C\x64\x28\x32\x29","\x30","\x2E\x76\x65\x72\x64\x69\x63\x74","\x2E\x76\x65\x72\x64\x69\x63\x74\x20\x2E\x76\x77\x72\x61\x70\x20\x3E\x20\x64\x69\x76\x20\x3E\x20\x70","\x20\x2B","\x20\x42\x6F\x6E\x75\x73","\x50\x65\x72\x66\x65\x63\x74\x20","\x22","\x42\x72\x61\x76\x6F\x21\x20","\x20\x41\x72\x63\x61\x64\x65\x20\x43\x6F\x6D\x70\x6C\x65\x74\x65\x64","\x4E\x6F\x74\x68\x69\x6E\x67\x20\x65\x6C\x73\x65\x20\x74\x6F\x20\x62\x65\x61\x74","\x20\x61\x63\x63\x75\x6D\x6D\x75\x6C\x61\x74\x65\x64\x2E","\x20\x41\x72\x63\x61\x64\x65\x20\x66\x61\x69\x6C\x65\x64","\x20\x61\x63\x63\x75\x6D\x6D\x75\x6C\x61\x74\x65\x64\x20\x73\x6F\x20\x66\x61\x72\x2E","\x76\x65\x72\x64\x69\x63\x74","\x74\x70\x6F\x69\x6E\x74\x73","\x74\x67\x61\x6D\x65\x73","\x6E\x77\x6F\x72\x64\x73","\x66\x77\x6F\x72\x64\x73","\x68\x73\x63\x6F\x72\x65","\x70\x77\x6F\x72\x64\x73","\x2E\x74\x70\x31","\x2E\x74\x70\x32","\x2E\x74\x70\x33","\x2E\x74\x70\x34","\x2E\x74\x70\x35","\x2E\x74\x70\x36","\x61\x72\x65\x6E\x61","\x70\x61\x64\x53\x74\x61\x72\x74","\x71\x75\x65\x72\x79\x53\x65\x6C\x65\x63\x74\x6F\x72\x41\x6C\x6C","\x2E\x68\x6F\x6D\x65","\x2E\x68\x65\x6C\x70","\x70\x72\x65\x76\x76","\x72\x65\x6D\x6F\x76\x65","\x63\x6C\x61\x73\x73\x4C\x69\x73\x74","\x61\x64\x64","\x68\x6F\x6D\x65\x20\x75\x6E\x73\x65\x65","\x76\x65\x72\x64\x69\x63\x74\x20\x75\x6E\x73\x65\x65","\x2E\x6D\x6F\x64\x61\x6C","\x6D\x6F\x64\x61\x6C","\x2E\x6D\x6F\x64\x65\x72\x61\x64","\x76\x61\x6C\x75\x65","\x73\x65\x6C\x65\x63\x74","\x2E\x63\x68\x6B\x73\x77\x69\x74\x63\x68\x2E\x61\x72\x6E","\x6D\x6F\x64\x61\x6C\x20\x75\x6E\x73\x65\x65","\x62\x61\x63\x6B\x67\x72\x6F\x75\x6E\x64","\x62\x6F\x64\x79","\x75\x72\x6C\x28\x69\x6D\x67\x2F\x69\x6D\x67","\x2E\x77\x65\x62\x70\x29","\x72\x67\x62\x28","\x29","\x2E\x67\x70\x65\x72\x63\x65\x6E\x74\x20\x73\x70\x61\x6E\x3A\x6E\x74\x68\x2D\x63\x68\x69\x6C\x64\x28\x31\x29","\x53\x6C\x69\x6E\x67\x73\x68\x6F\x74","\x41\x72\x63\x61\x64\x65\x20","\x68\x65\x6C\x70","\x68\x6F\x6D\x65","\x68\x65\x6C\x70\x20\x75\x6E\x73\x65\x65","\x2E\x70\x72\x65\x76\x76","\x75\x6E\x73\x65\x65","\x69\x73\x43\x6F\x6E\x66\x69\x72\x6D\x65\x64","\x47\x61\x6D\x65\x20\x4F\x6E\x21","\x59\x6F\x75\x20\x63\x61\x6E\x20\x64\x6F\x20\x74\x68\x69\x73","\x73\x75\x63\x63\x65\x73\x73","\x41\x72\x65\x20\x79\x6F\x75\x20\x73\x75\x72\x65\x3F","\x54\x68\x65\x20\x67\x61\x6D\x65\x20\x77\x69\x6C\x6C\x20\x62\x65\x20\x66\x6F\x72\x66\x65\x69\x74\x65\x64\x20\x69\x66\x20\x79\x6F\x75\x20\x6C\x65\x61\x76\x65\x21","\x77\x61\x72\x6E\x69\x6E\x67","\x23\x33\x30\x38\x35\x64\x36","\x50\x72\x6F\x63\x65\x65\x64","\x74\x6F\x46\x69\x78\x65\x64"];var gscore=[8,20,50,120],cx,lvname=[_0xd89d[0],_0xd89d[1],_0xd89d[2],_0xd89d[3]];var keys=_0xd89d[4],chrLeft=[],index=0,fail=0;var hold0=_0xd89d[5],hold2=_0xd89d[6];var res1=[_0xd89d[7],_0xd89d[8]],res2=[_0xd89d[9],_0xd89d[10]],res3=[_0xd89d[11],_0xd89d[12]];var gbgs=[_0xd89d[13],_0xd89d[14],_0xd89d[15],_0xd89d[16],_0xd89d[17],_0xd89d[18],_0xd89d[19],_0xd89d[20],_0xd89d[21],_0xd89d[22],_0xd89d[23],_0xd89d[24],_0xd89d[25],_0xd89d[26],_0xd89d[27],_0xd89d[28],_0xd89d[29],_0xd89d[30],_0xd89d[31],_0xd89d[32]];audioFiles= [_0xd89d[33],_0xd89d[34],_0xd89d[35],_0xd89d[36],_0xd89d[37],_0xd89d[38],_0xd89d[39],_0xd89d[40],_0xd89d[41],_0xd89d[42]];var localSetting={mode:true,difficulty:0,set:false,sound:false,arena:false,tpoints:0,tgames:0,nwords:0,fwords:0,hscore:0,pwords:0};var wordlen=0,arclevel=0,arcindex=[],hintlen=2,gpoint=0,obons=0,msc=0,secph=[];var ph=qSel(_0xd89d[43],false,0);fetch(qSel(_0xd89d[43],false,0)[_0xd89d[50]])[_0xd89d[48]]((_0xa512x19)=>{return _0xa512x19[_0xd89d[49]]()})[_0xd89d[48]]((_0xa512x18)=>{secph= JSON[_0xd89d[45]](_0xa512x18)[_0xd89d[44]];qSel(_0xd89d[43],false,0)[_0xd89d[47]][_0xd89d[46]](qSel(_0xd89d[43],false,0))});var audio= new Audio(_0xd89d[51]+ audioFiles[msc]);var rn=1,hlast=1;const settings=JSON[_0xd89d[45]](localStorage[_0xd89d[53]](_0xd89d[52]));if(settings){localSetting= settings}else {dset= {mode:true,difficulty:0,set:false,sound:false,arena:false,tpoints:0,tgames:0,nwords:0,fwords:0,hscore:0,pwords:0};localStorage[_0xd89d[55]](_0xd89d[52],JSON[_0xd89d[54]](dset))};if(localSetting[_0xd89d[56]]){playAudio();qSel(_0xd89d[58],false,0)[_0xd89d[57]]= true}else {pauseAudio();qSel(_0xd89d[58],false,0)[_0xd89d[57]]= true};qSel(_0xd89d[59],false,0)[_0xd89d[57]]= (localSetting[_0xd89d[60]])?true:false;function fader(_0xa512x1f){var _0xa512x20=setInterval(function(){if(!_0xa512x1f[_0xd89d[62]][_0xd89d[61]]){_0xa512x1f[_0xd89d[62]][_0xd89d[61]]= 1};if(_0xa512x1f[_0xd89d[62]][_0xd89d[61]]> 0){_0xa512x1f[_0xd89d[62]][_0xd89d[61]]-= 0.15}else {clearInterval(_0xa512x20);_0xa512x1f[_0xd89d[62]][_0xd89d[63]]= _0xd89d[64];document[_0xd89d[66]](_0xd89d[65])[_0xd89d[62]][_0xd89d[63]]= _0xd89d[64]}},50)}function preLoader(){fader(document[_0xd89d[66]](_0xd89d[67]));rstate= false}window[_0xd89d[68]]= function(){preLoader();qSel(_0xd89d[78],false,0)[_0xd89d[77]](_0xd89d[69],function(_0xa512x22){wH= window[_0xd89d[70]];tY= _0xa512x22[_0xd89d[72]][0][_0xd89d[71]];eL= qSel(_0xd89d[73],false,0);resY= wH- tY- eL[_0xd89d[74]];if(resY< 0){resY= 0}else {if(resY> wH/ 2){resY= wH/ 2}};eL[_0xd89d[62]][_0xd89d[75]]= resY+ _0xd89d[76]},false);initMsc();createKeys();createHint()};function initMsc(){audio[_0xd89d[79]]= 0.15;audio[_0xd89d[77]](_0xd89d[80],()=>{audio[_0xd89d[82]]()[_0xd89d[83]]((_0xa512x22)=>{window[_0xd89d[77]](_0xd89d[81],()=>{audio[_0xd89d[82]]()},{once:true})})});audio[_0xd89d[77]](_0xd89d[84],function(){msc++;if(msc< audioFiles[_0xd89d[85]]){audio[_0xd89d[86]]= _0xd89d[51]+ audioFiles[msc];audio[_0xd89d[82]]()}else {audio[_0xd89d[86]]= _0xd89d[51]+ audioFiles[0];audio[_0xd89d[82]]()}},false)}function switchAud(){audio[_0xd89d[87]]= (qSel(_0xd89d[58],false,0)[_0xd89d[57]])?false:true}function playAudio(){audio[_0xd89d[87]]= false}function pauseAudio(){audio[_0xd89d[87]]= true}function audClick(){let _0xa512x28= new Audio(_0xd89d[88]);_0xa512x28[_0xd89d[79]]= 0.2;_0xa512x28[_0xd89d[82]]()}function audWarn(){let _0xa512x2a= new Audio(_0xd89d[89]);_0xa512x2a[_0xd89d[79]]= 0.15;_0xa512x2a[_0xd89d[82]]()}function audBoo(){let _0xa512x2c= new Audio(_0xd89d[90]);_0xa512x2c[_0xd89d[82]]()}function audCheer(){let _0xa512x2e= new Audio(_0xd89d[91]);_0xa512x2e[_0xd89d[82]]()}function audDie(){let _0xa512x30= new Audio(_0xd89d[92]);_0xa512x30[_0xd89d[82]]()}function createKeys(){var _0xa512x32=qSel(_0xd89d[93],false,0);_0xa512x32[_0xd89d[50]]= _0xd89d[94];for(i= 0;i< keys[_0xd89d[85]];i++){var _0xa512x33=document[_0xd89d[95]](_0xd89d[44]);_0xa512x33[_0xd89d[96]]= _0xd89d[97];_0xa512x33[_0xd89d[98]]= keys[i];_0xa512x33[_0xd89d[100]](_0xd89d[99],_0xd89d[94]);_0xa512x33[_0xd89d[101]]= function(){chrCheck(this)};_0xa512x32[_0xd89d[102]](_0xa512x33)}}function createHint(){var _0xa512x32=qSel(_0xd89d[93],false,0);var _0xa512x33=document[_0xd89d[95]](_0xd89d[44]);_0xa512x33[_0xd89d[96]]= _0xd89d[103];_0xa512x33[_0xd89d[98]]= _0xd89d[104];_0xa512x33[_0xd89d[100]](_0xd89d[99],_0xd89d[94]);_0xa512x33[_0xd89d[101]]= function(){rn= Math[_0xd89d[106]](Math[_0xd89d[105]]()* hintlen);while(hlast== rn){rn= Math[_0xd89d[106]](Math[_0xd89d[105]]()* hintlen)};Swal[_0xd89d[108]](_0xd89d[107],secph[index][rn+ 1]);hlast= rn};_0xa512x32[_0xd89d[102]](_0xa512x33)}function createWord(){var _0xa512x36=qSel(_0xd89d[109],false,0);_0xa512x36[_0xd89d[50]]= _0xd89d[94];for(let _0xa512x37=0;_0xa512x37< 133;_0xa512x37++){index= Math[_0xd89d[106]](Math[_0xd89d[105]]()* secph[_0xd89d[85]]);if(arcindex[_0xd89d[110]](index)==  -1){break}};if(arcindex[_0xd89d[85]]>= 132){arcindex= []};arcindex[_0xd89d[111]](index);wordlen= secph[index][0][_0xd89d[85]];for(_0xa512x37= 0;_0xa512x37< secph[index][0][_0xd89d[85]];_0xa512x37++){var _0xa512x38=secph[index][0][_0xa512x37][_0xd89d[112]]();var _0xa512x33=document[_0xd89d[95]](_0xd89d[44]);_0xa512x33[_0xd89d[96]]= _0xd89d[113]+ (_0xa512x38== _0xd89d[114]?_0xd89d[115]:_0xd89d[94]);_0xa512x33[_0xd89d[50]]= _0xd89d[116];_0xa512x36[_0xd89d[102]](_0xa512x33);if(_0xa512x38!= _0xd89d[114]){if(chrLeft[_0xd89d[110]](_0xa512x38)==  -1){chrLeft[_0xd89d[111]](_0xa512x38)}}}}function clearKeys(){var _0xa512x33=qSel(_0xd89d[117],true,-1);for(i= 0;i< _0xa512x33[_0xd89d[85]];i++){_0xa512x33[i][_0xd89d[100]](_0xd89d[99],_0xd89d[94])}}function clearPty(){fail= 0;hintlen= 2;chrLeft= [];qSel(_0xd89d[118],false,0)[_0xd89d[50]]= hold0+ _0xd89d[119]+ hold2}function gCount(){if(chrLeft[_0xd89d[85]]== 0){return};clearInterval(cx);var _0xa512x3c=qSel(_0xd89d[120],false,0);var _0xa512x3d=16,_0xa512x3e=6,_0xa512x3f=0;cx= setInterval(function(){_0xa512x3f++;var _0xa512x40=_0xa512x3d- _0xa512x3f;if(_0xa512x40< 0){clearInterval(cx);_0xa512x3c[_0xd89d[96]]= _0xd89d[122];gameEnd(false,0)}else {if(_0xa512x40< _0xa512x3e){_0xa512x3c[_0xd89d[96]]= _0xd89d[123]}else {_0xa512x3c[_0xd89d[96]]= _0xd89d[124]};_0xa512x3c[_0xd89d[50]]= padUp(_0xa512x40,2)}},1000)}function chrCheck(_0xa512x33){if(fail> 9){return};if(_0xa512x33[_0xd89d[125]](_0xd89d[99])== _0xd89d[94]){(localSetting[_0xd89d[126]]== 3)?gCount():_0xd89d[94];var _0xa512x38=isExist(_0xa512x33[_0xd89d[98]]);_0xa512x33[_0xd89d[100]](_0xd89d[99],_0xa512x38);if(_0xa512x38){audClick();makeHappy();getPercent();if(chrLeft[_0xd89d[85]]== 0){var _0xa512x42=getBonus();(localSetting[_0xd89d[126]]== 3)?clearInt():_0xd89d[94];if(!localSetting[_0xd89d[127]]){gpoint= gpoint+ (gscore[localSetting[_0xd89d[126]]]* arclevel);(arclevel< 20)?playGame():gameEnd(true,_0xa512x42)}else {gpoint= gscore[localSetting[_0xd89d[126]]];gameEnd(true,_0xa512x42)}}}else {audWarn();showNextFail()}}}function isExist(_0xa512x33){_0xa512x33= _0xa512x33[_0xd89d[112]]();var _0xa512x38=chrLeft[_0xd89d[110]](_0xa512x33);if(_0xa512x38!=  -1){chrLeft[_0xd89d[128]](_0xa512x38,1);typeWord(_0xa512x33);return true};return false}function typeWord(_0xa512x33){for(i= 0;i< secph[index][0][_0xd89d[85]];i++){if(secph[index][0][i][_0xd89d[112]]()== _0xa512x33){qSel(_0xd89d[129],true,i)[_0xd89d[98]]= _0xa512x33}}}function showNextFail(){fail++;if(fail== 1){if(localSetting[_0xd89d[126]]== 0){qSel(_0xd89d[130],false,0)[_0xd89d[96]]= (fail> 0)?_0xd89d[131]:_0xd89d[103]};qSel(_0xd89d[118],false,0)[_0xd89d[50]]= hold0+ _0xd89d[132]+ hold2+ hold0+ _0xd89d[119]+ hold2}else {if(fail== 10){qSel(_0xd89d[118],false,0)[_0xd89d[50]]= hold0+ _0xd89d[133]+ hold2+ hold0+ _0xd89d[134]+ hold2+ hold0+ _0xd89d[135]+ hold2+ hold0+ _0xd89d[136]+ hold2;audDie();(localSetting[_0xd89d[126]]== 3)?clearInt():_0xd89d[94];sleep(7000)[_0xd89d[48]](()=>{gameEnd(false,0)})}else {if(fail> 1|| fail< 10){if(localSetting[_0xd89d[126]]== 1){qSel(_0xd89d[130],false,0)[_0xd89d[96]]= (fail> 4)?_0xd89d[131]:_0xd89d[103]};if(localSetting[_0xd89d[126]]== 1|| localSetting[_0xd89d[126]]== 0){hintlen= (fail> 6)?3:2};qSel(_0xd89d[118],false,0)[_0xd89d[50]]= hold0+ _0xd89d[132]+ hold2+ hold0+ _0xd89d[137]+ fail+ hold2}}}}function makeHappy(){if(fail== 0){return}else {qSel(_0xd89d[118],false,0)[_0xd89d[50]]= hold0+ _0xd89d[132]+ hold2+ hold0+ _0xd89d[138]+ fail+ hold2}}function newGame(){qSel(_0xd89d[139],false,0)[_0xd89d[50]]= _0xd89d[140];qSel(_0xd89d[130],false,0)[_0xd89d[96]]= _0xd89d[103];clearKeys();clearPty();createWord()}function clearInt(){clearInterval(cx);qSel(_0xd89d[120],false,0)[_0xd89d[96]]= _0xd89d[122]}function gameEnd(_0xa512x22,_0xa512x4a){if(arclevel< 20&& arclevel> 0&&  !localSetting[_0xd89d[127]]){gpoint= gpoint/ arclevel};(_0xa512x22)?audCheer():audBoo();var _0xa512x4b=qSel(_0xd89d[141],false,0);var _0xa512x4c=qSel(_0xd89d[142],true,-1);_0xa512x4b[_0xd89d[100]](_0xd89d[99],_0xa512x22);var _0xa512x4d=_0xd89d[94];if(_0xa512x4a!= 0){_0xa512x4d= _0xd89d[143]+ _0xa512x4a+ _0xd89d[144]};if(localSetting[_0xd89d[127]]){if(_0xa512x22){var _0xa512x4e=(fail== 0)?_0xd89d[145]:_0xd89d[94];_0xa512x4c[0][_0xd89d[50]]= _0xa512x4e+ res1[0];_0xa512x4c[1][_0xd89d[50]]= res2[0];_0xa512x4c[2][_0xd89d[50]]= gpoint+ res3[0]+ _0xa512x4d}else {_0xa512x4c[0][_0xd89d[50]]= res1[1];_0xa512x4c[1][_0xd89d[50]]= res2[1]+ secph[index][0][_0xd89d[112]]()+ _0xd89d[146];_0xa512x4c[2][_0xd89d[50]]= res3[1]}}else {if(_0xa512x22){_0xa512x4c[0][_0xd89d[50]]= _0xd89d[147]+ lvname[localSetting[_0xd89d[126]]]+ _0xd89d[148];_0xa512x4c[1][_0xd89d[50]]= _0xd89d[149];_0xa512x4c[2][_0xd89d[50]]= gpoint+ res3[0]+ _0xa512x4d+ _0xd89d[150]}else {_0xa512x4c[0][_0xd89d[50]]= res1[1]+ _0xd89d[151];_0xa512x4c[1][_0xd89d[50]]= res2[1]+ secph[index][0][_0xd89d[112]]()+ _0xd89d[146];_0xa512x4c[2][_0xd89d[50]]= gpoint+ res3[0]+ _0xa512x4d+ _0xd89d[152]}};gpoint+= _0xa512x4a;calScore(_0xa512x22,gpoint);_0xa512x4b[_0xd89d[96]]= _0xd89d[153]}function calScore(_0xa512x50,_0xa512x51){localSetting[_0xd89d[154]]+= _0xa512x51;localSetting[_0xd89d[155]]+= 1;localSetting[_0xd89d[156]]+= (_0xa512x50)?1:0;localSetting[_0xd89d[157]]+= (_0xa512x50)?0:1;localSetting[_0xd89d[158]]= (localSetting[_0xd89d[158]]> gpoint)?localSetting[_0xd89d[158]]:gpoint;localSetting[_0xd89d[159]]+= (fail== 0)?1:0;localStorage[_0xd89d[55]](_0xd89d[52],JSON[_0xd89d[54]](localSetting));qSel(_0xd89d[160],false,0)[_0xd89d[50]]= localSetting[_0xd89d[154]];qSel(_0xd89d[161],false,0)[_0xd89d[50]]= localSetting[_0xd89d[155]];qSel(_0xd89d[162],false,0)[_0xd89d[50]]= localSetting[_0xd89d[156]];qSel(_0xd89d[163],false,0)[_0xd89d[50]]= localSetting[_0xd89d[157]];qSel(_0xd89d[164],false,0)[_0xd89d[50]]= localSetting[_0xd89d[158]];qSel(_0xd89d[165],false,0)[_0xd89d[50]]= localSetting[_0xd89d[159]];gpoint= 0;arclevel= 0;obons= 0}function getBonus(){var _0xa512x53=0;if(fail== 0){_0xa512x53+= 20};if(localSetting[_0xd89d[166]]){_0xa512x53+= 10};obons+= _0xa512x53;return obons}function padUp(_0xa512x55,_0xa512x56){return _0xa512x55.toString()[_0xd89d[167]](_0xa512x56,_0xd89d[140])}function qSel(_0xa512x50,_0xa512x51,_0xa512x4c){if(_0xa512x51=== false){return document[_0xd89d[66]](_0xa512x50)}else {return (_0xa512x4c==  -1)?document[_0xd89d[168]](_0xa512x50):document[_0xd89d[168]](_0xa512x50)[_0xa512x4c]}}function sleep(_0xa512x59){return  new Promise((_0xa512x5a)=>{return setTimeout(_0xa512x5a,_0xa512x59)})}function lastPage(_0xa512x5c){var _0xa512x5d=[_0xd89d[169],_0xd89d[141],_0xd89d[170]];for(el of _0xa512x5d){qSel(el,false,0)[_0xd89d[173]][_0xd89d[172]](_0xd89d[171])};qSel(_0xa512x5c,false,0)[_0xd89d[173]][_0xd89d[174]](_0xd89d[171])}function startGame(){if(localSetting[_0xd89d[60]]){qSel(_0xd89d[169],false,0)[_0xd89d[96]]= _0xd89d[175];qSel(_0xd89d[141],false,0)[_0xd89d[96]]= _0xd89d[176];playGame()}else {qSel(_0xd89d[141],false,0)[_0xd89d[96]]= _0xd89d[176];qSel(_0xd89d[169],false,0)[_0xd89d[96]]= _0xd89d[175];qSel(_0xd89d[177],false,0)[_0xd89d[96]]= _0xd89d[178]}}function saveSetting(){if(!qSel(_0xd89d[59],false,0)[_0xd89d[57]]){localSetting[_0xd89d[60]]= qSel(_0xd89d[59],false,0)[_0xd89d[57]];localStorage[_0xd89d[55]](_0xd89d[52],JSON[_0xd89d[54]](localSetting))};localSetting[_0xd89d[127]]= qSel(_0xd89d[179],false,0)[_0xd89d[57]];localSetting[_0xd89d[126]]= qSel(_0xd89d[181],false,0)[_0xd89d[180]];localSetting[_0xd89d[60]]= qSel(_0xd89d[59],false,0)[_0xd89d[57]];localSetting[_0xd89d[56]]= qSel(_0xd89d[58],false,0)[_0xd89d[57]];localSetting[_0xd89d[166]]= qSel(_0xd89d[182],false,0)[_0xd89d[57]];if(qSel(_0xd89d[59],false,0)[_0xd89d[57]]){localStorage[_0xd89d[55]](_0xd89d[52],JSON[_0xd89d[54]](localSetting))};qSel(_0xd89d[177],false,0)[_0xd89d[96]]= _0xd89d[183];playGame()}function playGame(){if(!localSetting[_0xd89d[127]]){arclevel++;document[_0xd89d[66]](_0xd89d[185])[_0xd89d[62]][_0xd89d[184]]= (localSetting[_0xd89d[166]])?_0xd89d[186]+ arclevel+ _0xd89d[187]:_0xd89d[188]+ gbgs[arclevel- 1]+ _0xd89d[189]}else {fr= Math[_0xd89d[106]](Math[_0xd89d[105]]()* 20)+ 1;document[_0xd89d[66]](_0xd89d[185])[_0xd89d[62]][_0xd89d[184]]= (localSetting[_0xd89d[166]])?_0xd89d[186]+ fr+ _0xd89d[187]:_0xd89d[188]+ gbgs[fr- 1]+ _0xd89d[189]};qSel(_0xd89d[190],false,0)[_0xd89d[50]]= (localSetting[_0xd89d[127]])?_0xd89d[191]:_0xd89d[192]+ arclevel;newGame()}function showHelp(){qSel(_0xd89d[169],false,0)[_0xd89d[96]]= _0xd89d[175];qSel(_0xd89d[170],false,0)[_0xd89d[96]]= _0xd89d[193]}function hideHelp(){qSel(_0xd89d[169],false,0)[_0xd89d[96]]= _0xd89d[194];qSel(_0xd89d[170],false,0)[_0xd89d[96]]= _0xd89d[195]}function hideSetting(){var _0xa512x5c=qSel(_0xd89d[196],false,0);_0xa512x5c[_0xd89d[173]][_0xd89d[172]](_0xd89d[197]);_0xa512x5c[_0xd89d[173]][_0xd89d[172]](_0xd89d[171]);qSel(_0xd89d[177],false,0)[_0xd89d[96]]= _0xd89d[183]}function hideVerdict(){qSel(_0xd89d[169],false,0)[_0xd89d[96]]= _0xd89d[194];qSel(_0xd89d[141],false,0)[_0xd89d[96]]= _0xd89d[176]}function toSettings(){qSel(_0xd89d[177],false,0)[_0xd89d[96]]= _0xd89d[178];qSel(_0xd89d[141],false,0)[_0xd89d[96]]= _0xd89d[176]}function toHome(){swal[_0xd89d[108]]({title:_0xd89d[202],text:_0xd89d[203],icon:_0xd89d[204],showCancelButton:true,confirmButtonColor:_0xd89d[205],confirmButtonText:_0xd89d[206]})[_0xd89d[48]]((_0xa512x67)=>{if(_0xa512x67[_0xd89d[198]]){calScore(false,0);qSel(_0xd89d[169],false,0)[_0xd89d[96]]= _0xd89d[194]}else {swal[_0xd89d[108]](_0xd89d[199],_0xd89d[200],_0xd89d[201])}})}function getPercent(){qSel(_0xd89d[139],false,0)[_0xd89d[50]]= ((wordlen- chrLeft[_0xd89d[85]])/ wordlen* 100)[_0xd89d[207]](0)}
+var gscore = [8,20,50,120], cx, lvname = ['Magician', 'Viserion', 'Inferno', 'Immortal'];
+var keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ", chrLeft = [], index = 0, fail = 0;
+var hold0 = '<div style="background-image: url(img/', hold2 = '.png);"></div>';
+var res1 = ["Way to Go!", "Oops!"], res2 = ["You found the word", 'The word was "'], res3 = [" Points", "Better luck next time"];
+var gbgs = ["255, 255, 255", "222, 222, 222", "231, 218, 218", "231, 225, 218", "231, 231, 218", "224, 231, 218", "218, 231, 223", "218, 231, 230", "218, 222, 231", "224, 218, 231", "231, 218, 230", "216, 180, 180", "216, 199, 180", "215, 216, 180", "194, 216, 180", "180, 216, 193", "180, 208, 216", "180, 186, 216", "192, 180, 216", "216, 180, 211"];
+audioFiles = ["AftertheRain.mp3", "ThroughtheArbor.mp3", "SundialDreams.mp3", "TheEnchantedGarden.mp3", "Butterfly.mp3", "StrawHats.mp3", "AnotherRealm.mp3", "WaterLillies.mp3", "FairyWings.mp3", "PaperClouds.mp3"]
+var localSetting = {mode: true, difficulty: 0, set: false, sound: false, arena: false, tpoints: 0, tgames: 0, nwords: 0, fwords: 0, hscore: 0, pwords: 0};
+var wordlen = 0, arclevel = 0, arcindex = [], hintlen = 2, gpoint = 0, obons = 0, msc = 0, secph = [];
+var ph = qSel('.about-span', false, 0);
+fetch(qSel('.about-span', false, 0).innerHTML)
+.then(response => response.text())
+.then(about => { secph = JSON.parse(about).span; qSel('.about-span', false, 0).parentNode.removeChild(qSel('.about-span', false, 0)); });
+var audio = new Audio("msc/"+audioFiles[msc]);
+var rn = 1, hlast = 1;
+
+const settings = JSON.parse(localStorage.getItem('hngset'));
+if (settings) {
+    localSetting = settings;
+}else{
+    dset = {mode: true, difficulty: 0, set: false, sound: false, arena: false, tpoints: 0, tgames: 0, nwords: 0, fwords: 0, hscore: 0, pwords: 0};
+    localStorage.setItem('hngset', JSON.stringify(dset));    
+}
+if(localSetting.sound){ playAudio(); qSel('.chkswitch.snd', false, 0).checked = true; }
+else { pauseAudio(); qSel('.chkswitch.snd', false, 0).checked = true; }
+qSel('.chkinput', false, 0).checked = (localSetting.set) ? true : false ; 
+
+function fader(fadee){
+    var fadeOut = setInterval(function(){
+        if(!fadee.style.opacity) fadee.style.opacity = 1;
+        if(fadee.style.opacity > 0) fadee.style.opacity -= 0.15;
+        else { 
+            clearInterval(fadeOut); 
+            fadee.style.display = "none"; 
+            document.querySelector('.circ').style.display = "none"; }
+    }, 50);
+}
+function preLoader(){
+   fader(document.querySelector('.main'));
+   rstate = false;
+}
+
+window.onload = function () {
+    preLoader();
+
+    qSel('.divider', false, 0).addEventListener(
+          'touchmove',
+          function (e) {
+                wH = window.innerHeight;
+                tY = e.touches[0].clientY;
+                eL = qSel('.keyarea', false, 0);
+                resY = wH - tY - eL.offsetHeight;
+                if (resY < 0) {
+                      resY = 0;
+                } else if (resY > wH / 2) {
+                      resY = wH / 2;
+                }
+                eL.style.bottom = resY + "px";
+          },
+          false
+    );
+    initMsc();
+    createKeys();
+    createHint();
+};
+function initMsc(){
+    audio.volume = 0.15;
+
+    audio.addEventListener('canplaythrough', () => {
+        audio.play().catch(e => {
+            window.addEventListener('click', () => {
+                audio.play();
+            }, {once: true});
+        });
+    });
+    
+    audio.addEventListener('ended', function(){
+        msc++;
+        if(msc<audioFiles.length){
+            audio.src = "msc/"+audioFiles[msc];
+            audio.play();
+        }else{
+            audio.src = "msc/"+audioFiles[0];
+            audio.play();
+        }
+    }, false);
+}
+function switchAud(){
+    audio.muted = (qSel('.chkswitch.snd', false, 0).checked) ? false : true;
+}
+function playAudio(){
+    audio.muted = false;
+}
+function pauseAudio(){
+    audio.muted = true;
+}
+function audClick(){
+    let clk = new Audio("msc/click.mp3");
+    clk.volume = 0.2;
+    clk.play();
+}
+function audWarn(){
+    let wrn = new Audio("msc/warn.mp3");
+    wrn.volume = 0.15;
+    wrn.play();
+}
+function audBoo(){
+    let boo = new Audio("msc/boo.mp3");
+    boo.play();
+}
+function audCheer(){
+    let chr = new Audio("msc/cheer.mp3");
+    chr.play();
+}
+function audDie(){
+    let die = new Audio("msc/gallows.mp3");
+    die.play();
+}
+function createKeys() {
+    var kb = qSel('.keyboard', false, 0);
+    kb.innerHTML = '';
+    for (i = 0; i < keys.length; i++) {
+          var k = document.createElement('span');
+          k.className = 'key';
+          k.innerText = keys[i];
+          k.setAttribute("data", "");
+          k.onclick = function () {
+                chrCheck(this);
+          };
+          kb.appendChild(k);
+    } 
+}
+
+function createHint(){
+    var kb = qSel('.keyboard', false, 0);
+    var k = document.createElement('span');
+    k.className = 'key hint unsee';
+    k.innerText = 'i';
+    k.setAttribute("data", "");
+    k.onclick = function (){
+        rn = Math.floor(Math.random()*hintlen);
+        while(hlast == rn)
+            rn = Math.floor(Math.random()*hintlen);
+            
+        Swal.fire('Hint:', secph[index][rn+1]);
+        hlast = rn;
+    }
+    kb.appendChild(k);
+}
+
+function createWord() {
+    var chrs = qSel('.word', false, 0);
+    chrs.innerHTML = "";
+    //133 items
+    //arcindex 
+    for(let i=0; i<133; i++){
+        index = Math.floor(Math.random() * secph.length);
+        if(arcindex.indexOf(index) == -1) break;
+    }
+    if(arcindex.length >= 132) arcindex = [];
+    arcindex.push(index);
+    wordlen = secph[index][0].length;
+    for (i = 0; i < secph[index][0].length; i++) {
+        var w = secph[index][0][i].toUpperCase();
+        var k = document.createElement("span");
+        k.className = "l" + (w == " " ? " ls" : "");
+        k.innerHTML = "&nbsp";
+        chrs.appendChild(k);
+
+          if (w != " ") {
+                if (chrLeft.indexOf(w) == -1) {
+                      chrLeft.push(w);
+                }
+          }
+    }
+}
+
+function clearKeys() {
+    var k = qSel('.key', true, -1);
+    for (i = 0; i < k.length; i++) {
+          k[i].setAttribute("data", "");
+    }
+}
+
+function clearPty() {
+    fail = 0;
+    hintlen = 2;
+    chrLeft = [];
+    qSel('.phold', false, 0).innerHTML = hold0+'f1'+hold2;
+}
+
+function gCount(){
+    if(chrLeft.length == 0) return;
+    clearInterval(cx);
+    var t = qSel('.gtimer', false, 0);
+    var start = 16, mid = 6, end = 0;
+
+    cx = setInterval(function() {
+        end++;
+        var dis = start - end;
+        if (dis < 0) {
+            clearInterval(cx);
+            t.className = "gtimer ptimer unsee";
+            gameEnd(false, 0);
+        } else{
+            if(dis < mid){
+                t.className = "gtimer ptimer";
+            }else{
+                t.className = "gtimer";
+            }
+            t.innerHTML = padUp(dis,2);
+        }   
+    }, 1000);
+}
+function chrCheck(k) {
+    if(fail > 9) return;
+    if (k.getAttribute("data") == "") {
+          (localSetting.difficulty == 3)?gCount():"";
+          var w = isExist(k.innerText);
+          k.setAttribute("data", w);
+          if (w) {
+              audClick();
+              makeHappy();
+              getPercent();
+                if (chrLeft.length == 0) {
+                    var gb = getBonus();
+                    (localSetting.difficulty == 3)?clearInt():"";
+                    
+                    if(!localSetting.mode){
+                        gpoint = gpoint + (gscore[localSetting.difficulty]*arclevel);
+                        ( arclevel < 20 ) ? playGame() : gameEnd(true, gb);
+                    }else{
+                        gpoint = gscore[localSetting.difficulty];
+                        gameEnd(true, gb);
+                    }
+                }
+          } else {
+                audWarn();
+                showNextFail();
+          }
+    }
+}
+function isExist(k) {
+    k = k.toUpperCase();
+    var w = chrLeft.indexOf(k);
+    if (w != -1) {
+          chrLeft.splice(w, 1);
+          typeWord(k);
+          return true;
+    }
+    return false;
+}
+function typeWord(k) {
+    for (i = 0; i < secph[index][0].length; i++) {
+          if (secph[index][0][i].toUpperCase() == k) {
+                qSel('.l', true, i).innerText = k;
+          }
+    }
+}
+function showNextFail() {
+    fail++;
+    if(fail == 1){
+        if(localSetting.difficulty == 0){
+            qSel('.key.hint', false, 0).className = (fail > 0) ? "key hint" : "key hint unsee";
+        }
+        qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'f1'+hold2;
+    }else if(fail == 10){
+        qSel('.phold', false, 0).innerHTML = hold0+'knell'+hold2+hold0+'f10b'+hold2+hold0+'gallow-on'+hold2+hold0+'f10a'+hold2;
+        audDie();
+        (localSetting.difficulty == 3)?clearInt():"";
+        sleep(7000).then(() => { gameEnd(false, 0); });
+    }else if (fail > 1  || fail < 10){
+        if(localSetting.difficulty == 1){
+            qSel('.key.hint', false, 0).className = (fail > 4) ? "key hint" : "key hint unsee";
+        }
+        if(localSetting.difficulty == 1 || localSetting.difficulty == 0){
+            hintlen = (fail > 6) ? 3 : 2;
+        }
+        qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'f'+fail+hold2;
+    }
+}
+function makeHappy(){
+    if(fail == 0) return;
+    else    qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'c'+fail+hold2;
+}
+function newGame() {
+    qSel('.gpercent span:nth-child(2)', false, 0).innerHTML = "0";
+    qSel('.key.hint', false, 0).className = "key hint unsee";
+    clearKeys();
+    clearPty();
+    createWord();
+}
+function clearInt(){
+    clearInterval(cx);
+    qSel('.gtimer', false, 0).className = "gtimer ptimer unsee";
+}
+function gameEnd(e,g) { 
+    if(arclevel < 20 && arclevel > 0 && !localSetting.mode){
+        gpoint = gpoint/arclevel;
+    }
+    (e)?audCheer():audBoo();
+    var d = qSel('.verdict', false, 0);
+    var c = qSel('.verdict .vwrap > div > p', true, -1); 
+    // var point = 30; 
+    d.setAttribute("data", e);
+    var bonus = "";
+    if(g != 0){
+        bonus = " +"+g+" Bonus";
+    }
+    if(localSetting.mode){
+        if (e) {     
+            var pp = (fail==0)?"Perfect ":"";
+            c[0].innerHTML = pp + res1[0];
+            c[1].innerHTML = res2[0];
+            c[2].innerHTML = gpoint+res3[0]+bonus;
+        } else { 
+            c[0].innerHTML = res1[1];
+            c[1].innerHTML = res2[1]+secph[index][0].toUpperCase()+'"';
+            c[2].innerHTML = res3[1];
+        }
+    }else {
+        if(e){
+            c[0].innerHTML = "Bravo! "+lvname[localSetting.difficulty]+" Arcade Completed";
+            c[1].innerHTML = "Nothing else to beat";
+            c[2].innerHTML = gpoint+res3[0]+bonus+" accummulated.";
+        }else{
+            c[0].innerHTML = res1[1]+" Arcade failed";
+            c[1].innerHTML = res2[1]+secph[index][0].toUpperCase()+'"';
+            c[2].innerHTML = gpoint+res3[0]+bonus+" accummulated so far.";
+        }
+    }
+    gpoint += g;
+    calScore(e, gpoint);
+    d.className = "verdict";
+}
+function calScore(a,b){
+    localSetting.tpoints +=  b;
+    localSetting.tgames += 1;
+    localSetting.nwords += (a)? 1 : 0;
+    localSetting.fwords += (a)? 0 : 1;
+
+    localSetting.hscore = (localSetting.hscore > gpoint) ? localSetting.hscore : gpoint;
+    localSetting.pwords += (fail == 0) ? 1 : 0;
+
+    localStorage.setItem('hngset', JSON.stringify(localSetting));
+    
+    qSel('.tp1', false, 0).innerHTML = localSetting.tpoints;
+    qSel('.tp2', false, 0).innerHTML = localSetting.tgames;
+    qSel('.tp3', false, 0).innerHTML = localSetting.nwords;
+    qSel('.tp4', false, 0).innerHTML = localSetting.fwords;
+    qSel('.tp5', false, 0).innerHTML = localSetting.hscore;
+    qSel('.tp6', false, 0).innerHTML = localSetting.pwords;
+
+    gpoint = 0; arclevel = 0; obons = 0;
+}
+function getBonus(){
+    var bons = 0;
+    if(fail == 0){
+        bons += 20; 
+    }
+    if(localSetting.arena){
+        bons += 10;
+    }
+    obons += bons;
+    return obons;
+}
+function padUp(num, len) {
+    return num.toString().padStart(len, '0');
+}
+function qSel(a, b, c) {
+    if(b === false){
+        return document.querySelector(a);
+    }else{
+        return (c == -1) ? document.querySelectorAll(a) : document.querySelectorAll(a)[c];
+    }
+}
+
+function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+function lastPage(ele){
+    var els= ['.home', '.verdict', '.help'];
+    for(el of els) qSel(el, false, 0).classList.remove('prevv');
+    qSel(ele, false, 0).classList.add('prevv');
+}
+function startGame() {
+    if(localSetting.set){
+        qSel('.home', false, 0).className = "home unsee";
+        qSel('.verdict', false, 0).className = "verdict unsee";
+        playGame();   
+    }else{
+        qSel('.verdict', false, 0).className = "verdict unsee";
+        qSel('.home', false, 0).className = "home unsee";
+        qSel('.modal', false, 0).className = "modal";
+    }
+}
+function saveSetting(){
+    if(!qSel('.chkinput', false, 0).checked){
+        localSetting.set = qSel('.chkinput', false, 0).checked;
+        localStorage.setItem('hngset', JSON.stringify(localSetting));
+    }
+    localSetting.mode =  qSel('.moderad', false, 0).checked;
+    localSetting.difficulty = qSel('select', false, 0).value;
+    localSetting.set = qSel('.chkinput', false, 0).checked;
+    localSetting.sound = qSel('.chkswitch.snd', false, 0).checked;
+    localSetting.arena = qSel('.chkswitch.arn', false, 0).checked;
+    if (qSel('.chkinput', false, 0).checked) {
+        localStorage.setItem('hngset', JSON.stringify(localSetting));
+    }
+    qSel('.modal', false, 0).className = "modal unsee";
+    playGame();
+}
+function playGame(){
+    if(!localSetting.mode){
+        arclevel++;
+        document.querySelector('body').style.background = (localSetting.arena) ? "url(img/img"+arclevel+".png)" : "rgb("+gbgs[arclevel-1]+")";
+    }else{
+        fr = Math.floor(Math.random()*20)+1;
+        document.querySelector('body').style.background = (localSetting.arena) ? "url(img/img"+fr+".png)" : "rgb("+gbgs[fr-1]+")";
+    }
+    qSel('.gpercent span:nth-child(1)', false, 0).innerHTML = (localSetting.mode) ? "Slingshot" : "Arcade "+arclevel;
+    //where all settings come into play
+    newGame();
+}
+function showHelp(){
+    qSel('.home', false, 0).className = "home unsee";
+    qSel('.help', false, 0).className = "help";
+}
+function hideHelp(){
+    qSel('.home', false, 0).className = "home";
+    qSel('.help', false, 0).className = "help unsee";
+}
+function hideSetting(){
+    var ele = qSel('.prevv', false, 0);
+    ele.classList.remove('unsee');
+    ele.classList.remove('prevv');
+    qSel('.modal', false, 0).className = "modal unsee";
+}
+function hideVerdict(){
+    qSel('.home', false, 0).className = "home";
+    qSel('.verdict', false, 0).className = "verdict unsee";
+}
+function toSettings(){
+    qSel('.modal', false, 0).className = "modal";
+    qSel('.verdict', false, 0).className = "verdict unsee";
+}
+function toHome(){
+    swal.fire(
+        {title: "Are you sure?", text: "The game will be forfeited if you leave!", icon: "warning", showCancelButton: true, confirmButtonColor: '#3085d6', confirmButtonText: 'Proceed' }
+        ).then((result) => {
+            if(result.isConfirmed){
+                calScore(false,0);        
+                qSel('.home', false, 0).className = "home";
+            }else {
+               swal.fire('Game On!', "You can do this", 'success');
+            }
+        });
+}
+function getPercent(){
+    qSel('.gpercent span:nth-child(2)', false, 0).innerHTML = ((wordlen-chrLeft.length)/wordlen*100).toFixed(0);
+}

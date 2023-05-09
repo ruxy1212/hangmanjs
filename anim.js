@@ -1,1 +1,79 @@
-var _0xa46d=["\x2E\x63\x69\x72\x63","\x71\x75\x65\x72\x79\x53\x65\x6C\x65\x63\x74\x6F\x72","\x2E\x6D\x61\x69\x6E","\x67\x65\x74\x42\x6F\x75\x6E\x64\x69\x6E\x67\x43\x6C\x69\x65\x6E\x74\x52\x65\x63\x74","\x74\x6F\x70","\x6C\x65\x66\x74","\x72\x69\x67\x68\x74","\x62\x6F\x74\x74\x6F\x6D","\x73\x74\x79\x6C\x65","\x70\x78","\x77\x69\x64\x74\x68","\x72\x61\x6E\x64\x6F\x6D","\x66\x6C\x6F\x6F\x72"];var cz,w,h,r,ydir,ynow,rtir,rdir,xdir,xnow,xdest,ydest,rstate=true;var circ=document[_0xa46d[1]](_0xa46d[0]),circdiv=document[_0xa46d[1]](_0xa46d[2]);moveIt();function moveIt(){initVal();getRandom();setMove();startMove()}function startMove(){cz= setInterval(function(){var _0x22a8x12=circdiv[_0xa46d[3]]();var _0x22a8x13=circ[_0xa46d[3]]();if((ydir== false&& _0x22a8x13[_0xa46d[4]]<= (_0x22a8x12[_0xa46d[4]]+ 10))|| (xdir== false&& _0x22a8x13[_0xa46d[5]]<= (_0x22a8x12[_0xa46d[5]]+ 10))|| (xdir== true&& _0x22a8x13[_0xa46d[6]]>= (_0x22a8x12[_0xa46d[6]]- 10))|| (ydir== true&& _0x22a8x13[_0xa46d[7]]>= (_0x22a8x12[_0xa46d[7]]- 10))){clearInterval(cz);moveIt()};if(!rstate){clearInterval(cz)};ynow= (ydir)?ynow+ (rtir/ rdir):ynow- (rtir/ rdir);xnow= (xdir)?xnow+ (rtir):xnow- (rtir);circ[_0xa46d[8]][_0xa46d[4]]= ynow+ _0xa46d[9];circ[_0xa46d[8]][_0xa46d[5]]= xnow+ _0xa46d[9];rsir+= rtir},50)}function setMove(){var _0x22a8x12=circdiv[_0xa46d[3]]();var _0x22a8x13=circ[_0xa46d[3]]();xnow= _0x22a8x13[_0xa46d[5]];ynow= _0x22a8x13[_0xa46d[4]];xdest= (_0x22a8x12[_0xa46d[6]]- _0x22a8x13[_0xa46d[10]])- 100;ydest= (_0x22a8x12[_0xa46d[7]]- _0x22a8x13[_0xa46d[10]])- 100;if(xdest> xnow){xdiff= xdest- xnow;xdir= true}else {xdiff= xnow- xdest;xdir= false};if(ydest> ynow){ydiff= (ydest- ynow)+ 1;ydir= true}else {ydiff= (ynow- ydest)- 1;ydir= false};rdir= (90- r)/ r;rtir= _0x22a8x12[_0xa46d[10]]* 0.02;rsir= rtir}function initVal(){w= 0;h= 0;r= 0;ydir= true;ynow= 0;rtir= 0;rdir= 0;xdir= true;xnow= 0;xdest= 0;ydest= 0}function getRandom(){w= (Math[_0xa46d[12]](Math[_0xa46d[11]]()* 80)+ 20)/ 100;h= (Math[_0xa46d[12]](Math[_0xa46d[11]]()* 80)+ 20)/ 100;w= 0.9;h= 0.9;r= (Math[_0xa46d[12]](Math[_0xa46d[11]]()* 61)+ 15)}
+var cz, w, h, r, ydir, ynow, rtir, rdir, xdir, xnow, xdest, ydest, rstate = true;
+var circ = document.querySelector('.circ'), circdiv = document.querySelector('.main');
+moveIt();
+function moveIt(){
+    initVal();
+    getRandom(); 
+    setMove();
+    startMove();
+}
+
+function startMove(){
+    cz = setInterval(function() {
+        var body = circdiv.getBoundingClientRect();
+        var rect = circ.getBoundingClientRect();
+        if((ydir == false && rect.top <= (body.top+10)) || (xdir == false && rect.left <= (body.left+10)) || (xdir == true && rect.right >= (body.right-10)) || (ydir == true && rect.bottom >= (body.bottom-10))){ //rsir >= xdiff..(rsir >= (xdiff-10) && 
+            clearInterval(cz); moveIt();
+        //     initVal();
+        //     getRandom();
+        //     setMove();
+        //     startMove();
+
+        }  
+        if(!rstate) clearInterval(cz);
+
+        // circ.style.top = (ydir) ? ynow+(rtir/rdir)+'px' : (ynow-(rtir/rdir))+'px';
+        // circ.style.left = (xdir) ? xnow+(rtir)+'px' : (xnow-(rtir))+'px';
+        ynow = (ydir) ? ynow+(rtir/rdir) : ynow-(rtir/rdir);
+        xnow = (xdir) ? xnow+(rtir) : xnow-(rtir);
+        circ.style.top = ynow+'px';
+        circ.style.left = xnow+'px';
+        rsir += rtir;
+    }, 50);
+}
+
+function setMove(){ 
+    var body = circdiv.getBoundingClientRect();
+    var rect = circ.getBoundingClientRect();
+    xnow = rect.left; ynow = rect.top;
+    xdest = (body.right - rect.width)-100; ydest = (body.bottom - rect.width)-100;
+    if(xdest > xnow){
+        xdiff = xdest - xnow;
+        xdir = true; //toRight;
+    }else{
+        xdiff = xnow - xdest;
+        xdir = false; //toLeft;
+    }
+    if(ydest > ynow){
+        ydiff = (ydest - ynow)+1;
+        ydir = true; //toDown;
+    }else{
+        ydiff = (ynow - ydest)-1;
+        ydir = false; //toUp;
+    }
+    rdir = (90-r)/r; //xdiff/ydiff;
+    rtir = body.width * 0.02; //xdiff/100;
+    rsir = rtir;
+   // console.log([cz, w, h, r, ydir, ynow, rtir, rdir, xdir, xnow, xdest, ydest])
+}
+function initVal(){
+    w = 0;
+    h = 0;
+    r = 0;
+    ydir = true;
+    ynow = 0;
+    rtir = 0;
+    rdir = 0; 
+    xdir = true;
+    xnow = 0;
+    xdest = 0;
+    ydest = 0;
+}
+function getRandom(){
+    w = (Math.floor(Math.random()*80)+20) / 100; 
+    h = (Math.floor(Math.random()*80)+20) / 100;
+    w = 0.9; h = 0.9;
+    r = (Math.floor(Math.random()*61)+15);
+}
+
+////https://javascriptobfuscator.com/Javascript-Obfuscator.aspx

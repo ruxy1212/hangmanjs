@@ -11,7 +11,7 @@ body{
     width: 100%;
     margin: 0;
     padding: 0;
-    background-image:url(./img/img10.webp); 
+    background-image:url(./img/img10.png); 
     background-size: cover !important;
     background-attachment: fixed !important;
     background-position: center center !important;
@@ -222,7 +222,7 @@ body{
 .home {
     z-index: 10;
     background-color: rgb(226, 222, 215);
-    background-image: url(img/home.webp);
+    background-image: url(img/home.png);
     background-size: contain;
     background-repeat: no-repeat;
 }
