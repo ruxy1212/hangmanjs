@@ -1,8 +1,91 @@
+/* .background {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 14;
+    overflow: hidden;
+    background: linear-gradient(45deg, #ea84ff, #ce84ff, #848dff, #84d5ff, #84ffc0, 
+	#b3ff84, #ffde84, #ffad84, #ff8484, #ff84cd);
+    background-size: 500% 100%;
+    animation: anim 10s linear alternate infinite;
+}
 
-.main{
+.main {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    clip-path: circle(40% at center);
+}
+
+@keyframes anim {
+    0% {
+        background-position: 0%
+    }
+    100% {
+        background-position: 100%
+    } 
+}
+	*/
+
+	.main {
+		height: 100vh;
+		width: 100vw;
+		position: fixed;
+		overflow: hidden;
+		z-index: 16;
+		top: 0;
+		left: 0;
+	}
+	
+	.circ {
+		width: 180px;
+		height: 180px;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.623);
+		position: absolute;
+		top: 0;
+		left: 0;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	}	
+	@media only screen and (max-width: 820px){
+		.circ {
+			width: 160px;
+			height: 160px;
+		}
+	}
+	@media only screen and (max-width: 760px){
+		.circ {
+			width: 140px;
+			height: 140px;
+		}
+	}
+	@media only screen and (max-width: 492px){
+		.circ {
+			width: 120px;
+			height: 120px;
+		}
+	}
+	@media only screen and (max-width: 352px){
+		.circ {
+			width: 100px;
+			height: 100px;
+		}
+	}
+
+
+
+
+
+
+.preload{
 	height:100vh;
 	width:100vw;
-	background-color:lime;
+	background-color:rgb(44, 78, 44);
 	/* height: 600px;
 	width: 600px; */
 	position:absolute;
@@ -13,7 +96,7 @@
 	display:grid;
 	place-items:center;
 	overflow:hidden;
-	background: linear-gradient(45deg, #ea84ff , #ce84ff , #848dff , #84d5ff , #84ffc0 , #b3ff84 ,  #ffde84, #ffad84, #ff8484, #ff84cd);
+	background: linear-gradient(45deg, #56325ebd, #4e3361bd, #31345cbd, #2a4350bd, #1e3a2bbd, #314624bd, #3f3721bd, #4e3629bd, #2e1818bd, #773d60bd);
 	background-size: 500% 100%;
 	animation: anim 10s linear alternate infinite;
   }
@@ -27,7 +110,7 @@
 	}
 
 	
-.circ {
+.circn {
     background: red; 
     /* height: 100px;  */
     width: 30%; 
@@ -38,7 +121,7 @@
     left: 0; 
     z-index: 99;
 }
-.circ div {
+.circn div {
     height: 100vh; 
     width: 100vw; 
     background-color: rgb(226, 222, 215); 
@@ -48,11 +131,11 @@
     background-attachment: fixed;
 }
 @media only screen and (max-width: 600px){
-    .circ{
+    .circn{
         width: 50%;
     }
 }
-.mainv{
+.mainvn{
 	position: absolute;
     top: 0;
     left: 0;
@@ -74,7 +157,7 @@
 	box-shadow: 0px 0px 0px 2000px #000000;
 }
 @media only screen and (max-width: 600px){
-    .mainv:after{
+    .mainvn:after{
         width: 50%;
 		padding-bottom: 50%;
     }

@@ -12,7 +12,7 @@ fetch(qSel('.about-span', false, 0).innerHTML)
 .then(response => response.text())
 .then(about => { secph = JSON.parse(about).span; qSel('.about-span', false, 0).parentNode.removeChild(qSel('.about-span', false, 0)); });
 // var audio = new Audio("msc/"+audioFiles[msc]); //audio.preload = true;
-var audio = new Howl({volume: 0.15, muted: true, src: [audioFiles[msc]], preload: true, onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
+var audio = new Howl({volume: 0.15, muted: true, src: [audioFiles[msc]], onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
 var clk = new Howl({src: ["msc/click.mp3"], preload: true });
 var wrn = new Howl({src: ["msc/warn.mp3"], preload: true });
 var boo = new Howl({src: ["msc/boo.mp3"], preload: true });
@@ -39,11 +39,11 @@ function fader(fadee){
         else { 
             clearInterval(fadeOut); 
             fadee.style.display = "none"; 
-            document.querySelector('.circ').style.display = "none"; }
+            document.querySelector('.main').style.display = "none"; }
     }, 50);
 }
 function preLoader(){
-   fader(document.querySelector('.main'));
+   fader(document.querySelector('.preload'));
    rstate = false;
 }
 
