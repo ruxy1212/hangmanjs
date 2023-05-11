@@ -3,19 +3,21 @@ var keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ", chrLeft = [], index = 0, fail = 0;
 var hold0 = '<div style="background-image: url(img/', hold2 = '.png);"></div>';
 var res1 = ["Way to Go!", "Oops!"], res2 = ["You found the word", 'The word was "'], res3 = [" Points", "Better luck next time"];
 var gbgs = ["255, 255, 255", "222, 222, 222", "231, 218, 218", "231, 225, 218", "231, 231, 218", "224, 231, 218", "218, 231, 223", "218, 231, 230", "218, 222, 231", "224, 218, 231", "231, 218, 230", "216, 180, 180", "216, 199, 180", "215, 216, 180", "194, 216, 180", "180, 216, 193", "180, 208, 216", "180, 186, 216", "192, 180, 216", "216, 180, 211"];
-audioFiles = ["AftertheRain.mp3", "ThroughtheArbor.mp3", "SundialDreams.mp3", "TheEnchantedGarden.mp3", "Butterfly.mp3", "StrawHats.mp3", "AnotherRealm.mp3", "WaterLillies.mp3", "FairyWings.mp3", "PaperClouds.mp3"]
+audioFiles = ["msc/AftertheRain.mp3", "msc/ThroughtheArbor.mp3", "msc/SundialDreams.mp3", "msc/TheEnchantedGarden.mp3", "msc/Butterfly.mp3", "msc/StrawHats.mp3", "msc/AnotherRealm.mp3", "msc/WaterLillies.mp3", "msc/FairyWings.mp3", "msc/PaperClouds.mp3"];
+audFiles = ["msc/click.mp3", "msc/warn.mp3", "msc/boo.mp3", "msc/cheer.mp3", "msc/gallows.mp3"];
 var localSetting = {mode: true, difficulty: 0, set: false, sound: false, arena: false, tpoints: 0, tgames: 0, nwords: 0, fwords: 0, hscore: 0, pwords: 0};
 var wordlen = 0, arclevel = 0, arcindex = [], hintlen = 2, gpoint = 0, obons = 0, msc = 0, secph = [];
 var ph = qSel('.about-span', false, 0);
 fetch(qSel('.about-span', false, 0).innerHTML)
 .then(response => response.text())
 .then(about => { secph = JSON.parse(about).span; qSel('.about-span', false, 0).parentNode.removeChild(qSel('.about-span', false, 0)); });
-var audio = new Audio("msc/"+audioFiles[msc]); audio.preload = true;
-var clk = new Audio("msc/click.mp3"); clk.preload = true;
-var wrn = new Audio("msc/warn.mp3"); wrn.preload = true;
-var boo = new Audio("msc/boo.mp3"); boo.preload = true;
-var chr = new Audio("msc/cheer.mp3"); chr.preload = true;
-var die = new Audio("msc/gallows.mp3"); die.preload = true;
+// var audio = new Audio("msc/"+audioFiles[msc]); //audio.preload = true;
+var audio = new Howl({volume: 0.15, muted: true, src: [audioFiles[msc]], preload: true, onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
+var clk = new Howl({src: ["msc/click.mp3"], preload: true });
+var wrn = new Howl({src: ["msc/warn.mp3"], preload: true });
+var boo = new Howl({src: ["msc/boo.mp3"], preload: true });
+var chr = new Howl({src: ["msc/cheer.mp3"], preload: true });
+var die = new Howl({src: ["msc/gallows.mp3"], preload: true });
 
 var rn = 1, hlast = 1;
 
@@ -27,7 +29,7 @@ if (settings) {
     localStorage.setItem('hngset', JSON.stringify(dset));    
 }
 if(localSetting.sound){ playAudio(); qSel('.chkswitch.snd', false, 0).checked = true; }
-else { pauseAudio(); qSel('.chkswitch.snd', false, 0).checked = true; }
+else { pauseAudio(); qSel('.chkswitch.snd', false, 0).checked = false; }
 qSel('.chkinput', false, 0).checked = (localSetting.set) ? true : false ; 
 
 function fader(fadee){
@@ -68,43 +70,34 @@ window.onload = function () {
     createKeys();
     createHint();
 };
-function initMsc(){
-    audio.volume = 0.15;
-
-    audio.addEventListener('canplaythrough', () => {
-        audio.play().catch(e => {
-            window.addEventListener('click', () => {
-                audio.play();
-            }, {once: true});
-        });
-    });
-    
-    audio.addEventListener('ended', function(){
-        msc++;
-        if(msc<audioFiles.length){
-            audio.src = "msc/"+audioFiles[msc];
-            audio.play();
-        }else{
-            audio.src = "msc/"+audioFiles[0];
-            audio.play();
-        }
-    }, false);
+function controlMsc(){
+    msc++;
+    if(msc<audioFiles.length){
+        audio = new Howl({volume: 0.15, muted: localSetting.sound, src: [audioFiles[msc]], preload: true, onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
+    }else{
+        msc = 0;
+        audio = new Howl({volume: 0.15, muted: localSetting.sound, src: [audioFiles[0]], preload: true, onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
+    }
+    audio.play();
+}
+function initMsc(){ 
+    audio.play();
 }
 function switchAud(){
-    audio.muted = (qSel('.chkswitch.snd', false, 0).checked) ? false : true;
+    audio.mute(!(qSel('.chkswitch.snd', false, 0).checked))
 }
 function playAudio(){
-    audio.muted = false;
+    audio.mute(false);
 }
 function pauseAudio(){
-    audio.muted = true;
+    audio.mute(true);
 }
 function audClick(){
-    clk.volume = 0.2;
+    clk.volume(0.2);
     clk.play();
 }
 function audWarn(){
-    wrn.volume = 0.15;
+    wrn.volume(0.15);
     wrn.play();
 }
 function audBoo(){
