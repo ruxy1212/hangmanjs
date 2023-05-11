@@ -89,7 +89,7 @@ body{
     box-shadow: 0 0 0 0 #bbb;
     width: 10px;
 }
-.penalty {
+/* .penalty {
     max-width: 100%;
     width: 500px;
     margin: 0 auto;
@@ -97,9 +97,9 @@ body{
 .aspect {
     aspect-ratio: 1/1;
 }
-@supports not (aspect-ratio: 1/1){
+@supports not (aspect-ratio: 1/1){ */
     /* 	CSS workaround for browsers like some Safari not supporting aspect-ratio */
-    .aspect::before{
+    /* .aspect::before{
         content: "";
         padding-top: 100%;
     }
@@ -112,14 +112,52 @@ body{
 }
 .penalty > div {
     height: 100%;
-    width: 100%;
+    width: 100%; */
     /* background-image: var(--watch);
     background-size: cover; */
-    position: relative;
-    overflow: hidden;
+    /* position: relative;
+    overflow: hidden; */
     /* -webkit-filter: drop-shadow(var(--dr-sdw));
     filter: drop-shadow(var(--dr-sdw)); */
+/* }
+.penalty > div div {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+} */
+
+.penalty {
+    max-width: 100%;
+    width: 500px;
+    margin: 0 auto;
 }
+.aspect {
+    aspect-ratio: 1/1;
+}
+.penalty > div {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+@supports not (aspect-ratio: 1/1){
+    .aspect {
+        position: relative;
+        width: 100%;
+        padding-bottom: 100%;
+    }
+    .aspect > div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
 .penalty > div div {
     height: 100%;
     width: 100%;
@@ -128,6 +166,8 @@ body{
     left: 0;
     background-size: cover;
 }
+
+
 .home, .modal, .help, .verdict {
     height: 100%;
     width: 100%;
