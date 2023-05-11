@@ -54,7 +54,6 @@ function setMove(){
     rdir = (90-r)/r; //xdiff/ydiff;
     rtir = body.width * 0.02; //xdiff/100;
     rsir = rtir;
-   // console.log([cz, w, h, r, ydir, ynow, rtir, rdir, xdir, xnow, xdest, ydest])
 }
 function initVal(){
     w = 0;

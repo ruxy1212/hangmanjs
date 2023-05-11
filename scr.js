@@ -10,7 +10,13 @@ var ph = qSel('.about-span', false, 0);
 fetch(qSel('.about-span', false, 0).innerHTML)
 .then(response => response.text())
 .then(about => { secph = JSON.parse(about).span; qSel('.about-span', false, 0).parentNode.removeChild(qSel('.about-span', false, 0)); });
-var audio = new Audio("msc/"+audioFiles[msc]);
+var audio = new Audio("msc/"+audioFiles[msc]); audio.preload = true;
+var clk = new Audio("msc/click.mp3"); clk.preload = true;
+var wrn = new Audio("msc/warn.mp3"); wrn.preload = true;
+var boo = new Audio("msc/boo.mp3"); boo.preload = true;
+var chr = new Audio("msc/cheer.mp3"); chr.preload = true;
+var die = new Audio("msc/gallows.mp3"); die.preload = true;
+
 var rn = 1, hlast = 1;
 
 const settings = JSON.parse(localStorage.getItem('hngset'));
@@ -94,25 +100,20 @@ function pauseAudio(){
     audio.muted = true;
 }
 function audClick(){
-    let clk = new Audio("msc/click.mp3");
     clk.volume = 0.2;
     clk.play();
 }
 function audWarn(){
-    let wrn = new Audio("msc/warn.mp3");
     wrn.volume = 0.15;
     wrn.play();
 }
 function audBoo(){
-    let boo = new Audio("msc/boo.mp3");
     boo.play();
 }
 function audCheer(){
-    let chr = new Audio("msc/cheer.mp3");
     chr.play();
 }
 function audDie(){
-    let die = new Audio("msc/gallows.mp3");
     die.play();
 }
 function createKeys() {
