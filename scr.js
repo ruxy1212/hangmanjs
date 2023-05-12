@@ -41,8 +41,8 @@ function fader(fadee){
     }, 50);
 }
 function preLoader(){
-   fader(document.querySelector('.preload'));
-   rstate = false;
+//    fader(document.querySelector('.preload'));
+//    rstate = false;
 }
 
 window.onload = function () {
