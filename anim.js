@@ -79,7 +79,7 @@
 
 
 
-var cz, w, h, r, ydir, ynow, rtir, rdir, xdir, xnow, xdest, ydest, xorig, yorig, xlast = true, ylast = true;
+var cz, w, h, r, ydir, ynow, rtir, rdir, xdir, xnow, xdest, ydest, xorig, yorig, xlast = true, ylast = true, rstate = true;
 var circ = document.querySelector('.circ');
 var circdiv = document.querySelector('.main');
 
@@ -101,6 +101,7 @@ function startMove() {
             clearInterval(cz);
             moveIt();
         }
+        if(!rstate) clearInterval(cz);
 
         ynow = ydir ? ynow + rtir / rdir : ynow - rtir / rdir;
         xnow = xdir ? xnow + rtir : xnow - rtir;
