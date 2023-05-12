@@ -115,10 +115,10 @@ function setMove() {
     var rect = circ.getBoundingClientRect();
     xnow = rect.left;
     ynow = rect.top;
-    xdest = body.right - rect.width - (0.1*body.width);
-    ydest = body.bottom - rect.height - (0.1*body.height);
-    xorig = 0.1*body.width;
-    yorig = 0.1*body.height;
+    xdest = body.right - rect.width - (0.05*body.width);
+    ydest = body.bottom - rect.height - (0.05*body.height);
+    xorig = 0.05*body.width;
+    yorig = 0.05*body.height;
 
     if (xdest > xnow && xnow > xorig) {
         if(xlast) xdir = true;
