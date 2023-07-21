@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LAN Chat System</title>
+</head>
+<body>
+    <div id="home-screen">
+        <button id="create-button">Create Chat</button>
+        <button id="join-button">Join Chat</button>
+        <div id="conversations"></div>
+    </div>
+    <div id="conversation-screen" style="display: none;">
+        <h2>Conversation</h2>
+        <div id="chat"></div>
+        <input type="text" id="message-input" readonly>
+    </div>
+    <!-- Add the WebRTC library script -->
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>
