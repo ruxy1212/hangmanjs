@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>LAN Chat System</title>
+  <!-- Add the Firebase SDK script tags here -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
 </head>
 <body>
-    <div id="home-screen">
-        <button id="create-button">Create Chat</button>
-        <button id="join-button">Join Chat</button>
-        <div id="conversations"></div>
-    </div>
-    <div id="conversation-screen" style="display: none;">
-        <h2>Conversation</h2>
-        <div id="chat"></div>
-        <input type="text" id="message-input" readonly>
-    </div>
-    <!-- Add the WebRTC library script -->
-    <script src="adapter-latest.js"></script>
-    <script src="chat.js"></script>
+  <!-- Your HTML content here -->
+
+  <script>
+    // Your Firebase web app's configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </body>
 </html>
