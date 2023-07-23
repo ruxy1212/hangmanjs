@@ -65,7 +65,7 @@
 
     // Create Game
     createGameBtn.addEventListener('click', () => {
-      const username = prompt('Enter your username:');
+      const username = prompt('Enter your username:'); alert("Good to go!");
       if (!username) return;
 
       playerA = { id: generateRandomId(), username, status: 'waiting' };
