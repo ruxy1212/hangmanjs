@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Add the Firebase SDK script tags here -->
-  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+  <!-- Add your Firebase SDK script tag here -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
 </head>
 <body>
-  <!-- Your HTML content here -->
+  <h1>Multiplayer Texting Game</h1>
+  <div id="mainContainer">
+    <button id="createGameBtn">Create Game</button>
+    <button id="joinGameBtn">Join Game</button>
+  </div>
+  <div id="waitScreen" style="display: none;">
+    <h2>Waiting for an opponent...</h2>
+  </div>
+  <div id="gameList" style="display: none;">
+    <h2>Available Games</h2>
+    <ul id="gamesList"></ul>
+  </div>
+  <div id="gameContainer" style="display: none;">
+    <div id="gameInfo"></div>
+    <textarea id="textInput" rows="4" cols="50"></textarea>
+    <button id="sendBtn">Send</button>
+  </div>
 
   <script>
+    // Initialize Firebase with your config settings
     // Your Firebase web app's configuration
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
@@ -22,6 +39,142 @@
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    
+    // Reference to the Firebase Realtime Database
+    const database = firebase.database();
+
+    // Player objects
+    let playerA = null;
+    let playerB = null;
+
+    // Buttons and containers
+    const createGameBtn = document.getElementById('createGameBtn');
+    const joinGameBtn = document.getElementById('joinGameBtn');
+    const mainContainer = document.getElementById('mainContainer');
+    const waitScreen = document.getElementById('waitScreen');
+    const gameListContainer = document.getElementById('gameList');
+    const gamesList = document.getElementById('gamesList');
+    const gameContainer = document.getElementById('gameContainer');
+    const gameInfo = document.getElementById('gameInfo');
+    const textInput = document.getElementById('textInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Create Game
+    createGameBtn.addEventListener('click', () => {
+      const username = prompt('Enter your username:');
+      if (!username) return;
+
+      playerA = { id: generateRandomId(), username, status: 'waiting' };
+      database.ref('games').push(playerA);
+      displayWaitScreen();
+    });
+
+    // Join Game
+    joinGameBtn.addEventListener('click', () => {
+      displayGameList();
+    });
+
+    // Display list of available games
+    function displayGameList() {
+      mainContainer.style.display = 'none';
+      gameListContainer.style.display = 'block';
+
+      database.ref('games').once('value', (snapshot) => {
+        const games = snapshot.val();
+        if (games) {
+          gamesList.innerHTML = ''; // Clear the list
+          Object.keys(games).forEach((gameId) => {
+            const game = games[gameId];
+            if (game.status === 'waiting') {
+              const listItem = document.createElement('li');
+              const joinButton = document.createElement('button');
+              joinButton.textContent = `Join Game with ${game.username}`;
+              joinButton.addEventListener('click', () => joinGame(gameId));
+              listItem.appendChild(joinButton);
+              gamesList.appendChild(listItem);
+            }
+          });
+        }
+      });
+    }
+
+    // Join a Game
+    function joinGame(gameId) {
+      const username = prompt('Enter your username:');
+      if (!username) return;
+
+      playerB = { id: generateRandomId(), username, status: 'playing' };
+      const gameRef = database.ref(`games/${gameId}`);
+      gameRef.transaction((game) => {
+        if (game && game.status === 'waiting') {
+          game.status = 'playing';
+          game.playerB = playerB;
+        }
+        return game;
+      }, (error, committed) => {
+        if (committed) {
+          gameRef.onDisconnect().remove(); // Clean up when playerB disconnects
+          startGame();
+        } else {
+          alert('Game is no longer available.');
+          displayGameList();
+        }
+      });
+    }
+
+    // Game Logic
+    function startGame() {
+      gameListContainer.style.display = 'none';
+      gameContainer.style.display = 'block';
+      displayGameInfo();
+
+      textInput.disabled = true;
+      textInput.value = '';
+
+      if (playerA && playerB) {
+        textInput.disabled = false;
+        textInput.focus();
+        textInput.placeholder = "Type your message...";
+        sendBtn.addEventListener('click', sendMessage);
+      }
+    }
+
+    // Display game information
+    function displayGameInfo() {
+      gameInfo.innerHTML = `You are playing against ${playerA.username} (${playerA.id}).`;
+    }
+
+    // Send Message
+    function sendMessage() {
+      const message = textInput.value.trim();
+      if (message === '') return;
+
+      const currentPlayer = isPlayerA() ? playerA : playerB;
+      const otherPlayer = isPlayerA() ? playerB : playerA;
+
+      // Save the message in the database, for example:
+      const messagesRef = database.ref(`games/${currentPlayer.id}-${otherPlayer.id}/messages`);
+      messagesRef.push({
+        from: currentPlayer.username,
+        text: message,
+        timestamp: Date.now(),
+      });
+
+      textInput.value = '';
+      textInput.disabled = true;
+      sendBtn.removeEventListener('click', sendMessage);
+    }
+
+    // Helper function to check if the current player is player A
+    function isPlayerA() {
+      return playerA && playerA.id === currentPlayer.id;
+    }
+
+    // Helper function to generate a random ID
+    function generateRandomId() {
+      return Math.random().toString(36).substring(2, 15);
+    }
   </script>
 </body>
 </html>
