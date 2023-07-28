@@ -1,4 +1,4 @@
-we<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>Multi Game</title>
@@ -21,7 +21,14 @@ we<!DOCTYPE html>
     <textarea id="textInput" rows="4" cols="30"></textarea>
     <button id="sendBtn">Send</button>
   </div>
-
+    <script>
+(function () {
+    var src = '//cdn.jsdelivr.net/npm/eruda';
+    if (!/eruda=true/.test(window.location) && localStorage.getItem('active-eruda') != 'true') return;
+    document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+    document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
+})();
+</script>
   <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
