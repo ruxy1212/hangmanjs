@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Add your Firebase SDK script tag here -->
+</head>
+<body>
+  <h1>Multiplayer Game</h1>
+  <div>
+    <button id="createGameBtn">Create Game</button>
+  </div>
+  <div id="gameList">
+    <!-- Display available games here -->
+  </div>
+  <div id="gameContainer" style="display: none;">
+    <!-- Game board and elements go here -->
+  </div>
+
+  <script>
+    // Initialize Firebase with your config settings
+
+    // Reference to the Firebase Realtime Database
+    const database = firebase.database();
+
+    // Player objects
+    let playerA = null;
+    let playerB = null;
+
+    // Create Game
+    document.getElementById('createGameBtn').addEventListener('click', () => {
+      playerA = { id: generateRandomId(), status: 'waiting' };
+      const newGameRef = database.ref('games').push(playerA);
+      newGameRef.onDisconnect().remove(); // Clean up when playerA disconnects
+      newGameRef.on('value', (snapshot) => {
+        const gameData = snapshot.val();
+        if (gameData && gameData.status === 'paired') {
+          playerB = gameData.playerB;
+          startGame();
+        }
+      });
+      displayGameList();
+    });
+
+    // Join a Game
+    function joinGame(gameId) {
+      playerB = { id: generateRandomId(), status: 'waiting' };
+      const gameRef = database.ref(`games/${gameId}`);
+      gameRef.transaction((game) => {
+        if (!game || game.status !== 'waiting') {
+          // Game not available
+          return;
+        }
+        game.playerB = playerB;
+        game.status = 'paired';
+        return game;
+      }, (error, committed) => {
+        if (committed) {
+          gameRef.onDisconnect().remove(); // Clean up when playerB disconnects
+          startGame();
+        }
+      });
+    }
+
+    // Game Logic
+    function startGame() {
+      // Hide game list and display the game container
+      document.getElementById('gameList').style.display = 'none';
+      document.getElementById('gameContainer').style.display = 'block';
+
+      // Implement your game logic here
+    }
+
+    // Display list of available games
+    function displayGameList() {
+      const gameListContainer = document.getElementById('gameList');
+      gameListContainer.innerHTML = ''; // Clear the container
+
+      database.ref('games').once('value', (snapshot) => {
+        const games = snapshot.val();
+        if (games) {
+          Object.keys(games).forEach((gameId) => {
+            const game = games[gameId];
+            if (game.status === 'waiting') {
+              const joinButton = document.createElement('button');
+              joinButton.textContent = `Join Game ${gameId}`;
+              joinButton.addEventListener('click', () => joinGame(gameId));
+              gameListContainer.appendChild(joinButton);
+            }
+          });
+        }
+      });
+    }
+
+    // Helper function to generate a random ID
+    function generateRandomId() {
+      return Math.random().toString(36).substring(2, 15);
+    }
+  </script>
+</body>
+</html>

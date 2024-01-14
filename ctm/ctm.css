@@ -1,8 +1,14 @@
-.custom-select {
+.custom-select, .cnt.user {
     position: relative;
     font-family: Arial;
     width: 200px !important; 
     line-height: 1;
+}
+
+.cnt.user input {
+  padding: 8px 16px;
+  width: 100%;
+  outline-color: dodgerblue;
 }
 
 .custom-select select {
@@ -83,8 +89,14 @@
   }
   
   .slider:before {
-    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font: var(--fa-font-solid);
     content: "";
+    position: absolute;
     height: 26px;
     width: 26px;
     left: 4px;
@@ -93,12 +105,16 @@
     -webkit-transition: .4s;
     transition: .4s;
   }
+
+  .vol__cont .slider:before {
+    content: "\f6a9";
+  }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: dodgerblue;
   }
   .lscont .btn {
-      background-color: #2196F3;
+      background-color: dodgerblue;
       padding: 15px 50px;
       border-radius: 12px;
       font-family: Arial;
@@ -112,13 +128,22 @@
       color: #aaa;
   }
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px dodgerblue;
   }
   
   input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
+  }
+
+  .vol__cont input:checked + .slider:before {
+    content: "\f028"; 
+  }
+  
+  .vol__cont{
+    margin-top: 20px;
+    float: right;
   }
   
   .slider.round {
@@ -180,7 +205,7 @@
   }
   
   .container input:checked ~ .checkmark {
-    background-color: #2196F3;
+    background-color: dodgerblue;
   }
   
   .checkmark:after {
@@ -241,4 +266,43 @@
 }
 .lscont{
     justify-content: center;
+}
+.lscont.hp{
+  display: flex;
+  align-items: center;
+}
+.lscont.hpm{
+  margin-bottom: 20px;
+}
+.lscont.hp .btn {
+  width: 200px;
+}
+
+.lscont .anchor{
+  padding: 0;
+  background-color: transparent;
+  color: #ddd;
+  font-family: Arial;
+  border: none;
+  cursor: pointer;
+}
+
+.lscont .anchor:hover{
+  color: dodgerblue;
+}
+
+.keyboard {
+  position: relative;
+}
+
+.keyboard .__cover{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.3);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  backdrop-filter: blur(2px);
 }

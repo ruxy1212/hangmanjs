@@ -1,21 +1,314 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>LAN Chat System</title>
+  <!-- Add your Firebase SDK script tag here -->
 </head>
+
 <body>
-    <div id="home-screen">
-        <button id="create-button">Create Chat</button>
-        <button id="join-button">Join Chat</button>
-        <div id="conversations"></div>
-    </div>
-    <div id="conversation-screen" style="display: none;">
-        <h2>Conversation</h2>
-        <div id="chat"></div>
-        <input type="text" id="message-input" readonly>
-    </div>
-    <!-- Add the WebRTC library script -->
-    <script src="adapter-latest.js"></script>
-    <script src="chat.js"></script>
+  <h1>Multiplayer Texting Game</h1>
+  <div id="mainContainer">
+    <button id="createGameBtn">Create Game</button>
+    <button id="joinGameBtn">Join Game</button>
+  </div>
+  <div id="waitScreen" style="display: none;">
+    <h2>Waiting for an opponent...</h2>
+  </div>
+  <div id="gameList" style="display: none;">
+    <h2>Available Games</h2>
+    <ul id="gamesList"></ul>
+  </div>
+  <div id="gameContainer" style="display: none;">
+    <div id="gameInfo"></div>
+    <textarea id="textInput" rows="4" cols="50"></textarea>
+    <button id="sendBtn">Send</button>
+    <p id="messageBox"></p>
+  </div>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, get, update, child, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { v4 as uuid_v4 } from 'https://jspm.dev/uuid';
+    // console.log(uuid_v4()); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAT_eenN3lS26peDKTxWKa3H8qrl3DL5T4",
+      authDomain: "multihangman-35515.firebaseapp.com",
+      databaseURL: "https://multihangman-35515-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "multihangman-35515",
+      storageBucket: "multihangman-35515.appspot.com",
+      messagingSenderId: "1039000061263",
+      appId: "1:1039000061263:web:2ab630cb2234e960f0b13a",
+      // databaseURL: "https://multihangman-35515-default-rtdb.europe-west1.firebasedatabase.app/https://DATABASE_NAME.firebaseio.com",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    // const auth = getAuth(app);
+    // const provider = new GoogleAuthProvider();
+
+    // signInWithRedirect(auth, provider);
+    // getRedirectResult(auth)
+    //   .then((result) => {
+    //     const credential = GoogleAuthProvider.credentialFromResult(result);
+    //     const token = credential.accessToken;
+    //     const user = result.user;
+    //     console.log(user.displayName);
+    //   }).catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     const email = error.customData.email;
+    //     const credential = GoogleAuthProvider.credentialFromError(error);
+    //   });
+
+
+    // signInWithPopup(auth, provider)
+    //   .then((result) => {
+    //     const credential = GoogleAuthProvider.credentialFromResult(result);
+    //     const token = credential.accessToken;
+    //     const user = result.user;
+    //     console.log(user);
+    //   }).catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     const email = error.customData.email;
+    //     const credential = GoogleAuthProvider.credentialFromError(error);
+    //   });
+
+    // Player objects
+    let playerA = null;
+    let playerB = null;
+
+    // Buttons and containers
+    const createGameBtn = document.getElementById('createGameBtn');
+    const joinGameBtn = document.getElementById('joinGameBtn');
+    const mainContainer = document.getElementById('mainContainer');
+    const waitScreen = document.getElementById('waitScreen');
+    const gameListContainer = document.getElementById('gameList');
+    const gamesList = document.getElementById('gamesList');
+    const gameContainer = document.getElementById('gameContainer');
+    const gameInfo = document.getElementById('gameInfo');
+    const textInput = document.getElementById('textInput');
+    const messageBox = document.getElementById('messageBox');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Create Game
+    createGameBtn.addEventListener('click', () => {
+      const username = prompt('Enter your username:');
+      if (!username) return;
+      let uuid = cookieExists('multi_hangman_js') ? cookieExists('multi_hangman_js') : uuid_v4();
+      playerA = { id: uuid, username, status: 'waiting' };
+      set(ref(database, 'games/new/' + uuid), playerA);
+      setCookie('multi_hangman_js', uuid); // Set the cookie with the random ID
+      // database.ref('games').push(playerA);
+      // displayWaitScreen();
+      console.log('created');
+      const gameRef = ref(database, 'games/new/' + uuid);
+      onValue(gameRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data.status === 'playing') {
+          playerA = data;
+          startGame();
+        }
+        else console.log('still waiting');
+        // updateStarCount(postElement, data);
+      });
+    });
+
+    function setCookie(name, value) {
+      const expires = new Date(Date.now() + 30 * 60 * 1000); // Set expiration to 30 minutes from now
+      document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+      localStorage.setItem("multi_hangman_js", value);
+    }
+
+    function extendCookieExpiry(name) {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name)) {
+          const expires = new Date(Date.now() + 30 * 60 * 1000); // Add 30 minutes to current expiry
+          document.cookie = cookie + `; expires=${expires.toUTCString()}; path=/`;
+          break;
+        }
+      }
+    }
+
+    function cookieExists(name) {
+      const uuid = localStorage.getItem(name);
+      if (uuid) {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.startsWith(name)) {
+            return uuid;
+          }
+        }
+        return false;
+      } else return false;
+    }
+
+
+    // Join Game
+    joinGameBtn.addEventListener('click', () => {
+      displayGameList();
+    });
+
+    // Display list of available games
+    function displayGameList() {
+      mainContainer.style.display = 'none';
+      gameListContainer.style.display = 'block';
+
+      const dbRef = ref(getDatabase());
+      get(child(dbRef, `games/new`)).then((snapshot) => {
+        if (snapshot.exists()) {
+          gamesList.innerHTML = '';
+          for (const game_id in snapshot.val()) {
+            const game = snapshot.val()[game_id];
+            if (game.status === 'waiting') {
+              const listItem = document.createElement('li');
+              const joinButton = document.createElement('button');
+              joinButton.textContent = `Join Game with ${game.username}`;
+              joinButton.addEventListener('click', () => joinGame(game_id, game));
+              listItem.appendChild(joinButton);
+              gamesList.appendChild(listItem);
+            }
+            // console.log(snapshot.val()[game_id]);
+          }
+
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+
+    // Join a Game
+    function joinGame(gameId, game) {
+      const username = prompt('Enter your username:');
+      if (!username) return;
+      const updates = {};
+      playerB = { id: gameId, username: game.username + '::;::' + username, status: 'playing' };
+      // set(ref(database, 'games/new/'+gameId), playerB);
+      updates['games/new/' + gameId] = playerB;
+      update(ref(database), updates);
+      set(ref(database, 'games/trans/' + gameId), { id: gameId, players: game.username + '::;::' + username, word: '', status: 'ready', active: 'playerA' });
+      // const gameRef = database.ref(`games/${gameId}`);
+      // gameRef.transaction((game) => {
+      //   if (game && game.status === 'waiting') {
+      //     game.status = 'playing';
+      //     game.playerB = playerB;
+      //   }
+      //   return game;
+      // }, (error, committed) => {
+      //   if (committed) {
+      //     gameRef.onDisconnect().remove(); // Clean up when playerB disconnects
+      //     startGame();
+      //   } else {
+      //     alert('Game is no longer available.');
+      //     displayGameList();
+      //   }
+      // });
+      console.log('joined');
+      startGame();
+    }
+
+    // Game Logic
+    function startGame() {
+      mainContainer.style.display = 'none';
+      gameListContainer.style.display = 'none';
+      gameContainer.style.display = 'block';
+      console.log('ready to start'); //
+      textInput.disabled = true;
+      textInput.value = '';
+      let gameId = '', playerName = 'Player B';
+
+      if (playerA) { //.includes('::;::') || playerB.includes('::;::')
+        let pCreate = playerA.username.includes('::;::') ? playerA.username.split('::;::')[0] : 'PlayerA',
+          pJoin = playerA.username.includes('::;::') ? playerA.username.split('::;::')[1] : 'PlayerB';
+        displayGameInfo(pJoin, pCreate);
+        gameId = playerA.id;
+        playerName = pCreate;
+        // textInput.disabled = false;
+        // textInput.focus();
+        // textInput.placeholder = "Type your message...";
+        // sendBtn.addEventListener('click', sendMessage);
+      }
+      if (playerB) {
+        let pCreate = playerB.username.includes('::;::') ? playerB.username.split('::;::')[0] : 'PlayerA',
+          pJoin = playerB.username.includes('::;::') ? playerB.username.split('::;::')[1] : 'PlayerB';
+        displayGameInfo(pCreate, pJoin);
+        gameId = playerB.id;
+        playerName = pCreate;
+        // textInput.disabled = false;
+        // textInput.focus();
+        // textInput.placeholder = "Type your message...";
+        // sendBtn.addEventListener('click', sendMessage);
+      }
+      playGame(gameId);
+    }
+
+    function playGame(id) {
+      const gameRef = ref(database, 'games/trans/' + id);
+      onValue(gameRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data.status === 'ready') {
+          if (data.active === 'playerA') {
+            if (playerA) {
+              textInput.disabled = false;
+              textInput.focus();
+              textInput.placeholder = "Type your message...";
+              sendBtn.addEventListener('click', sendMessage);
+              messageBox.innerHTML = data.word;
+            } else {
+              console.log('not your turn');
+              textInput.disabled = true;
+              textInput.value = '';
+              messageBox.innerHTML = 'Waiting for player ' + data.players.split('::;::')[0];
+            }
+          } else if (data.active === 'playerB') {
+            if (playerB) {
+              textInput.disabled = false;
+              textInput.focus();
+              textInput.placeholder = "Type your message...";
+              sendBtn.addEventListener('click', sendMessage);
+              messageBox.innerHTML = data.word;
+            } else {
+              console.log('not your turn');
+              textInput.disabled = true;
+              textInput.value = '';
+              messageBox.innerHTML = 'Waiting for player ' + data.players.split('::;::')[1];
+            }
+          }
+        }
+        else console.log('waiting now for word');
+      });
+    }
+
+    // Display game information
+    function displayGameInfo(userA, userB) {
+      gameInfo.innerHTML = `You are playing against ${userA} (${userB}).`;
+    }
+
+    // Send Message
+    function sendMessage() {
+      const message = textInput.value.trim();
+      if (message === '') return;
+
+      const currentPlayer = playerA ? 'playerB' : 'playerA';
+      const game = playerA ? playerA : playerB;
+
+      const updates = {};
+      updates['games/trans/' + game.id] = { id: game.id, players: game.username, word: message, status: 'ready', active: currentPlayer };
+      update(ref(database), updates);
+      playGame(game.id);
+    }
+  </script>
 </body>
+
 </html>

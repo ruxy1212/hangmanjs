@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hangman Game</title>
     <link rel="stylesheet" href="sty.css">
+    <link rel="stylesheet" href="fontawesome.css">
     <link rel="stylesheet" href="ctm/ctm.css">
     <script src="preload.js"></script>
     <script src="sweetalert2@9.js"></script>
@@ -34,7 +35,7 @@
             <div>
                 <div class="close" onclick="hideHelp();">&times;</div>
                 <h4>About Hangman</h4>
-                <p>Hangman is a game basically about guessing words. The words can be guessed from the number of letters in that word. Every wrong guess takes you closer to the gallows. <br /> Pick the correct letters and you will win.<br /> Otherwise you will lose.</p>
+                <p>Hangman is a game basically about guessing words. The words can be guessed from the number of letters in that word. Every wrong guess takes you closer to the gallows. <br /> Pick the correct letters and you will win.<br /> Otherwise you will be hanged.</p>
                 <h4>How to Play</h4>
                 <h5 class="helph5">Game Modes</h5>
                 <p><b>Slingshot:</b> This a single game mode. Based on the difficulty, points will be awarded to you if you get the word correctly.</p>
@@ -66,9 +67,32 @@
             </div>
         </div>
     </div>
-    <div class="modal unsee">
+    <div class="__one modal unsee">
         <div>
-            <div class="close" onclick="hideSetting();">&times;</div>
+            <div class="close" onclick="hideSetting(1);">&times;</div>
+            <h3>SELECT GAME</h3>
+            <div class="">
+                <div class="lscont hp hpm">
+                    <button onclick="playSingle();" class="btn">Single Player</button>
+                </div>
+                <div class="lscont hp">
+                    <button onclick="playMulti();" class="btn">Multi Player</button>
+                </div>
+                <div>
+                    <div class="cnt vol__cont">
+                        <label class="switch">
+                            <input type="checkbox" class="chkswitch snd" onclick="switchAud();">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="__two modal unsee">
+        <div>
+            <div class="close" onclick="hideSetting(2);">&times;</div>
             <h3>GAME SETTINGS</h3>
             <div class="flexrow">
                 <div>
@@ -96,15 +120,6 @@
                     </div>
                 </div>
                 <div>
-                    <label class="rowlabel lbl">Sound:</label>
-                    <div class="cnt">
-                        <label class="switch">
-                            <input type="checkbox" class="chkswitch snd" onclick="switchAud();">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </div>
-                <div>
                     <label class="rowlabel lbl">Arena:</label>
                     <div class="cnt">
                         <label class="switch">
@@ -118,27 +133,26 @@
                     <label class="container">
                         <input type="checkbox" class="chkinput">
                         <span class="checkmark chkboxafter"></span>
-                        Don't ask next time
+                        Save these settings
                     </label>
                 </div>
                 <div class="lscont">
-                    <button onclick="saveSetting();" class="btn">Play</button>
+                    <button onclick="saveSingleSetting();" class="btn">Play</button>
                 </div>
             </div>
         </div>
-
     </div>
-    <div class="verdict unsee" data="false">
+    <div class="__two verdict unsee" data="false">
         <div>
-            <div class="close" onclick="hideVerdict();">&times;</div>
+            <div class="close" onclick="hideSingleVerdict();">&times;</div>
             <div class="vwrap">
                 <div>
                     <p>Congratulations!</p>
                     <p>Your game was good</p>
                     <p>Thank You</p>
-                    <span><button class="btn" onclick="startGame(); lastPage('.verdict');">Play Again</button></span>
+                     <span><button class="btn" onclick="startSingleGame(); lastPage('.__two.verdict');">Play Again</button></span>
                     <br><br>
-                    <a href="javascript:void(0);" onclick="toSettings(); lastPage('.verdict');">Change Game Settings</a>
+                    <a href="javascript:void(0);" onclick="toSingleSettings(); lastPage('.__two.verdict');">Change Game Settings</a>
                     <div>
                         <p>Total Points: <span class="tp1">0</span></p>
                         <p>Words Found: <span class="tp3">0</span></p>
@@ -153,6 +167,124 @@
             <div class="footer"><div >Ruxy©2023 | <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a></div></div>
         </div>
     </div>
+    <div class="__three modal unsee">
+        <div>
+            <div class="close" onclick="hideSetting(3);">&times;</div>
+            <h3>MULTI GAME SETTINGS</h3>
+            <div class="__three page__one">
+                <div>
+                    <div class="">
+                        <div class="lscont hp hpm">
+                            <button onclick="multiCreate();" class="btn">Create Game</button>
+                        </div>
+                        <div class="lscont hp">
+                            <button onclick="multiJoin();" class="btn">Join Game</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="__three page__two unsee">
+                <div class="flexrow __create __join">
+                    <div>
+                        <label class="rowlabel lbl">Name:</label>
+                        <div class="cnt user">
+                            <input type="text" name="username" class="chkswitch snd __username" placeholder="Your username">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="rowlabel lbl">Dictionary:</label>
+                        <div class="cnt flexst">
+                            <label class="container">Built-in
+                                <input type="radio" checked="checked" name="word_mode" class="word_moderad">
+                                <span class="checkmark radiocheckmark radioafter"></span>
+                            </label>
+                            <label class="container">Online
+                                <input type="radio" name="word_mode" class="word_moderad">
+                                <span class="checkmark radiocheckmark radioafter"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="rowlabel lbl">Difficulty:</label>
+                        <div class="custom-select cnt">
+                            <select class="__multi">
+                                <option value="0">Magician</option>
+                                <option value="1">Viserion</option>
+                                <option value="2">Inferno</option>
+                                <option value="3">Immortal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="rowlabel lbl">Arena:</label>
+                        <div class="cnt">
+                            <label class="switch">
+                                <input type="checkbox" class="chkswitch arn __multi">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="lscont">
+                        <label class="container">
+                            <input type="checkbox" class="chkinput __multi">
+                            <span class="checkmark chkboxafter"></span>
+                            Save these settings
+                        </label>
+                    </div>
+                    <div class="lscont">
+                        <button onclick="saveMultiSetting();" class="btn __prcd">Proceed</button>
+                    </div>
+                    <div class="lscont">
+                        <button onclick="showMultiSettings(1);" class="anchor">Go Back</button>
+                    </div>
+                </div>
+            </div>
+            <div class="__three page__three unsee">
+                <div>
+                    <div class="__content">
+                        <div class="__three">
+
+                        </div>
+                        <!-- <div class="lscont hp hpm">
+                            <button onclick="multiCreate();" class="btn">Create Game</button>
+                        </div>
+                        <div class="lscont hp">
+                            <button onclick="multiJoin();" class="btn">Join Game</button>
+                        </div> -->
+                        <div class="lscont">
+                            <button onclick="showMultiSettings(1);" class="anchor">Go Back</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="__three verdict unsee" data="false">
+        <div>
+            <div class="close" onclick="hideMultiVerdict();">&times;</div>
+            <div class="vwrap">
+                <div>
+                    <p>Congratulations!</p>
+                    <p>Your game was good</p>
+                    <p>Thank You</p>
+                     <span><button class="btn" onclick="startMultiGame(); lastPage('.__two.verdict');">Play Again</button></span>
+                    <br><br>
+                    <a href="javascript:void(0);" onclick="toMultiSettings(); lastPage('.__two.verdict');">Change Game Settings</a>
+                    <div>
+                        <p>Total Points: <span class="tp1">0</span></p>
+                        <p>Words Found: <span class="tp3">0</span></p>
+                        <p>Words Failed: <span class="tp4">0</span></p>
+                        <p>Total Games: <span class="tp2">0</span></p>
+                        <p>Flawless Games: <span class="tp6">0</span></p>
+                        <p>Highest Score: <span class="tp5">0</span></p>           
+                    </div>
+                </div>
+            </div>
+            <div class="footer"><div >Ruxy©2023 | <a href="https://www.buymeacoffee.com/ruxy1212" target="_blank">Buy me a coke</a></div></div>
+        </div>
+    </div>
+
     <div class="word"></div>
     <div class="penalty aspect">
         <div class="phold">
@@ -165,12 +297,1119 @@
         </div>
         <div class="keyboard"></div>
     </div>
+
     <div class="gclose" onclick="toHome();">&times;</div>
     <div class="gtimer ptimer unsee">05</div>
     <div class="gpercent"><span>Arcadian</span> (<span>0</span>%)</div>
     <span class="about-span">msc/secph.txt</span>
+
     <script src="howler.js"></script>
-    <script src="scr.js"></script>
+    <script>
+        audioFiles = ["msc/AftertheRain.mp3", "msc/ThroughtheArbor.mp3", "msc/SundialDreams.mp3", "msc/TheEnchantedGarden.mp3", "msc/Butterfly.mp3", "msc/StrawHats.mp3", "msc/AnotherRealm.mp3", "msc/WaterLillies.mp3", "msc/FairyWings.mp3", "msc/PaperClouds.mp3"];
+        var localSetting = {single: {mode: true, difficulty: 0, set: false, arena: false, tpoints: 0, tgames: 0, nwords: 0, fwords: 0, hscore: 0, pwords: 0}, multi: {mode: true, difficulty: 0, set: false, arena: false, tpoints: 0, tgames: 0, nwords: 0, fwords: 0, hscore: 0, pwords: 0}, sound: false};
+        var audio, msc = 0;
+        var rn = 1, hlast = 1, mode;
+        const settings = JSON.parse(localStorage.getItem('hngset'));
+        if (settings) {
+            localSetting = settings;
+        }else{
+            dset = {single: {mode: true, difficulty: 0, set: false, arena: false, tpoints: 0, tgames: 0, nwords: 0, fwords: 0, hscore: 0, pwords: 0}, multi: {mode: true, difficulty: 0, set: false, arena: false, tpoints: 0, tgames: 0, nwords: 0, fwords: 0, hscore: 0, pwords: 0}, sound: false};
+            localStorage.setItem('hngset', JSON.stringify(dset));    
+        }
+
+        function fader(fadee){
+            var fadeOut = setInterval(function(){
+                if(!fadee.style.opacity) fadee.style.opacity = 1;
+                if(fadee.style.opacity > 0) fadee.style.opacity -= 0.15;
+                else { 
+                    clearInterval(fadeOut); 
+                    fadee.style.display = "none"; 
+                    document.querySelector('.main').style.display = "none"; }
+            }, 50);
+        }
+        function preLoader(){
+        fader(document.querySelector('.preload'));
+        rstate = false;
+        }
+
+        window.onload = function () {
+            preLoader();
+
+            qSel('.divider', false, 0).addEventListener(
+                'touchmove',
+                function (e) {
+                        wH = window.innerHeight;
+                        tY = e.touches[0].clientY;
+                        eL = qSel('.keyarea', false, 0);
+                        resY = wH - tY - eL.offsetHeight;
+                        if (resY < 0) {
+                            resY = 0;
+                        } else if (resY > wH / 2) {
+                            resY = wH / 2;
+                        }
+                        eL.style.bottom = resY + "px";
+                },
+                false
+            );
+
+            initMsc();
+            createKeys();
+            createHint();
+            initImg();
+        };
+
+        function initImg(){
+            proImages(["img/gallow-off.png", "img/gallow-on.png", "img/knell.png", "img/c1.png", "img/c2.png", "img/c3.png", "img/c4.png", "img/c5.png", "img/c6.png", "img/c7.png", "img/c8.png", "img/c9.png", "img/f1.png", "img/f2.png", "img/f3.png", "img/f4.png", "img/f5.png", "img/f6.png", "img/f7.png", "img/f8.png", "img/f9.png", "img/f10a.png", "img/f10b.png", "img/img1.png", "img/img2.png", "img/img3.png", "img/img4.png", "img/img5.png", "img/img6.png", "img/img7.png", "img/img8.png", "img/img9.png", "img/img10.png", "img/img11.png", "img/img12.png", "img/img13.png", "img/img14.png", "img/img15.png", "img/img16.png", "img/img17.png", "img/img18.png", "img/img19.png", "img/img20.png"]);
+        }
+        function proImages(imgs){
+            for(const img of imgs){
+                const i = new Image();
+                i.src = img;
+            }
+        }
+        function controlMsc(){
+            msc++;
+            if(msc<audioFiles.length){
+                audio = new Howl({volume: 0.15, muted: localSetting.sound, src: [audioFiles[msc]], preload: true, onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
+            }else{
+                msc = 0;
+                audio = new Howl({volume: 0.15, muted: localSetting.sound, src: [audioFiles[0]], preload: true, onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
+            }
+            audio.play();
+        }
+        function initMsc(){ 
+            audio = new Howl({volume: 0.15, muted: true, src: [audioFiles[msc]], onend: function(){controlMsc();}, onplayerror: function(){audio.once('unlock', function() {audio.play();});}});
+
+            if(localSetting.sound){ playAudio(); qSel('.chkswitch.snd', false, 0).checked = true; }
+            else { pauseAudio(); qSel('.chkswitch.snd', false, 0).checked = false; }
+            audio.play();
+        }
+        function switchAud(){
+            audio.mute(!(qSel('.chkswitch.snd', false, 0).checked))
+        }
+        function playAudio(){
+            audio.mute(false);
+        }
+        function pauseAudio(){
+            audio.mute(true);
+        }
+        function audClick(){
+            clk.volume(0.2);
+            clk.play();
+        }
+        function audWarn(){
+            wrn.volume(0.15);
+            wrn.play();
+        }
+        function audBoo(){
+            boo.play();
+        }
+        function audCheer(){
+            chr.play();
+        }
+        function audDie(){
+            die.play();
+        }
+        function qSel(a, b, c) {
+            if(b === false){
+                return document.querySelector(a);
+            }else{
+                return (c == -1) ? document.querySelectorAll(a) : document.querySelectorAll(a)[c];
+            }
+        }
+        function lastPage(ele){
+            var els= ['.home', '.__two.verdict', '.help'];
+            for(el of els) qSel(el, false, 0).classList.remove('prevv');
+            qSel(ele, false, 0).classList.add('prevv');
+        }
+        function startGame() {
+            qSel('.home', false, 0).className = "home unsee";
+            qSel('.__one.modal', false, 0).className = "__one modal";
+        }
+        function hideSetting(num){
+            var ele = qSel('.prevv', false, 0), elms = ['__one', '__two', '__three'];
+            ele.classList.remove('unsee');
+            ele.classList.remove('prevv');
+            qSel('.'+elms[num-1]+'.modal', false, 0).className = elms[num-1]+" modal unsee";
+        }
+        function showHelp(){
+            qSel('.home', false, 0).className = "home unsee";
+            qSel('.help', false, 0).className = "help";
+        }
+        function hideHelp(){
+            qSel('.home', false, 0).className = "home";
+            qSel('.help', false, 0).className = "help unsee";
+        }
+        function playSingle(){
+            qSel('.__one.modal', false, 0).className = "__one modal unsee";
+            mode = 1;
+            startSingleGame();
+        }
+        function playMulti(){
+            qSel('.__one.modal', false, 0).className = "__one modal unsee";
+            mode = 2;
+            startMultiGame();
+        }
+        function createKeys() {
+            var kb = qSel('.keyboard', false, 0);
+            kb.innerHTML = '';
+            let kc = document.createElement('div');
+            kc.className = '__cover';
+            kc.innerHTML = 'Waiting for Opponent!';
+            kb.appendChild(kc);
+            for (i = 0; i < keys.length; i++) {
+                var k = document.createElement('span');
+                k.className = 'key key__'+keys[i];
+                k.innerText = keys[i];
+                k.setAttribute("data", "");
+                k.onclick = function () {
+                    chrCheck(this);
+                };
+                kb.appendChild(k);
+            } 
+        }
+        function createHint(){
+            var kb = qSel('.keyboard', false, 0);
+            var k = document.createElement('span');
+            k.className = 'key hint unsee';
+            k.innerText = 'i';
+            k.setAttribute("data", "");
+            k.onclick = function (){
+                rn = Math.floor(Math.random()*hintlen);
+                while(hlast == rn)
+                    rn = Math.floor(Math.random()*hintlen);
+                    
+                Swal.fire('Hint:', secph[index][rn+1]);
+                hlast = rn;
+            }
+            kb.appendChild(k);
+        }
+        
+    </script>
+    <script>
+        var gscore = [8,20,50,120], cx, lvname = ['Magician', 'Viserion', 'Inferno', 'Immortal'];
+        var keys = "ABCDEFGHIJKLMNOPQRSTUVWXYZ", chrLeft = [], index = 0, fail = 0;
+        var hold0 = '<div style="background-image: url(img/', hold2 = '.png);"></div>';
+        var res1 = ["Way to Go!", "Oops!"], res2 = ["You found the word", 'The word was "'], res3 = [" Points", "Better luck next time"];
+        var gbgs = ["255, 255, 255", "222, 222, 222", "231, 218, 218", "231, 225, 218", "231, 231, 218", "224, 231, 218", "218, 231, 223", "218, 231, 230", "218, 222, 231", "224, 218, 231", "231, 218, 230", "216, 180, 180", "216, 199, 180", "215, 216, 180", "194, 216, 180", "180, 216, 193", "180, 208, 216", "180, 186, 216", "192, 180, 216", "216, 180, 211"];
+        audFiles = ["msc/click.mp3", "msc/warn.mp3", "msc/boo.mp3", "msc/cheer.mp3", "msc/gallows.mp3"];
+        var wordlen = 0, arclevel = 0, arcindex = [], hintlen = 2, gpoint = 0, obons = 0, secph = [];
+        var ph = qSel('.about-span', false, 0);
+        fetch(qSel('.about-span', false, 0).innerHTML)
+        .then(response => response.text())
+        .then(about => { secph = JSON.parse(about).span; qSel('.about-span', false, 0).parentNode.removeChild(qSel('.about-span', false, 0)); });
+        // var audio = new Audio("msc/"+audioFiles[msc]); //audio.preload = true;
+        var audio;
+        var clk = new Howl({src: ["msc/click.mp3"], preload: true });
+        var wrn = new Howl({src: ["msc/warn.mp3"], preload: true });
+        var boo = new Howl({src: ["msc/boo.mp3"], preload: true });
+        var chr = new Howl({src: ["msc/cheer.mp3"], preload: true });
+        var die = new Howl({src: ["msc/gallows.mp3"], preload: true });
+
+        var rn = 1, hlast = 1, online_word = null, play__mode = 'single';
+
+
+
+        function startSingleGame(){
+            if(localSetting.single.set){
+                // qSel('.home', false, 0).className = "home unsee pre";
+                qSel('.__two.verdict', false, 0).className = "__two verdict unsee";
+                playSingleGame();   
+            }else{
+                qSel('.__two.verdict', false, 0).className = "__two verdict unsee";
+                // qSel('.home', false, 0).className = "home unsee";
+                qSel('.__two.modal', false, 0).className = "__two modal";
+            }
+        }
+        function playSingleGame(){
+            if(!localSetting.single.mode){
+                arclevel++;
+                document.querySelector('body').style.background = (localSetting.single.arena) ? "url(img/img"+arclevel+".png)" : "rgb("+gbgs[arclevel-1]+")";
+            }else{
+                fr = Math.floor(Math.random()*20)+1;
+                document.querySelector('body').style.background = (localSetting.single.arena) ? "url(img/img"+fr+".png)" : "rgb("+gbgs[fr-1]+")";
+            }
+            qSel('.gpercent span:nth-child(1)', false, 0).innerHTML = (localSetting.single.mode) ? "Slingshot" : "Arcade "+arclevel;
+            //where all settings come into play
+            newSingleGame();
+        }
+        function saveSingleSetting(){
+            if(!qSel('.chkinput', false, 0).checked){
+                localSetting.single.set = qSel('.chkinput', false, 0).checked;
+                localStorage.setItem('hngset', JSON.stringify(localSetting));
+            }
+            localSetting.single.mode =  qSel('.moderad', false, 0).checked;
+            localSetting.single.difficulty = qSel('select', false, 0).value;
+            localSetting.single.set = qSel('.chkinput', false, 0).checked;
+            localSetting.sound = qSel('.chkswitch.snd', false, 0).checked;
+            localSetting.single.arena = qSel('.chkswitch.arn', false, 0).checked;
+            if (qSel('.chkinput', false, 0).checked) {
+                localStorage.setItem('hngset', JSON.stringify(localSetting));
+            }
+            qSel('.__two.modal', false, 0).className = "__two modal unsee";
+            playSingleGame();
+        }
+        function playSingleGame(){
+            if(!localSetting.single.mode){
+                arclevel++;
+                document.querySelector('body').style.background = (localSetting.single.arena) ? "url(img/img"+arclevel+".png)" : "rgb("+gbgs[arclevel-1]+")";
+            }else{
+                fr = Math.floor(Math.random()*20)+1;
+                document.querySelector('body').style.background = (localSetting.single.arena) ? "url(img/img"+fr+".png)" : "rgb("+gbgs[fr-1]+")";
+            }
+            qSel('.gpercent span:nth-child(1)', false, 0).innerHTML = (localSetting.single.mode) ? "Slingshot" : "Arcade "+arclevel;
+            //where all settings come into play
+            newSingleGame();
+        }
+        function newSingleGame() {
+            play__mode = 'single';
+            qSel('.gpercent span:nth-child(2)', false, 0).innerHTML = "0";
+            qSel('.key.hint', false, 0).className = "key hint unsee";
+            clearKeys();
+            clearPty();
+            createSingleWord();
+        }
+        function clearKeys() {
+            var k = qSel('.key', true, -1);
+            for (i = 0; i < k.length; i++) {
+                k[i].setAttribute("data", "");
+            }
+            chrLeft = [];
+        }
+        function clearPty() {
+            fail = 0;
+            hintlen = 2;
+            qSel('.phold', false, 0).innerHTML = hold0+'f1'+hold2;
+        }
+        function createSingleWord() {
+            var chrs = qSel('.word', false, 0);
+            chrs.innerHTML = "";
+            for(let i=0; i<secph.length-1; i++){
+                index = Math.floor(Math.random() * secph.length);
+                if(arcindex.indexOf(index) == -1) break;
+            }
+            if(arcindex.length >= secph.length-1) arcindex = [];
+            arcindex.push(index);
+            wordlen = secph[index][0].length;
+            for (i = 0; i < secph[index][0].length; i++) {
+                var w = secph[index][0][i].toUpperCase();
+                var k = document.createElement("span");
+                k.className = "l" + (w == " " ? " ls" : "");
+                k.innerHTML = "&nbsp";
+                chrs.appendChild(k);
+
+                if (w != " ") {
+                    if (chrLeft.indexOf(w) == -1) {
+                        chrLeft.push(w);
+                    }
+                }
+            }
+        }
+        function chrCheck(k) {
+            if(play__mode =='multi') {
+                sendMultiMessage(k.innerText);
+                return;
+            }
+            if(fail > 9) return;
+            if (k.getAttribute("data") == "") {
+                (localSetting.single.difficulty == 3)?gCount():"";
+                var w = isExist(k.innerText);
+                k.setAttribute("data", w);
+                if (w) {
+                    audClick();
+                    makeHappy();
+                    getPercent();
+                    if (chrLeft.length == 0) {
+                        var gb = getBonus();
+                        (localSetting.single.difficulty == 3)?clearInt():"";    
+                        if(!localSetting.single.mode){
+                            gpoint = gpoint + (gscore[localSetting.single.difficulty]*arclevel);
+                            ( arclevel < 20 ) ? playSingleGame() : gameEnd(true, gb);
+                        }else{
+                            gpoint = gscore[localSetting.single.difficulty];
+                            gameEnd(true, gb);
+                        }
+                    }
+                } else {
+                    audWarn();
+                    showNextFail();
+                }
+            }
+        }
+        function isExist(k) {
+            k = k.toUpperCase();
+            var w = chrLeft.indexOf(k);
+            if (w != -1) {
+                chrLeft.splice(w, 1);
+                typeWord(k);
+                return true;
+            }
+            return false;
+        }
+        function typeWord(k) {
+            for (i = 0; i < secph[index][0].length; i++) {
+                if (secph[index][0][i].toUpperCase() == k) {
+                        qSel('.l', true, i).innerText = k;
+                }
+            }
+        }
+        function showNextFail() {
+            fail++;
+            if(fail == 1){
+                if(localSetting.single.difficulty == 0){
+                    qSel('.key.hint', false, 0).className = (fail > 0) ? "key hint" : "key hint unsee";
+                }
+                qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'f1'+hold2;
+            }else if(fail == 10){
+                qSel('.phold', false, 0).innerHTML = hold0+'knell'+hold2+hold0+'f10b'+hold2+hold0+'gallow-on'+hold2+hold0+'f10a'+hold2;
+                audDie();
+                (localSetting.single.difficulty == 3)?clearInt():"";
+                sleep(7000).then(() => { gameEnd(false, 0); });
+            }else if (fail > 1  || fail < 10){
+                if(localSetting.single.difficulty == 1){
+                    qSel('.key.hint', false, 0).className = (fail > 4) ? "key hint" : "key hint unsee";
+                }
+                if(localSetting.single.difficulty == 1 || localSetting.single.difficulty == 0){
+                    hintlen = (fail > 6) ? 3 : 2;
+                }
+                qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'f'+fail+hold2;
+            }
+        }
+        function makeHappy(){
+            if(fail == 0) return;
+            else    qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'c'+fail+hold2;
+        }
+        function getPercent(){
+            qSel('.gpercent span:nth-child(2)', false, 0).innerHTML = ((wordlen-chrLeft.length)/wordlen*100).toFixed(0);
+        }
+        function clearInt(){
+            clearInterval(cx);
+            qSel('.gtimer', false, 0).className = "gtimer ptimer unsee";
+        }
+        function gameEnd(e,g) { 
+            if(arclevel < 20 && arclevel > 0 && !localSetting.single.mode){
+                gpoint = gpoint/arclevel;
+            }
+            (e)?audCheer():audBoo();
+            var d = qSel('.verdict', false, 0);
+            var c = qSel('.verdict .vwrap > div > p', true, -1); 
+            // var point = 30; 
+            d.setAttribute("data", e);
+            var bonus = "";
+            if(g != 0){
+                bonus = " +"+g+" Bonus";
+            }
+            if(localSetting.single.mode){
+                if (e) {     
+                    var pp = (fail==0)?"Perfect ":"";
+                    c[0].innerHTML = pp + res1[0];
+                    c[1].innerHTML = res2[0];
+                    c[2].innerHTML = gpoint+res3[0]+bonus;
+                } else { 
+                    c[0].innerHTML = res1[1];
+                    c[1].innerHTML = res2[1]+secph[index][0].toUpperCase()+'"';
+                    c[2].innerHTML = res3[1];
+                }
+            }else {
+                if(e){
+                    c[0].innerHTML = "Bravo! "+lvname[localSetting.single.difficulty]+" Arcade Completed";
+                    c[1].innerHTML = "Nothing else to beat";
+                    c[2].innerHTML = gpoint+res3[0]+bonus+" accummulated.";
+                }else{
+                    c[0].innerHTML = res1[1]+" Arcade failed";
+                    c[1].innerHTML = res2[1]+secph[index][0].toUpperCase()+'"';
+                    c[2].innerHTML = gpoint+res3[0]+bonus+" accummulated so far.";
+                }
+            }
+            gpoint += g;
+            calScore(e, gpoint);
+            d.className = '__two '+"verdict";
+        }
+        function calScore(a,b){
+            localSetting.single.tpoints +=  b;
+            localSetting.single.tgames += 1;
+            localSetting.single.nwords += (a)? 1 : 0;
+            localSetting.single.fwords += (a)? 0 : 1;
+
+            localSetting.single.hscore = (localSetting.single.hscore > gpoint) ? localSetting.single.hscore : gpoint;
+            localSetting.single.pwords += (fail == 0) ? 1 : 0;
+
+            localStorage.setItem('hngset', JSON.stringify(localSetting));
+            
+            qSel('.tp1', false, 0).innerHTML = localSetting.single.tpoints;
+            qSel('.tp2', false, 0).innerHTML = localSetting.single.tgames;
+            qSel('.tp3', false, 0).innerHTML = localSetting.single.nwords;
+            qSel('.tp4', false, 0).innerHTML = localSetting.single.fwords;
+            qSel('.tp5', false, 0).innerHTML = localSetting.single.hscore;
+            qSel('.tp6', false, 0).innerHTML = localSetting.single.pwords;
+
+            gpoint = 0; arclevel = 0; obons = 0;
+        }
+        function getBonus(){
+            var bons = 0;
+            if(fail == 0){
+                bons += 20; 
+            }
+            if(localSetting.single.arena){
+                bons += 10;
+            }
+            obons += bons;
+            return obons;
+        }
+        function padUp(num, len) {
+            return num.toString().padStart(len, '0');
+        }
+        function gCount(){
+            if(chrLeft.length == 0) return;
+            clearInterval(cx);
+            var t = qSel('.gtimer', false, 0);
+            var start = 16, mid = 6, end = 0;
+
+            cx = setInterval(function() {
+                end++;
+                var dis = start - end;
+                if (dis < 0) {
+                    clearInterval(cx);
+                    t.className = "gtimer ptimer unsee";
+                    gameEnd(false, 0);
+                } else{
+                    if(dis < mid){
+                        t.className = "gtimer ptimer";
+                    }else{
+                        t.className = "gtimer";
+                    }
+                    t.innerHTML = padUp(dis,2);
+                }   
+            }, 1000);
+        }
+        function hideSingleVerdict(){
+            qSel('.home', false, 0).className = "home";
+            qSel('.__two.verdict', false, 0).className = "__two verdict unsee";
+        }
+        function toSingleSettings(){
+            qSel('.__two.modal', false, 0).className = "__two modal";
+            qSel('.__two.verdict', false, 0).className = "__two verdict unsee";
+        }
+        function toHome(){
+            swal.fire(
+                {title: "Are you sure?", text: "The game will be forfeited if you leave!", icon: "warning", showCancelButton: true, confirmButtonColor: '#3085d6', confirmButtonText: 'Proceed' }
+                ).then((result) => {
+                    if(result.isConfirmed){
+                        calScore(false,0);        
+                        qSel('.home', false, 0).className = "home";
+                    }else {
+                    swal.fire('Game On!', "You can do this", 'success');
+                    }
+                });
+        }
+        function sleep(ms){
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+
+    </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, get, query, update, remove, child, onValue, orderByChild, limitToLast} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { v4 as uuid_v4 } from 'https://jspm.dev/uuid';
+        import { generate, count } from "./ctm/random.js";
+        import { wordList } from "./ctm/random.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAT_eenN3lS26peDKTxWKa3H8qrl3DL5T4",
+            authDomain: "multihangman-35515.firebaseapp.com",
+            databaseURL: "https://multihangman-35515-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "multihangman-35515",
+            storageBucket: "multihangman-35515.appspot.com",
+            messagingSenderId: "1039000061263",
+            appId: "1:1039000061263:web:2ab630cb2234e960f0b13a",
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // let playerA = null;
+        // let playerB = null;
+
+        function createMultiGame(){
+            qSel('.__three.page__three .__content .anchor', false, 0).innerHTML = 'Close Connection';
+            qSel('.__three.page__three .__content .anchor', false, 0).setAttribute('onclick', 'window.exitMultiGame();');
+            const username = qSel('.chkswitch.__username', false, 0).value;
+            if (!username) {
+                swal.fire({ text:"Please enter a username", icon:'warning' });
+                return;
+            }
+            let uuid = cookieExists('multi_hangman_js') ? cookieExists('multi_hangman_js') : uuid_v4();
+            playerA = { id: uuid, username, status: 'waiting', timestamp: new Date().getTime(), options: {mode: localSetting.multi.mode, difficulty: localSetting.multi.difficulty, arena: localSetting.multi.arena} };
+            set(ref(database, 'games/new/' + uuid), playerA);
+            setCookie('multi_hangman_js', uuid);
+            const gameRef = ref(database, 'games/new/' + uuid);
+            onValue(gameRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data.status === 'playing') {
+                    playerA = data;
+                    showMultiGame();
+                } else {
+                    qSel('.__three .__content .__three', false, 0).innerHTML = 'Waiting for opponent';
+                }
+            });
+            showMultiSettings(3);
+        }
+        window.createMultiGame = createMultiGame;
+
+        function setCookie(name, value) {
+            const expires = new Date(Date.now() + 30 * 60 * 1000); // Set expiration to 30 minutes from now
+            document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/`;
+            localStorage.setItem("multi_hangman_js", value);
+        }
+
+            function extendCookieExpiry(name) {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name)) {
+                const expires = new Date(Date.now() + 30 * 60 * 1000); // Add 30 minutes to current expiry
+                document.cookie = cookie + `; expires=${expires.toUTCString()}; path=/`;
+                break;
+                }
+            }
+        }
+
+        function cookieExists(name) {
+            const uuid = localStorage.getItem(name);
+            if (uuid) {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name)) { console.log(uuid);
+                        return uuid;
+                    }
+                }
+                return false;
+            } else return false;
+        }
+
+        function joinMultiGame() {
+            let cont__three = qSel('.__three .__content .__three', false, 0), o_games = 0;
+            // mainContainer.style.display = 'none';
+            // gameListContainer.style.display = 'block';
+
+            const dbRef = query(ref(getDatabase(), `games/new`), orderByChild('timestamp'), limitToLast(5)); 
+            get(dbRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    // gamesList.innerHTML = '';
+                    cont__three.innerHTML = '';
+                    qSel('.__three .__content .__three', false, 0).innerHTML = '';
+                    for (const game_id in snapshot.val()) {
+                        const game = snapshot.val()[game_id];
+                        if (game.status === 'waiting') {
+                            const listItem = document.createElement('li');
+                            const joinButton = document.createElement('button');
+                            joinButton.textContent = `Join Game with ${game.username}`;
+                            joinButton.addEventListener('click', () => connectGame(game_id, game));
+                            listItem.appendChild(joinButton);
+                            cont__three.appendChild(listItem);
+                            o_games++;
+                        }
+                    }
+                    if(o_games <1) cont__three.innerHTML = "No games open";
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+            // showMultiSettings(3);
+        }
+        window.joinMultiGame = joinMultiGame;
+
+        function exitMultiGame(){
+            if(remove(ref(getDatabase(), `games/new`+ playerA.id))){
+                playerA = null;
+                qSel('.__three.page__three .__content .anchor', false, 0).innerHTML = 'Go Back';
+                qSel('.__three.page__three .__content .anchor', false, 0).setAttribute('onclick', 'showMultiSettings(1);');
+                showMultiSettings(1);
+            } 
+        }
+        window.exitMultiGame = exitMultiGame;
+
+        function connectGame(gameId, game) {
+            const username = qSel('.chkswitch.__username', false, 0).value;
+            if (!username) {
+                swal.fire({ text:"Please enter a username", icon:'warning' });
+                return;
+            }
+            const updates = {};
+            playerB = { id: gameId, username: game.username + '::;::' + username, status: 'playing', timestamp: game.timestamp, options: game.options };
+            updates['games/new/' + gameId] = playerB;
+            if(update(ref(database), updates)){
+                localSetting.multi.mode = game.options.mode;
+                localSetting.multi.difficulty = game.options.difficulty;
+                localSetting.multi.arena = game.options.arena;
+                let gen_word = generateMultiWord(playerB.options.mode, playerB.options.difficulty);
+                set(ref(database, 'games/trans/' + gameId), { id: gameId, players: game.username + '::;::' + username, word: gen_word, wi: index, status: 'ready', active: 'playerA' });
+                showMultiGame();
+                // return;
+            }
+            // 
+        }
+
+        function generateMultiWord(mode, difficulty){
+            var sel_word = '', difficulty_len = [3,4,6,7];
+            if(mode){
+                for(let i=0; i<secph.length-1; i++){
+                    index = Math.floor(Math.random() * secph.length);
+                    if(arcindex.indexOf(index) == -1 && secph[index][0].length >= difficulty_len[difficulty]) break;
+                }
+                if(arcindex.length >= secph.length-1) arcindex = [];
+                arcindex.push(index);
+                sel_word = secph[index][0];
+            }else{       
+                sel_word = generate({ minLength: difficulty_len[difficulty] });
+            }
+            return sel_word;
+        }
+
+        function createMultiWord(wi){
+            let chrs = qSel('.word', false, 0);
+            chrs.innerHTML = "";
+            wordlen = wi.length;
+            for (i = 0; i < wi.length; i++) {
+                var w = wi[i].toUpperCase();
+                var k = document.createElement("span");
+                k.className = "l" + (w == " " ? " ls" : "");
+                k.innerHTML = "&nbsp";
+                chrs.appendChild(k);
+
+                if (w != " ") {
+                    if (chrLeft.indexOf(w) == -1) {
+                        chrLeft.push(w);
+                    }
+                }
+            }
+        }
+
+        function continueMultiGame(gameId){
+            online_word = null;
+            newMultiGame();
+            let gen_word = generateMultiWord(localSetting.multi.mode, localSetting.multi.difficulty);
+            const updates = {};
+            updates['games/trans/' + gameId + '/word'] = gen_word;
+            updates['games/trans/' + gameId + '/wi'] = index;
+            if(update(ref(database), updates)){
+                playMultiGame(gameId);
+            }
+        }
+
+        function newMultiGame(){
+            play__mode = 'multi';
+            qSel('.gpercent span:nth-child(2)', false, 0).innerHTML = "0";
+            qSel('.key.hint', false, 0).className = "key hint unsee";
+            clearKeys();
+            // clearPty();
+            let fr = Math.floor(Math.random()*20)+1;
+            document.querySelector('body').style.background = (localSetting.multi.arena) ? "url(img/img"+fr+".png)" : "rgb("+gbgs[fr-1]+")";
+            qSel('.gpercent span:nth-child(1)', false, 0).innerHTML = (localSetting.multi.mode) ? "Slingshot" : "Arcade ";
+        }
+
+        function showMultiGame() {
+            newMultiGame();
+            // if(playerA) createMultiWord();
+            
+            // textInput.disabled = true;
+            // textInput.value = '';
+            let gameId = '', playerName = 'Player B';
+
+            if (playerA) { //.includes('::;::') || playerB.includes('::;::')
+                let pCreate = playerA.username.includes('::;::') ? playerA.username.split('::;::')[0] : 'PlayerA',
+                pJoin = playerA.username.includes('::;::') ? playerA.username.split('::;::')[1] : 'PlayerB';
+                displayGameInfo(pJoin, pCreate);
+                gameId = playerA.id;
+                playerName = pCreate;
+            }
+            if (playerB) {
+                let pCreate = playerB.username.includes('::;::') ? playerB.username.split('::;::')[0] : 'PlayerA',
+                pJoin = playerB.username.includes('::;::') ? playerB.username.split('::;::')[1] : 'PlayerB';
+                displayGameInfo(pCreate, pJoin);
+                gameId = playerB.id;
+                playerName = pCreate;
+            }
+            qSel('.__three.modal', false, 0).className = "__three modal unsee";
+            playMultiGame(gameId);
+        }
+        function playMultiGame(id) {
+            const gameRef = ref(database, 'games/trans/' + id);
+            onValue(gameRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data.status === 'ready') {
+                    if(playerA){
+                        if(!online_word){
+                            online_word = createMultiWord(data.word);
+                            index = data.wi;
+                        }
+                        if(data.active === 'playerA'){
+                            console.log('it is your turn');
+                            qSel('.keyboard .__cover', false, 0).style.display = "none";
+                        }else{
+                            console.log('it is not your turn');
+                            qSel('.keyboard .__cover', false, 0).style.display = "flex";
+                        }
+                    }else if(playerB){ //createMultiWord(online_word);
+                        if(!online_word) {
+                            index = data.wi;
+                            online_word = createMultiWord(data.word);
+                        }
+                        if(data.active === 'playerB'){
+                            console.log('it is your turn');
+                            qSel('.keyboard .__cover', false, 0).style.display = "none";
+                        }else{
+                            console.log('it is not your turn');
+                            qSel('.keyboard .__cover', false, 0).style.display = "flex";
+                        }
+                    }
+                    // if (data.active === 'playerA') {
+                    //     if (playerA) {
+                    //         textInput.disabled = false;
+                    //         textInput.focus();
+                    //         textInput.placeholder = "Type your message...";
+                    //         sendBtn.addEventListener('click', sendMessage);
+                    //         messageBox.innerHTML = data.word;
+                    //     } else {
+                    //     console.log('not your turn');
+                    //     textInput.disabled = true;
+                    //     textInput.value = '';
+                    //     messageBox.innerHTML = 'Waiting for player ' + data.players.split('::;::')[0];
+                    //     }
+                    // } else if (data.active === 'playerB') {
+                    //     if (playerB) {
+                    //     textInput.disabled = false;
+                    //     textInput.focus();
+                    //     textInput.placeholder = "Type your message...";
+                    //     sendBtn.addEventListener('click', sendMessage);
+                    //     messageBox.innerHTML = data.word;
+                    //     } else {
+                    //     console.log('not your turn');
+                    //     textInput.disabled = true;
+                    //     textInput.value = '';
+                    //     messageBox.innerHTML = 'Waiting for player ' + data.players.split('::;::')[1];
+                    //     }
+                    // }
+                }else if(data.status == 'playing'){
+                    if(playerA){
+                        if(data.active === 'playerA'){
+                            console.log('it is your turn'); //disable keys.. .keyboard .__cover
+                            qSel('.keyboard .__cover', false, 0).style.display = "none";
+                        }else{
+                            console.log('it is not your turn'); //enable keys
+                            qSel('.keyboard .__cover', false, 0).style.display = "flex";
+                        }
+                    }else if(playerB){ //createMultiWord(online_word);
+                        if(data.active === 'playerB'){
+                            console.log('it is your turn'); //disable keys
+                            qSel('.keyboard .__cover', false, 0).style.display = "none";
+                        }else{
+                            console.log('it is not your turn'); //enable keys
+                            qSel('.keyboard .__cover', false, 0).style.display = "flex";
+                        }
+                    }
+                    if(multiChrCheck(data.pkey)) continueMultiGame(id);
+                }
+                else console.log('waiting now for word');
+            });
+        }
+
+    // Display game information
+    function displayGameInfo(userA, userB) {
+      //gameInfo.innerHTML = 
+      console.log(`You are playing against ${userA} (${userB}).`);
+    }
+
+    // Send Message
+    function sendMultiMessage(k){
+        if (k === '') return;
+
+        const currentPlayer = playerA ? 'playerB' : 'playerA';
+        const game = playerA ? playerA : playerB;
+
+        const updates = {};
+        updates['games/trans/' + game.id] = { id: game.id, players: game.username, pkey: k, status: 'playing', active: currentPlayer };
+        update(ref(database), updates);
+        playMultiGame(game.id); // multiChrCheck;
+    }
+    window.sendMultiMessage = sendMultiMessage;
+
+    </script>
+    <script>
+        let playerA = null;
+        let playerB = null;
+        function startMultiGame(){
+            showMultiSettings(1);
+            qSel('.__three.verdict', false, 0).className = "__three verdict unsee";
+            // qSel('.home', false, 0).className = "home unsee";
+            qSel('.__three.modal', false, 0).className = "__three modal";
+        }
+        function multiCreate(){
+            if(playerA){
+                showMultiSettings(3);
+                return;
+            }
+            qSel('.__three.page__two .flexrow.__create.__join > div', true, -1).forEach((div, i) => { 
+                if(i>0 && i<4){
+                    div.className = "";
+                }
+            })
+            // if(localSetting.multi.set){
+            //     qSel('.__three.verdict', false, 0).className = "__three verdict unsee";
+            //     window.createMultiGame();   
+            // }else{
+                qSel('.__three.page__one', false, 0).className = "__three page__one unsee";
+                qSel('.__three.page__two', false, 0).className = "__three page__two";
+            // }
+        }
+        function multiJoin(){
+            window.joinMultiGame();
+            qSel('.__three.page__two .__create.__join .__prcd', false, 0).setAttribute('onclick', 'joinMultiSetting();');
+            qSel('.__three.page__one', false, 0).className = "__three page__one unsee";
+            qSel('.__three.page__two', false, 0).className = "__three page__two"; //flexrow __join unsee
+            qSel('.__three.page__two .flexrow.__create.__join > div', true, -1).forEach((div, i) => { 
+                if(i>0 && i<4){
+                    div.className = "unsee";
+                }
+            })
+            // qSel('.__three.page__two .flexrow.__create', false, 0).className = "flexrow __create unsee";
+            // qSel('.__three.page__two .flexrow.__join', false, 0).className = "flexrow __join";
+        }
+        function showMultiSettings(num){
+            let nums = ['page__one', 'page__two', 'page__three'];
+            nums.forEach(n => {
+                qSel('.__three.'+n, false, 0).className = "__three "+n+" unsee";
+            });
+            qSel('.__three.'+nums[num-1], false, 0).className = "__three "+nums[num-1];
+        }
+        function saveMultiSetting(){
+            if(!qSel('.chkinput.__multi', false, 0).checked){
+                localSetting.multi.set = qSel('.chkinput.__multi', false, 0).checked;
+                localStorage.setItem('hngset', JSON.stringify(localSetting));
+            }
+            localSetting.multi.mode =  qSel('.word_moderad', false, 0).checked;
+            localSetting.multi.difficulty = qSel('select.__multi', false, 0).value;
+            localSetting.multi.set = qSel('.chkinput.__multi', false, 0).checked;
+            localSetting.sound = qSel('.chkswitch.snd', false, 0).checked;
+            localSetting.multi.arena = qSel('.chkswitch.arn.__multi', false, 0).checked;
+            if (qSel('.chkinput.__multi', false, 0).checked) {
+                localStorage.setItem('hngset', JSON.stringify(localSetting));
+            }
+            // qSel('.__two.modal', false, 0).className = "__two modal unsee";
+            window.createMultiGame();
+        }
+        function joinMultiSetting(){
+            if(!qSel('.chkinput.__multi', false, 0).checked){
+                localSetting.multi.set = qSel('.chkinput.__multi', false, 0).checked;
+                localStorage.setItem('hngset', JSON.stringify(localSetting));
+            }
+            localSetting.multi.set = qSel('.chkinput.__multi', false, 0).checked;
+            localSetting.sound = qSel('.chkswitch.snd', false, 0).checked;
+            if (qSel('.chkinput.__multi', false, 0).checked) {
+                localStorage.setItem('hngset', JSON.stringify(localSetting));
+            }
+            qSel('.__three.page__three .__content .anchor', false, 0).innerHTML = 'Go Back';
+            qSel('.__three.page__three .__content .anchor', false, 0).setAttribute('onclick', 'showMultiSettings(1);');
+            qSel('.__three.page__two', false, 0).className = "__three page__two unsee";
+            qSel('.__three.page__three', false, 0).className = "__three page__three";
+            // qSel('.__two.modal', false, 0).className = "__two modal unsee";
+            // window.joinMultiGame();
+        }
+
+        function multiChrCheck(pkey) {
+            let k = qSel('.key.key__'+pkey, false, 0);
+            if(fail > 9) return;
+            if (k.getAttribute("data") == "") {
+                (localSetting.multi.difficulty == 3)?gCount():"";
+                var w = multiIsExist(k.innerText);
+                k.setAttribute("data", w);
+                if (w) {
+                    audClick();
+                    makeHappy();
+                    getPercent();
+                    if (chrLeft.length == 0) {
+                        var gb = multiGetBonus();
+                        (localSetting.multi.difficulty == 3)?clearInt():"";
+                        return true;
+                        // gpoint = gscore[localSetting.single.difficulty];
+                        //multiGameEnd(true, 0); // gameEnd(true, gb); 
+                        // if(!localSetting.single.mode){
+                        //     gpoint = gpoint + (gscore[localSetting.single.difficulty]*arclevel);
+                        //     ( arclevel < 20 ) ? playSingleGame() : gameEnd(true, gb);
+                        // }else{
+                            
+                        // }
+                    }
+                    return false;
+                } else {
+                    audWarn();
+                    multiShowNextFail();
+                    return false;
+                }
+            }
+        }
+        function multiIsExist(k) {
+            k = k.toUpperCase();
+            var w = chrLeft.indexOf(k);
+            if (w != -1) {
+                chrLeft.splice(w, 1);
+                multiTypeWord(k);
+                return true;
+            }
+            return false;
+        }
+        function multiTypeWord(k) {
+            for (i = 0; i < secph[index][0].length; i++) {
+                if (secph[index][0][i].toUpperCase() == k) {
+                        qSel('.l', true, i).innerText = k;
+                }
+            }
+        }
+        function multiShowNextFail() {
+            fail++;
+            if(fail == 1){
+                if(localSetting.multi.difficulty == 0){
+                    qSel('.key.hint', false, 0).className = (fail > 0) ? "key hint" : "key hint unsee";
+                }
+                qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'f1'+hold2;
+            }else if(fail == 10){
+                qSel('.phold', false, 0).innerHTML = hold0+'knell'+hold2+hold0+'f10b'+hold2+hold0+'gallow-on'+hold2+hold0+'f10a'+hold2;
+                audDie();
+                (localSetting.multi.difficulty == 3)?clearInt():"";
+                sleep(7000).then(() => { gameEnd(false, 0); });
+            }else if (fail > 1  || fail < 10){
+                if(localSetting.multi.difficulty == 1){
+                    qSel('.key.hint', false, 0).className = (fail > 4) ? "key hint" : "key hint unsee";
+                }
+                if(localSetting.multi.difficulty == 1 || localSetting.multi.difficulty == 0){
+                    hintlen = (fail > 6) ? 3 : 2;
+                }
+                qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'f'+fail+hold2;
+            }
+        }
+        function multiMakeHappy(){
+            if(fail == 0) return;
+            else    qSel('.phold', false, 0).innerHTML = hold0+'gallow-off'+hold2+hold0+'c'+fail+hold2;
+        }
+        function multiGetPercent(){
+            qSel('.gpercent span:nth-child(2)', false, 0).innerHTML = ((wordlen-chrLeft.length)/wordlen*100).toFixed(0);
+        }
+        // function clearInt(){
+        //     clearInterval(cx);
+        //     qSel('.gtimer', false, 0).className = "gtimer ptimer unsee";
+        // }
+        function multiGameEnd(e,g) { 
+            // if(arclevel < 20 && arclevel > 0 && !localSetting.multi.mode){
+            //     gpoint = gpoint/arclevel;
+            // }
+            (e)?audCheer():audBoo();
+            var d = qSel('.verdict', false, 0);
+            var c = qSel('.verdict .vwrap > div > p', true, -1); 
+            // var point = 30; 
+            d.setAttribute("data", e);
+            var bonus = "";
+            if(g != 0){
+                bonus = " +"+g+" Bonus";
+            }
+            if(localSetting.single.mode){
+                if (e) {     
+                    var pp = (fail==0)?"Perfect ":"";
+                    c[0].innerHTML = pp + res1[0];
+                    c[1].innerHTML = res2[0];
+                    c[2].innerHTML = gpoint+res3[0]+bonus;
+                } else { 
+                    c[0].innerHTML = res1[1];
+                    c[1].innerHTML = res2[1]+secph[index][0].toUpperCase()+'"';
+                    c[2].innerHTML = res3[1];
+                }
+            }else {
+                if(e){
+                    c[0].innerHTML = "Bravo! "+lvname[localSetting.single.difficulty]+" Arcade Completed";
+                    c[1].innerHTML = "Nothing else to beat";
+                    c[2].innerHTML = gpoint+res3[0]+bonus+" accummulated.";
+                }else{
+                    c[0].innerHTML = res1[1]+" Arcade failed";
+                    c[1].innerHTML = res2[1]+secph[index][0].toUpperCase()+'"';
+                    c[2].innerHTML = gpoint+res3[0]+bonus+" accummulated so far.";
+                }
+            }
+            gpoint += g;
+            calScore(e, gpoint);
+            d.className = '__two '+"verdict";
+        }
+        function multiCalScore(a,b){
+            localSetting.single.tpoints +=  b;
+            localSetting.single.tgames += 1;
+            localSetting.single.nwords += (a)? 1 : 0;
+            localSetting.single.fwords += (a)? 0 : 1;
+
+            localSetting.single.hscore = (localSetting.single.hscore > gpoint) ? localSetting.single.hscore : gpoint;
+            localSetting.single.pwords += (fail == 0) ? 1 : 0;
+
+            localStorage.setItem('hngset', JSON.stringify(localSetting));
+            
+            qSel('.tp1', false, 0).innerHTML = localSetting.single.tpoints;
+            qSel('.tp2', false, 0).innerHTML = localSetting.single.tgames;
+            qSel('.tp3', false, 0).innerHTML = localSetting.single.nwords;
+            qSel('.tp4', false, 0).innerHTML = localSetting.single.fwords;
+            qSel('.tp5', false, 0).innerHTML = localSetting.single.hscore;
+            qSel('.tp6', false, 0).innerHTML = localSetting.single.pwords;
+
+            gpoint = 0; arclevel = 0; obons = 0;
+        }
+        function multiGetBonus(){
+            var bons = 0;
+            if(fail == 0){
+                bons += 20; 
+            }
+            if(localSetting.multi.arena){
+                bons += 10;
+            }
+            obons += bons;
+            return obons;
+        }
+        // function padUp(num, len) {
+        //     return num.toString().padStart(len, '0');
+        // }
+        function multiGCount(){
+            if(chrLeft.length == 0) return;
+            clearInterval(cx);
+            var t = qSel('.gtimer', false, 0);
+            var start = 16, mid = 6, end = 0;
+
+            cx = setInterval(function() {
+                end++;
+                var dis = start - end;
+                if (dis < 0) {
+                    clearInterval(cx);
+                    t.className = "gtimer ptimer unsee";
+                    gameEnd(false, 0);
+                } else{
+                    if(dis < mid){
+                        t.className = "gtimer ptimer";
+                    }else{
+                        t.className = "gtimer";
+                    }
+                    t.innerHTML = padUp(dis,2);
+                }   
+            }, 1000);
+        }
+        // function hideSingleVerdict(){
+        //     qSel('.home', false, 0).className = "home";
+        //     qSel('.__two.verdict', false, 0).className = "__two verdict unsee";
+        // }
+        // function toSingleSettings(){
+        //     qSel('.__two.modal', false, 0).className = "__two modal";
+        //     qSel('.__two.verdict', false, 0).className = "__two verdict unsee";
+        // }
+    </script>
+    
     <script src="ctm/ctm.js"></script>
     <script src="ctm/clk.js"></script>
 </body>
