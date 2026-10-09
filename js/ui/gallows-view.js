@@ -1,39 +1,76 @@
 // js/ui/gallows-view.js
-// Handles gallows graphics, character progression, and opponent ghost silhouette rendering
+// Handles shared gallows graphics, player character sprite, and opponent ghost silhouette rendering
 
 export class GallowsView {
-    constructor({ playerContainer, opponentContainer = null }) {
+    constructor({ gallowsContainer, playerContainer, opponentContainer = null }) {
+        this.gallowsContainer = gallowsContainer;
         this.playerContainer = playerContainer;
         this.opponentContainer = opponentContainer;
+        this.playerFail = 0;
+        this.opponentFail = 0;
+    }
+
+    reset() {
+        this.playerFail = 0;
+        this.opponentFail = 0;
+        if (this.gallowsContainer) {
+            this.gallowsContainer.innerHTML = '';
+        }
+        if (this.playerContainer) {
+            this.playerContainer.innerHTML = '<div style="background-image: url(img/f1.png);"></div>';
+        }
+        if (this.opponentContainer) {
+            this.opponentContainer.innerHTML = '<div style="background-image: url(img/f1.png);"></div>';
+        }
     }
 
     renderPlayerStage(failCount, isHappy = false) {
-        if (!this.playerContainer) return;
-        this.playerContainer.innerHTML = this.getStageHtml(failCount, isHappy, false);
+        this.playerFail = failCount;
+        this.updateSharedGallows();
+
+        if (this.playerContainer) {
+            this.playerContainer.innerHTML = this.getCharacterSpriteHtml(failCount, isHappy);
+        }
     }
 
     renderOpponentStage(failCount, isHappy = false) {
-        if (!this.opponentContainer) return;
-        this.opponentContainer.innerHTML = this.getStageHtml(failCount, isHappy, true);
+        this.opponentFail = failCount;
+        this.updateSharedGallows();
+
+        if (this.opponentContainer) {
+            this.opponentContainer.innerHTML = this.getCharacterSpriteHtml(failCount, isHappy);
+        }
     }
 
-    getStageHtml(fail, isHappy, isGhost) {
+    updateSharedGallows() {
+        if (!this.gallowsContainer) return;
+        const maxFail = Math.max(this.playerFail, this.opponentFail);
         const hold0 = '<div style="background-image: url(img/';
         const hold2 = '.png);"></div>';
-        let content = '';
+
+        if (this.playerFail >= 10 || this.opponentFail >= 10) {
+            // Hanging gallows state
+            this.gallowsContainer.innerHTML = `${hold0}knell${hold2}${hold0}gallow-on${hold2}`;
+        } else if (maxFail >= 1) {
+            // Wooden gallows erected
+            this.gallowsContainer.innerHTML = `${hold0}gallow-off${hold2}`;
+        } else {
+            // Stage clean before any mistake
+            this.gallowsContainer.innerHTML = '';
+        }
+    }
+
+    getCharacterSpriteHtml(fail, isHappy) {
+        const hold0 = '<div style="background-image: url(img/';
+        const hold2 = '.png);"></div>';
 
         if (fail === 0) {
-            content = `${hold0}f1${hold2}`;
-        } else if (fail === 1) {
-            content = `${hold0}gallow-off${hold2}${hold0}f1${hold2}`;
+            return `${hold0}f1${hold2}`;
         } else if (fail >= 10) {
-            content = `${hold0}knell${hold2}${hold0}f10b${hold2}${hold0}gallow-on${hold2}${hold0}f10a${hold2}`;
+            return `${hold0}f10b${hold2}${hold0}f10a${hold2}`;
         } else {
             const prefix = isHappy ? 'c' : 'f';
-            content = `${hold0}gallow-off${hold2}${hold0}${prefix}${fail}${hold2}`;
+            return `${hold0}${prefix}${fail}${hold2}`;
         }
-
-        const ghostClass = isGhost ? 'opponent-ghost-inner' : 'player-stage-inner';
-        return `<div class="${ghostClass}">${content}</div>`;
     }
 }

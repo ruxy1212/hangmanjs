@@ -1,103 +1,131 @@
 // js/multi/matchmaking.js
-// Matchmaking coordinator: supports Room Code duels, random matchmaking, and fallback to "Computer" bot
+// Open Challenges Lobby & WebRTC Matchmaking Coordinator
 
 import { BotPlayer } from './bot-player.js';
 import { PeerSync } from './peer-sync.js';
 
 export class MatchmakingManager {
-    constructor({ onMatchFound, onStatusUpdate }) {
+    constructor({ onMatchFound, onStatusUpdate, onRoomsUpdated }) {
         this.onMatchFound = onMatchFound;
         this.onStatusUpdate = onStatusUpdate;
-        this.timeoutTimer = null;
-        this.isSearching = false;
-        this.bot = null;
+        this.onRoomsUpdated = onRoomsUpdated;
+
+        this.openRooms = new Map();
+        this.hostedRoom = null;
+        this.heartbeatTimer = null;
+        this.staleCheckerTimer = null;
         this.peerSync = null;
+        this.bot = null;
+        this.currentOpponentHandlers = null;
+
+        this.initDiscovery();
     }
 
-    startMatchmaking({ username = 'Player', mode = 'slingshot', difficulty = 0, roomCode = null, customWord = null } = {}) {
-        this.cancel();
-        this.isSearching = true;
+    initDiscovery() {
+        if (typeof BroadcastChannel === 'undefined') return;
 
-        if (roomCode) {
-            // Join specific room
-            this.connectDirectPeer(roomCode, false, difficulty, customWord);
-            return;
-        }
+        this.discoveryChannel = new BroadcastChannel('hng_lobby_discovery');
+        this.discoveryChannel.onmessage = (event) => {
+            const data = event.data;
+            if (!data) return;
 
-        if (this.onStatusUpdate) {
-            this.onStatusUpdate("Searching for online challenger...");
-        }
-
-        // Try local peer broadcast room discovery
-        const discoveryRoom = 'global_lobby';
-        this.peerSync = new PeerSync({
-            onOpponentConnected: () => {
-                this.onPeerMatched("Online Challenger");
-            },
-            onOpponentMessage: (data) => {
-                this.handlePeerMessage(data);
-            },
-            onOpponentDisconnected: () => {
-                if (this.currentOpponentHandlers?.onOpponentDisconnected) {
-                    this.currentOpponentHandlers.onOpponentDisconnected();
+            if (data.type === 'announce_match' && data.room) {
+                // Ignore our own hosted room in the open list
+                if (this.hostedRoom && data.room.id === this.hostedRoom.id) return;
+                data.room.lastSeen = Date.now();
+                this.openRooms.set(data.room.id, data.room);
+                this.notifyRoomsUpdated();
+            } else if (data.type === 'query_matches') {
+                if (this.hostedRoom) {
+                    this.broadcastAnnouncement();
+                }
+            } else if (data.type === 'cancel_match' && data.roomId) {
+                if (this.openRooms.has(data.roomId)) {
+                    this.openRooms.delete(data.roomId);
+                    this.notifyRoomsUpdated();
                 }
             }
-        });
-        this.peerSync.createRoom(discoveryRoom);
+        };
 
-        // 11s fallback countdown to "Computer"
-        this.timeoutTimer = setTimeout(() => {
-            if (!this.isSearching) return;
-            if (this.onStatusUpdate) {
-                this.onStatusUpdate("Challenger found: Computer (Rating: 1250)");
-            }
-
-            // Cleanup peer search
-            if (this.peerSync) {
-                this.peerSync.disconnect();
-                this.peerSync = null;
-            }
-
-            // Spawn Computer Bot opponent
-            this.bot = new BotPlayer({
-                difficulty,
-                onGuess: (data) => {
-                    if (this.currentOpponentHandlers?.onGuess) {
-                        this.currentOpponentHandlers.onGuess(data);
-                    }
-                },
-                onSolve: () => {
-                    if (this.currentOpponentHandlers?.onSolve) {
-                        this.currentOpponentHandlers.onSolve();
-                    }
-                },
-                onHang: () => {
-                    if (this.currentOpponentHandlers?.onHang) {
-                        this.currentOpponentHandlers.onHang();
-                    }
+        // Periodically purge stale rooms older than 6 seconds
+        this.staleCheckerTimer = setInterval(() => {
+            const now = Date.now();
+            let changed = false;
+            for (const [id, room] of this.openRooms.entries()) {
+                if (now - (room.lastSeen || 0) > 6000) {
+                    this.openRooms.delete(id);
+                    changed = true;
                 }
+            }
+            if (changed) {
+                this.notifyRoomsUpdated();
+            }
+        }, 2500);
+
+        // Query immediately
+        this.queryOpenMatches();
+    }
+
+    queryOpenMatches() {
+        if (this.discoveryChannel) {
+            this.discoveryChannel.postMessage({ type: 'query_matches' });
+        }
+    }
+
+    notifyRoomsUpdated() {
+        if (this.onRoomsUpdated) {
+            this.onRoomsUpdated(Array.from(this.openRooms.values()));
+        }
+    }
+
+    broadcastAnnouncement() {
+        if (this.discoveryChannel && this.hostedRoom) {
+            this.discoveryChannel.postMessage({
+                type: 'announce_match',
+                room: this.hostedRoom
             });
-
-            this.isSearching = false;
-            if (this.onMatchFound) {
-                this.onMatchFound({
-                    isBot: true,
-                    opponentName: "Computer",
-                    botInstance: this.bot,
-                    sendToOpponent: (msg) => {}
-                });
-            }
-        }, 11000);
+        }
     }
 
-    connectDirectPeer(roomCode, isHost, difficulty, customWord) {
+    hostMatch({ username = 'Host', mode = 'slingshot', difficulty = 0, wordMode = 'builtin', customWord = null } = {}) {
+        this.cancel();
+
+        const roomId = 'duel_' + Math.random().toString(36).substring(2, 9);
+        this.hostedRoom = {
+            id: roomId,
+            hostName: username,
+            mode,
+            difficulty: parseInt(difficulty, 10),
+            wordMode,
+            customWord,
+            createdAt: Date.now(),
+            lastSeen: Date.now()
+        };
+
         if (this.onStatusUpdate) {
-            this.onStatusUpdate(`Connecting to room ${roomCode}...`);
+            this.onStatusUpdate(`Room created: ${roomId}. Waiting for challenger...`);
         }
 
+        // Setup WebRTC Host
         this.peerSync = new PeerSync({
             onOpponentConnected: () => {
-                this.onPeerMatched("P2P Challenger");
+                this.stopHeartbeat();
+                // Take room off the public lobby board
+                if (this.discoveryChannel) {
+                    this.discoveryChannel.postMessage({ type: 'cancel_match', roomId });
+                }
+                if (this.onMatchFound) {
+                    this.onMatchFound({
+                        isBot: false,
+                        isHost: true,
+                        opponentName: "Guest Challenger",
+                        room: this.hostedRoom,
+                        peerSyncInstance: this.peerSync,
+                        sendToOpponent: (msg) => {
+                            if (this.peerSync) this.peerSync.sendMessage(msg);
+                        }
+                    });
+                }
             },
             onOpponentMessage: (data) => {
                 this.handlePeerMessage(data);
@@ -109,41 +137,128 @@ export class MatchmakingManager {
             }
         });
 
-        if (isHost) {
-            this.peerSync.createRoom(roomCode);
-        } else {
-            this.peerSync.joinRoom(roomCode);
+        this.peerSync.createRoom(roomId);
+
+        // Start heartbeat broadcasting
+        this.broadcastAnnouncement();
+        this.heartbeatTimer = setInterval(() => {
+            this.broadcastAnnouncement();
+        }, 2000);
+
+        return this.hostedRoom;
+    }
+
+    stopHeartbeat() {
+        if (this.heartbeatTimer) {
+            clearInterval(this.heartbeatTimer);
+            this.heartbeatTimer = null;
         }
     }
 
-    onPeerMatched(opponentName) {
-        if (!this.isSearching) return;
-        if (this.timeoutTimer) {
-            clearTimeout(this.timeoutTimer);
-            this.timeoutTimer = null;
+    cancelHosting() {
+        if (this.hostedRoom) {
+            const roomId = this.hostedRoom.id;
+            this.stopHeartbeat();
+            if (this.discoveryChannel) {
+                this.discoveryChannel.postMessage({ type: 'cancel_match', roomId });
+            }
+            this.hostedRoom = null;
         }
-        this.isSearching = false;
+        if (this.peerSync) {
+            this.peerSync.disconnect();
+            this.peerSync = null;
+        }
+    }
+
+    joinMatch(room, guestUsername = 'Guest') {
+        this.cancel();
+
+        if (this.onStatusUpdate) {
+            this.onStatusUpdate(`Connecting to ${room.hostName}'s match...`);
+        }
+
+        this.peerSync = new PeerSync({
+            onOpponentConnected: () => {
+                if (this.onMatchFound) {
+                    this.onMatchFound({
+                        isBot: false,
+                        isHost: false,
+                        opponentName: room.hostName || "Host",
+                        room,
+                        peerSyncInstance: this.peerSync,
+                        sendToOpponent: (msg) => {
+                            if (this.peerSync) this.peerSync.sendMessage(msg);
+                        }
+                    });
+                }
+            },
+            onOpponentMessage: (data) => {
+                this.handlePeerMessage(data);
+            },
+            onOpponentDisconnected: () => {
+                if (this.currentOpponentHandlers?.onOpponentDisconnected) {
+                    this.currentOpponentHandlers.onOpponentDisconnected();
+                }
+            }
+        });
+
+        this.peerSync.joinRoom(room.id);
+    }
+
+    playVsComputer({ mode = 'slingshot', difficulty = 0, wordMode = 'builtin', customWord = null } = {}) {
+        this.cancel();
+
+        this.bot = new BotPlayer({
+            difficulty: parseInt(difficulty, 10),
+            onGuess: (data) => {
+                if (this.currentOpponentHandlers?.onGuess) {
+                    this.currentOpponentHandlers.onGuess(data);
+                }
+            },
+            onSolve: () => {
+                if (this.currentOpponentHandlers?.onSolve) {
+                    this.currentOpponentHandlers.onSolve();
+                }
+            },
+            onHang: () => {
+                if (this.currentOpponentHandlers?.onHang) {
+                    this.currentOpponentHandlers.onHang();
+                }
+            }
+        });
+
+        const roomConfig = {
+            mode,
+            difficulty: parseInt(difficulty, 10),
+            wordMode,
+            customWord
+        };
 
         if (this.onMatchFound) {
             this.onMatchFound({
-                isBot: false,
-                opponentName,
-                peerSyncInstance: this.peerSync,
-                sendToOpponent: (msg) => {
-                    if (this.peerSync) this.peerSync.sendMessage(msg);
-                }
+                isBot: true,
+                isHost: true,
+                opponentName: "Computer",
+                room: roomConfig,
+                botInstance: this.bot,
+                sendToOpponent: (msg) => {}
             });
         }
     }
 
     handlePeerMessage(msg) {
         if (!msg) return;
-        if (msg.action === 'guess' && this.currentOpponentHandlers?.onGuess) {
+
+        if (msg.action === 'init_game' && this.currentOpponentHandlers?.onInitGame) {
+            this.currentOpponentHandlers.onInitGame(msg);
+        } else if (msg.action === 'guess' && this.currentOpponentHandlers?.onGuess) {
             this.currentOpponentHandlers.onGuess(msg.data);
         } else if (msg.action === 'solve' && this.currentOpponentHandlers?.onSolve) {
             this.currentOpponentHandlers.onSolve();
         } else if (msg.action === 'hang' && this.currentOpponentHandlers?.onHang) {
             this.currentOpponentHandlers.onHang();
+        } else if (msg.action === 'next_level' && this.currentOpponentHandlers?.onNextLevel) {
+            this.currentOpponentHandlers.onNextLevel(msg);
         }
     }
 
@@ -152,11 +267,7 @@ export class MatchmakingManager {
     }
 
     cancel() {
-        this.isSearching = false;
-        if (this.timeoutTimer) {
-            clearTimeout(this.timeoutTimer);
-            this.timeoutTimer = null;
-        }
+        this.cancelHosting();
         if (this.bot) {
             this.bot.stop();
             this.bot = null;

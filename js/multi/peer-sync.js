@@ -59,7 +59,10 @@ export class PeerSync {
 
         this.sendSignaling({
             type: 'offer',
-            sdp: this.peerConnection.localDescription
+            sdp: {
+                type: this.peerConnection.localDescription.type,
+                sdp: this.peerConnection.localDescription.sdp
+            }
         });
     }
 
@@ -82,7 +85,7 @@ export class PeerSync {
             if (event.candidate) {
                 this.sendSignaling({
                     type: 'candidate',
-                    candidate: event.candidate
+                    candidate: event.candidate.toJSON ? event.candidate.toJSON() : JSON.parse(JSON.stringify(event.candidate))
                 });
             }
         };
@@ -107,7 +110,10 @@ export class PeerSync {
             if (this.peerConnection.localDescription) {
                 this.sendSignaling({
                     type: 'offer',
-                    sdp: this.peerConnection.localDescription
+                    sdp: {
+                        type: this.peerConnection.localDescription.type,
+                        sdp: this.peerConnection.localDescription.sdp
+                    }
                 });
             }
         } else if (msg.type === 'offer' && !this.isHost) {
@@ -116,7 +122,10 @@ export class PeerSync {
             await this.peerConnection.setLocalDescription(answer);
             this.sendSignaling({
                 type: 'answer',
-                sdp: this.peerConnection.localDescription
+                sdp: {
+                    type: this.peerConnection.localDescription.type,
+                    sdp: this.peerConnection.localDescription.sdp
+                }
             });
         } else if (msg.type === 'answer' && this.isHost) {
             if (this.peerConnection.signalingState !== 'stable') {
@@ -130,6 +139,7 @@ export class PeerSync {
             }
         }
     }
+
 
     setupDataChannel(channel) {
         this.dataChannel = channel;

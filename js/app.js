@@ -53,6 +53,7 @@ class HangmanApp {
 
         // Initialize UI Views
         this.gallowsView = new GallowsView({
+            gallowsContainer: document.querySelector('.stage-gallows'),
             playerContainer: document.querySelector('.phold'),
             opponentContainer: document.querySelector('.opponent-ghost-hold')
         });
@@ -68,13 +69,13 @@ class HangmanApp {
         this.engine.onTimerTick = (seconds) => this.renderTimer(seconds);
         this.engine.onGameOver = (summary) => this.handleGameOver(summary);
 
-        // Setup Matchmaking
+        // Setup Matchmaking & Lobby Coordinator
         this.matchmaking = new MatchmakingManager({
             onMatchFound: (session) => this.onMultiplayerMatchFound(session),
-            onStatusUpdate: (text) => this.updateMatchmakingStatus(text)
+            onStatusUpdate: (text) => this.updateMatchmakingStatus(text),
+            onRoomsUpdated: (rooms) => this.renderOpenMatchesList(rooms)
         });
     }
-
 
     preloadAssets() {
         const images = [
@@ -120,51 +121,34 @@ class HangmanApp {
         leaderboardManager.updateScore({
             hscore: this.stats.hscore,
             tpoints: this.stats.tpoints,
-            pwords: this.stats.pwords,
-            tgames: this.stats.tgames
+            multiWins: this.stats.multiWins,
+            pwords: this.stats.pwords
         });
     }
 
     removePreloader() {
         const preload = document.querySelector('.preload');
-        const main = document.querySelector('.main');
         if (preload) {
-            preload.style.pointerEvents = 'none';
-            preload.style.opacity = '0';
+            preload.style.display = 'none';
         }
-        if (main) {
-            main.style.pointerEvents = 'none';
-        }
-        setTimeout(() => {
-            if (preload) preload.style.display = 'none';
-            if (main) main.style.display = 'none';
-            if (typeof window.rstate !== 'undefined') window.rstate = false;
-        }, 350);
     }
-
 
     bindEvents() {
         // Sound Switch
-        const soundSwitches = document.querySelectorAll('.snd');
-        soundSwitches.forEach(sw => {
-            sw.checked = this.stats.soundEnabled;
-            sw.addEventListener('change', (e) => {
+        const soundSwitch = document.querySelector('.chkswitch.snd');
+        if (soundSwitch) {
+            soundSwitch.checked = this.stats.soundEnabled;
+            soundSwitch.addEventListener('change', (e) => {
                 this.stats.soundEnabled = e.target.checked;
-                soundManager.setMute(!e.target.checked);
+                soundManager.setMuted(!this.stats.soundEnabled);
                 this.saveStats();
             });
-        });
+        }
 
-        // Close to Home
+        // Close In-game / Forfeit
         const closeBtn = document.querySelector('.gclose');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => this.confirmExitGame());
-        }
-
-        // Profile Name Editor
-        const editNameBtn = document.querySelector('#btn-edit-username');
-        if (editNameBtn) {
-            editNameBtn.addEventListener('click', () => this.promptEditUsername());
         }
 
         // Leaderboard Open
@@ -173,7 +157,7 @@ class HangmanApp {
             openLbBtn.addEventListener('click', () => this.showLeaderboard());
         }
 
-        // Play Button
+        // Play Button (Main Menu)
         const openPlayBtn = document.querySelector('#btn-open-play');
         if (openPlayBtn) {
             openPlayBtn.addEventListener('click', () => this.showModal('.mode-select-modal'));
@@ -184,7 +168,6 @@ class HangmanApp {
         if (openAboutBtn) {
             openAboutBtn.addEventListener('click', () => this.showModal('.help'));
         }
-
 
         // Single Player Start Button
         const startSingleBtn = document.querySelector('#btn-start-single');
@@ -197,30 +180,113 @@ class HangmanApp {
             });
         }
 
-        // Multiplayer Start Button
-        const startMultiBtn = document.querySelector('#btn-start-multi');
-        if (startMultiBtn) {
-            startMultiBtn.addEventListener('click', () => {
-                const isArcade = document.querySelector('#multi-opt-arcadian')?.checked;
-                const isOnline = document.querySelector('#multi-src-online')?.checked;
-                const isCustom = document.querySelector('#multi-src-custom')?.checked;
-                const customVal = document.querySelector('#multi-custom-word-input')?.value.trim();
-                const diff = document.querySelector('#multi-difficulty-select')?.value || 0;
-                if (isCustom && !customVal) {
-                    if (window.Swal) Swal.fire({ text: 'Please enter a custom word!', icon: 'warning' });
-                    else alert('Please enter a custom word!');
-                    return;
-                }
-                this.initiateMultiMatchmaking({
-                    mode: isArcade ? 'arcadian' : 'slingshot',
-                    wordMode: isCustom ? 'custom' : (isOnline ? 'online' : 'builtin'),
-                    difficulty: diff,
-                    customWord: isCustom ? customVal : null
-                });
-            });
-        }
-    }
+        // --- Lobby & Open Challenges Event Wiring ---
+        // Profile Name Editor in Lobby
+        document.querySelector('#btn-lobby-edit-name')?.addEventListener('click', () => this.promptEditUsername());
 
+        // Toggle custom word input in host form
+        const hostCustomWrap = document.querySelector('#host-custom-word-wrap');
+        document.querySelectorAll('input[name="host_word_src"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                if (hostCustomWrap) {
+                    hostCustomWrap.classList.toggle('unsee', radio.value !== 'custom');
+                }
+            });
+        });
+
+        // Open Host Form
+        document.querySelector('#btn-show-host-form')?.addEventListener('click', () => {
+            this.showMultiPage('host');
+        });
+
+        // Cancel Host Form
+        document.querySelector('#btn-cancel-host')?.addEventListener('click', () => {
+            this.showMultiPage('lobby');
+        });
+
+        // Refresh Open Matches List
+        document.querySelector('#btn-refresh-matches')?.addEventListener('click', () => {
+            this.matchmaking.queryOpenMatches();
+        });
+
+        // Play vs Computer Button in Lobby List
+        document.querySelector('#btn-lobby-play-bot')?.addEventListener('click', () => {
+            this.showMultiPage('bot-setup');
+        });
+
+        // Cancel Bot Setup
+        document.querySelector('#btn-cancel-bot-setup')?.addEventListener('click', () => {
+            this.showMultiPage('lobby');
+        });
+
+        // Start Bot Match
+        document.querySelector('#btn-start-bot-match')?.addEventListener('click', () => {
+            const isArcade = document.querySelector('#bot-opt-arcadian')?.checked;
+            const isOnline = document.querySelector('#bot-src-online')?.checked;
+            const diff = document.querySelector('#bot-difficulty-select')?.value || 0;
+            this.matchmaking.playVsComputer({
+                mode: isArcade ? 'arcadian' : 'slingshot',
+                difficulty: diff,
+                wordMode: isOnline ? 'online' : 'builtin',
+                customWord: null
+            });
+        });
+
+        // Publish Hosted Match
+        document.querySelector('#btn-publish-match')?.addEventListener('click', () => {
+            const isArcade = document.querySelector('#host-opt-arcadian')?.checked;
+            const hostSrc = document.querySelector('input[name="host_word_src"]:checked')?.value || 'builtin';
+            const customVal = document.querySelector('#host-custom-word-input')?.value.trim();
+            const diff = document.querySelector('#host-difficulty-select')?.value || 0;
+
+            if (hostSrc === 'custom' && !customVal) {
+                if (window.Swal) Swal.fire({ text: 'Please enter a custom word!', icon: 'warning' });
+                else alert('Please enter a custom word!');
+                return;
+            }
+
+            const room = this.matchmaking.hostMatch({
+                username: leaderboardManager.getUsername(),
+                mode: isArcade ? 'arcadian' : 'slingshot',
+                difficulty: diff,
+                wordMode: hostSrc,
+                customWord: hostSrc === 'custom' ? customVal : null
+            });
+
+            // Update badge on Waiting screen
+            const badge = document.querySelector('#waiting-rules-badge');
+            if (badge) {
+                const diffNames = ['Magician', 'Viserion', 'Inferno', 'Immortal'];
+                badge.innerHTML = `
+                    <span class="tag-pill tag-mode">${room.mode.toUpperCase()}</span>
+                    <span class="tag-pill tag-diff">${diffNames[room.difficulty] || 'Standard'}</span>
+                    <span class="tag-pill tag-src">${room.wordMode.toUpperCase()}</span>
+                `;
+            }
+
+            this.showMultiPage('waiting');
+        });
+
+        // Cancel Waiting / Unpublish Room
+        document.querySelector('#btn-waiting-cancel')?.addEventListener('click', () => {
+            this.matchmaking.cancelHosting();
+            this.showMultiPage('lobby');
+        });
+
+        // If Waiting Host decides to play Computer Bot immediately with their chosen rules
+        document.querySelector('#btn-waiting-play-bot')?.addEventListener('click', () => {
+            const hosted = this.matchmaking.hostedRoom;
+            if (hosted) {
+                this.matchmaking.cancelHosting();
+                this.matchmaking.playVsComputer({
+                    mode: hosted.mode,
+                    difficulty: hosted.difficulty,
+                    wordMode: hosted.wordMode,
+                    customWord: hosted.customWord
+                });
+            }
+        });
+    }
 
     promptEditUsername() {
         const current = leaderboardManager.getUsername();
@@ -232,10 +298,10 @@ class HangmanApp {
     }
 
     updateProfileDisplay() {
-        const nameEl = document.querySelector('.profile-name-tag');
-        if (nameEl) {
-            nameEl.innerText = leaderboardManager.getUsername();
-        }
+        const nameEls = document.querySelectorAll('.profile-name-tag');
+        nameEls.forEach(el => {
+            el.innerText = leaderboardManager.getUsername();
+        });
     }
 
     async showLeaderboard() {
@@ -281,6 +347,7 @@ class HangmanApp {
 
         this.hideAllModals();
         this.keyboardView.reset();
+        this.gallowsView.reset();
         this.updateArenaBackground(1);
 
         const wordData = await wordProvider.getWord({
@@ -304,58 +371,105 @@ class HangmanApp {
     startMultiplayerLobby() {
         this.currentMode = 'multi';
         this.showModal('.multi-modal');
-        this.showMultiPage(1);
+        this.showMultiPage('lobby');
+        this.updateProfileDisplay();
+        this.matchmaking.queryOpenMatches();
     }
 
-    showMultiPage(pageNumber) {
-        document.querySelectorAll('.multi-page').forEach((p, idx) => {
-            p.classList.toggle('unsee', idx + 1 !== pageNumber);
+    showMultiPage(pageKey) {
+        const pages = {
+            'lobby': '.multi-page-lobby',
+            'host': '.multi-page-host',
+            'waiting': '.multi-page-waiting',
+            'bot-setup': '.multi-page-bot-setup'
+        };
+        document.querySelectorAll('.multi-page').forEach(p => p.classList.add('unsee'));
+        const target = document.querySelector(pages[pageKey] || '.multi-page-lobby');
+        if (target) target.classList.remove('unsee');
+    }
+
+    renderOpenMatchesList(rooms) {
+        const list = document.querySelector('#open-matches-list');
+        if (!list) return;
+
+        if (!rooms || rooms.length === 0) {
+            list.innerHTML = `
+                <div class="no-matches-notice">
+                    No players hosting right now.<br>Host your own match or challenge the Computer!
+                </div>
+            `;
+            return;
+        }
+
+        const diffNames = ['Magician', 'Viserion', 'Inferno', 'Immortal'];
+        list.innerHTML = '';
+
+        rooms.forEach(room => {
+            const row = document.createElement('div');
+            row.className = 'match-row player-row';
+            const diffName = diffNames[room.difficulty] || 'Standard';
+            const srcName = room.wordMode === 'custom' ? 'Custom Word' : (room.wordMode === 'online' ? 'Online API' : 'Built-in');
+
+            row.innerHTML = `
+                <div class="match-meta">
+                    <div class="match-name">👤 ${escapeHtml(room.hostName || 'Challenger')}</div>
+                    <div class="match-tags">
+                        <span class="tag-pill tag-mode">${escapeHtml(room.mode.toUpperCase())}</span>
+                        <span class="tag-pill tag-diff">${escapeHtml(diffName)}</span>
+                        <span class="tag-pill tag-src">${escapeHtml(srcName)}</span>
+                    </div>
+                </div>
+                <button class="btn-match-action join-btn" type="button">Join Match</button>
+            `;
+
+            const joinBtn = row.querySelector('.join-btn');
+            joinBtn.addEventListener('click', () => {
+                this.joinHostedMatch(room);
+            });
+
+            list.appendChild(row);
         });
     }
 
-    async initiateMultiMatchmaking({ mode = 'slingshot', difficulty = 0, wordMode = 'builtin', customWord = null } = {}) {
-        this.currentSubMode = mode;
-        this.difficulty = parseInt(difficulty, 10);
-        this.wordSource = wordMode;
-        this.pendingCustomWord = customWord;
-
-        this.showMultiPage(3);
-        this.updateMatchmakingStatus("Finding an opponent for Word Rush...");
-
-        this.matchmaking.startMatchmaking({
-            username: leaderboardManager.getUsername(),
-            mode: this.currentSubMode,
-            difficulty: this.difficulty,
-            customWord
-        });
+    joinHostedMatch(room) {
+        this.matchmaking.joinMatch(room, leaderboardManager.getUsername());
     }
 
     updateMatchmakingStatus(statusText) {
-        const statusEl = document.querySelector('.matchmaking-status-text');
-        if (statusEl) statusEl.innerText = statusText;
+        console.log("[Matchmaking]", statusText);
     }
 
     async onMultiplayerMatchFound(session) {
         this.activeMultiSession = session;
         this.hideAllModals();
         this.keyboardView.reset();
+        this.gallowsView.reset();
         this.opponentFail = 0;
         this.opponentSolved = 0;
 
-        // Visual ghost opponent container enabled
+        this.currentMode = 'multi';
+        this.currentSubMode = session.room?.mode || 'slingshot';
+        this.difficulty = session.room?.difficulty ?? 0;
+        this.wordSource = session.room?.wordMode || 'builtin';
+
+        // Visual single gallows stage with ghost opponent layer enabled
         this.setInGameVisibility(true, true);
         this.gallowsView.renderOpponentStage(0, false);
-
-        // Fetch shared mystery word (or custom word with auto-fetched hints)
-        const wordData = await wordProvider.getWord({
-            mode: this.wordSource,
-            difficulty: this.difficulty,
-            customWord: this.pendingCustomWord
-        });
-
+        this.gallowsView.renderPlayerStage(0, false);
 
         // Register opponent bot or peer listeners
         this.matchmaking.registerOpponentHandlers({
+            onInitGame: async (data) => {
+                // For Guest: Host transmits the shared word and hints
+                await this.engine.startRound({
+                    word: data.word,
+                    hints: data.hints,
+                    mode: data.mode,
+                    difficulty: data.difficulty,
+                    arcadeLevel: 1,
+                    accumulatedScore: 0
+                });
+            },
             onGuess: (data) => {
                 this.opponentFail = data.failCount;
                 this.opponentSolved = data.solvedCount;
@@ -368,22 +482,58 @@ class HangmanApp {
             onHang: () => {
                 // Opponent hanged! Player instantly wins this level
                 this.engine.endRound(true, 'OPPONENT_HANGED');
+            },
+            onNextLevel: async (data) => {
+                // For Guest in Arcadian mode
+                this.keyboardView.reset();
+                this.updateArenaBackground(data.level);
+                await this.engine.startRound({
+                    word: data.word,
+                    hints: data.hints,
+                    mode: 'arcadian',
+                    difficulty: this.difficulty,
+                    arcadeLevel: data.level,
+                    accumulatedScore: this.engine.accumulatedScore
+                });
+            },
+            onOpponentDisconnected: () => {
+                if (window.Swal) Swal.fire({ title: 'Opponent Disconnected', text: 'Your opponent left the match.', icon: 'info' });
             }
         });
 
-        // Start player round
-        await this.engine.startRound({
-            word: wordData.word,
-            hints: wordData.hints,
-            mode: this.currentSubMode,
-            difficulty: this.difficulty,
-            arcadeLevel: 1,
-            accumulatedScore: 0
-        });
+        // If this client is Host (or playing vs Bot), fetch the word and serve it
+        if (session.isHost) {
+            const wordData = await wordProvider.getWord({
+                mode: this.wordSource,
+                difficulty: this.difficulty,
+                customWord: session.room?.customWord
+            });
 
-        // Start Bot if applicable
-        if (session.isBot && session.botInstance) {
-            session.botInstance.startRound(wordData.word);
+            // If connected to a real peer guest, transmit the initial round data
+            if (!session.isBot) {
+                session.sendToOpponent({
+                    action: 'init_game',
+                    word: wordData.word,
+                    hints: wordData.hints,
+                    mode: this.currentSubMode,
+                    difficulty: this.difficulty
+                });
+            }
+
+            // Start host player round
+            await this.engine.startRound({
+                word: wordData.word,
+                hints: wordData.hints,
+                mode: this.currentSubMode,
+                difficulty: this.difficulty,
+                arcadeLevel: 1,
+                accumulatedScore: 0
+            });
+
+            // Start Bot if applicable
+            if (session.isBot && session.botInstance) {
+                session.botInstance.startRound(wordData.word);
+            }
         }
     }
 
@@ -391,7 +541,7 @@ class HangmanApp {
         if (this.matchmaking) {
             this.matchmaking.cancel();
         }
-        this.showMultiPage(1);
+        this.showMultiPage('lobby');
     }
 
     // --- Key / Hint Inputs ---
@@ -460,8 +610,6 @@ class HangmanApp {
         }
         setTimeout(() => container.remove(), 3000);
     }
-
-
 
     handleHintClick() {
         const hint = this.engine.getHint();
@@ -559,10 +707,29 @@ class HangmanApp {
         this.keyboardView.reset();
         this.updateArenaBackground(nextLevel);
 
+        if (this.currentMode === 'multi' && this.activeMultiSession && !this.activeMultiSession.isHost) {
+            // Guest waits for host to serve next level
+            return;
+        }
+
         const wordData = await wordProvider.getWord({
             mode: this.wordSource === 'online' ? 'online' : 'builtin',
             difficulty: this.difficulty
         });
+
+        if (this.currentMode === 'multi' && this.activeMultiSession) {
+            if (!this.activeMultiSession.isBot) {
+                this.activeMultiSession.sendToOpponent({
+                    action: 'next_level',
+                    level: nextLevel,
+                    word: wordData.word,
+                    hints: wordData.hints
+                });
+            }
+            if (this.activeMultiSession.isBot && this.activeMultiSession.botInstance) {
+                this.activeMultiSession.botInstance.startRound(wordData.word);
+            }
+        }
 
         await this.engine.startRound({
             word: wordData.word,
@@ -572,10 +739,6 @@ class HangmanApp {
             arcadeLevel: nextLevel,
             accumulatedScore: this.engine.accumulatedScore
         });
-
-        if (this.activeMultiSession?.botInstance) {
-            this.activeMultiSession.botInstance.startRound(wordData.word);
-        }
     }
 
     showVerdict(summary) {
@@ -590,27 +753,35 @@ class HangmanApp {
             const perfectText = summary.failCount === 0 ? "Perfect! " : "";
             titleEl.innerText = `${perfectText}Way to Go!`;
             descEl.innerText = `You solved the word: "${summary.answer}"`;
+            if (summary.reason === 'OPPONENT_HANGED') {
+                descEl.innerText = `Opponent was hanged! Word was: "${summary.answer}"`;
+            }
             pointsEl.innerText = `+${summary.totalRoundEarned} Points`;
         } else {
             titleEl.innerText = "Game Over!";
             descEl.innerText = `The secret word was: "${summary.answer}"`;
-            pointsEl.innerText = summary.reason === 'OPPONENT_WON' ? 'Opponent finished first!' : 'Better luck next time!';
+            pointsEl.innerText = summary.reason === 'OPPONENT_WON' ? 'Opponent solved it first!' : 'Better luck next time!';
         }
 
         // Update stats breakdown in modal
-        modal.querySelector('.tp1').innerText = this.stats.tpoints;
-        modal.querySelector('.tp2').innerText = this.stats.tgames;
-        modal.querySelector('.tp3').innerText = this.stats.nwords;
-        modal.querySelector('.tp4').innerText = this.stats.fwords;
-        modal.querySelector('.tp5').innerText = this.stats.hscore;
-        modal.querySelector('.tp6').innerText = this.stats.pwords;
+        const setSpan = (cls, val) => {
+            const el = modal.querySelector(cls);
+            if (el) el.innerText = val;
+        };
+        setSpan('.tp1', this.stats.tpoints);
+        setSpan('.tp2', this.stats.tgames);
+        setSpan('.tp3', this.stats.nwords);
+        setSpan('.tp4', this.stats.fwords);
+        setSpan('.tp5', this.stats.hscore);
+        setSpan('.tp6', this.stats.pwords);
 
+        modal.setAttribute('data', summary.won ? 'true' : 'false');
         modal.classList.remove('unsee');
     }
 
     updateArenaBackground(stage) {
         const body = document.body;
-        if (this.useArena) {
+        if (!this.useArena) {
             const bgIndex = ((stage - 1) % 20) + 1;
             body.style.backgroundImage = `url(img/img${bgIndex}.png)`;
         } else {
@@ -667,9 +838,10 @@ class HangmanApp {
 
     returnToHome() {
         this.engine.stopTimer();
-        if (this.activeMultiSession?.botInstance) {
-            this.activeMultiSession.botInstance.stop();
+        if (this.matchmaking) {
+            this.matchmaking.cancel();
         }
+        this.activeMultiSession = null;
         this.hideAllModals();
         this.setInGameVisibility(false, false);
         document.body.style.backgroundImage = 'url(img/img10.png)';
@@ -681,6 +853,7 @@ class HangmanApp {
 }
 
 function escapeHtml(str) {
+    if (!str) return '';
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
@@ -692,4 +865,3 @@ if (document.readyState === 'loading') {
 } else {
     window.app.init();
 }
-

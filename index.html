@@ -113,93 +113,173 @@
         </div>
     </div>
 
-    <!-- Multiplayer Lobby Modal -->
+    <!-- Multiplayer Duel Lobby Modal -->
     <div class="modal multi-modal unsee">
-        <div>
+        <div class="lobby-card-box">
             <div class="close" onclick="window.app.hideAllModals();">&times;</div>
-            <h3>MULTIPLAYER WORD RUSH</h3>
+            <h3>MULTIPLAYER DUEL LOBBY</h3>
             
-            <!-- Page 1: Type Selection -->
-            <div class="multi-page multi-page-1">
-                <div class="lscont hp hpm">
-                    <button onclick="window.app.showMultiPage(2);" class="btn" style="width: 100%;">Find Match</button>
+            <!-- Top Profile & Lobby Controls -->
+            <div class="lobby-bar">
+                <div class="lobby-profile">
+                    <span>Player: <strong class="profile-name-tag">Player</strong></span>
+                    <button class="btn-sm-text" id="btn-lobby-edit-name" type="button">✏️ Edit</button>
                 </div>
-                <div class="lscont hp" style="margin-top: 10px;">
-                    <button onclick="window.app.showModal('.mode-select-modal');" class="btn-secondary" style="width: 100%;">Back</button>
+                <div class="lobby-controls">
+                    <button id="btn-show-host-form" class="btn-pill-action" type="button">+ Host Match</button>
+                    <button id="btn-refresh-matches" class="btn-refresh-icon" type="button" title="Refresh Open Matches">🔄</button>
                 </div>
             </div>
 
-            <!-- Page 2: Match Options -->
-            <div class="multi-page multi-page-2 unsee">
+            <!-- Page 1: Open Matches List -->
+            <div class="multi-page multi-page-lobby">
+                <div class="lobby-subtitle">Open Matches</div>
+                
+                <!-- Fixed Computer Bot Card (Always available at the top) -->
+                <div class="match-row bot-row">
+                    <div class="match-meta">
+                        <div class="match-name">🤖 Computer (AI Bot)</div>
+                        <div class="match-subtext">Instant match • Choose your rules & start right away</div>
+                    </div>
+                    <button id="btn-lobby-play-bot" class="btn-match-action bot-btn" type="button">Play vs Computer</button>
+                </div>
+
+                <!-- Dynamic Human Open Matches List -->
+                <div id="open-matches-list" class="open-matches-scroll">
+                    <div class="no-matches-notice">
+                        No players hosting right now.<br>Host your own match or challenge the Computer!
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; text-align: center;">
+                    <button onclick="window.app.showModal('.mode-select-modal');" class="btn-secondary" style="width: 100%;" type="button">Back to Modes</button>
+                </div>
+            </div>
+
+            <!-- Page 2: Host a Match Setup -->
+            <div class="multi-page multi-page-host unsee">
+                <div class="lobby-subtitle">Host a Match (Set Game Rules)</div>
                 <div class="flexrow">
                     <div>
                         <label class="rowlabel lbl">Format:</label>
                         <div class="cnt flexst">
                             <label class="container">Slingshot
-                                <input type="radio" checked="checked" name="multi_mode" value="slingshot" id="multi-opt-slingshot">
+                                <input type="radio" checked="checked" name="host_mode" value="slingshot" id="host-opt-slingshot">
                                 <span class="checkmark radiocheckmark radioafter"></span>
                             </label>
                             <label class="container">Arcadian
-                                <input type="radio" name="multi_mode" value="arcadian" id="multi-opt-arcadian">
+                                <input type="radio" name="host_mode" value="arcadian" id="host-opt-arcadian">
                                 <span class="checkmark radiocheckmark radioafter"></span>
                             </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="rowlabel lbl">Difficulty:</label>
+                        <div class="custom-select cnt">
+                            <select id="host-difficulty-select">
+                                <option value="0">Magician (Easy)</option>
+                                <option value="1">Viserion (Medium)</option>
+                                <option value="2">Inferno (Hard)</option>
+                                <option value="3">Immortal (16s Timer)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: none;">
+                        <label class="rowlabel lbl">Word Source:</label>
+                        <div class="cnt flexst">
+                            <label class="container">Built-in
+                                <input type="radio" checked="checked" name="host_word_src" value="builtin" id="host-src-builtin">
+                                <span class="checkmark radiocheckmark radioafter"></span>
+                            </label>
+                            <label class="container">Online API
+                                <input type="radio" name="host_word_src" value="online" id="host-src-online">
+                                <span class="checkmark radiocheckmark radioafter"></span>
+                            </label>
+                            <label class="container">Custom Word
+                                <input type="radio" name="host_word_src" value="custom" id="host-src-custom">
+                                <span class="checkmark radiocheckmark radioafter"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="host-custom-word-wrap" class="unsee" style="margin-top: 10px;">
+                        <label class="rowlabel lbl">Challenge Word:</label>
+                        <div class="cnt user">
+                            <input type="text" id="host-custom-word-input" class="chkswitch snd" placeholder="Enter word (hints auto-fetched)" maxlength="16">
+                        </div>
+                    </div>
+                    <div class="lscont" style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button id="btn-publish-match" class="btn" style="flex: 1;" type="button">Broadcast Match</button>
+                        <button id="btn-cancel-host" class="btn-secondary" style="flex: 1;" type="button">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: Waiting for Challenger Screen -->
+            <div class="multi-page multi-page-waiting unsee">
+                <div style="text-align: center; padding: 20px 0;">
+                    <div class="matchmaking-spinner" style="font-size: 36px; margin-bottom: 15px;">⏳</div>
+                    <p style="font-size: 16px; font-weight: bold; color: #00e1ff;">Match Open in Lobby</p>
+                    <div id="waiting-rules-badge" class="waiting-tags" style="margin: 10px 0;">
+                        <span class="tag-pill">Slingshot</span>
+                        <span class="tag-pill">Magician</span>
+                        <span class="tag-pill">Built-in</span>
+                    </div>
+                    <p style="font-size: 13px; opacity: 0.7; margin-bottom: 20px;">Waiting for a player to join...</p>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button id="btn-waiting-play-bot" class="btn" type="button">Play vs Computer with these rules</button>
+                        <button id="btn-waiting-cancel" class="btn-secondary" type="button">Cancel & Unpublish</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4: Play vs Computer Setup Screen -->
+            <div class="multi-page multi-page-bot-setup unsee">
+                <div class="lobby-subtitle">Play vs Computer Bot</div>
+                <div class="flexrow">
+                    <div>
+                        <label class="rowlabel lbl">Format:</label>
+                        <div class="cnt flexst">
+                            <label class="container">Slingshot
+                                <input type="radio" checked="checked" name="bot_mode" value="slingshot" id="bot-opt-slingshot">
+                                <span class="checkmark radiocheckmark radioafter"></span>
+                            </label>
+                            <label class="container">Arcadian
+                                <input type="radio" name="bot_mode" value="arcadian" id="bot-opt-arcadian">
+                                <span class="checkmark radiocheckmark radioafter"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="rowlabel lbl">Difficulty:</label>
+                        <div class="custom-select cnt">
+                            <select id="bot-difficulty-select">
+                                <option value="0">Magician (Easy)</option>
+                                <option value="1">Viserion (Medium)</option>
+                                <option value="2">Inferno (Hard)</option>
+                                <option value="3">Immortal (16s Timer)</option>
+                            </select>
                         </div>
                     </div>
                     <div>
                         <label class="rowlabel lbl">Word Source:</label>
                         <div class="cnt flexst">
                             <label class="container">Built-in
-                                <input type="radio" checked="checked" name="multi_word_src" value="builtin" id="multi-src-builtin" onchange="document.querySelector('#custom-word-wrap').classList.add('unsee');">
+                                <input type="radio" checked="checked" name="bot_word_src" value="builtin" id="bot-src-builtin">
                                 <span class="checkmark radiocheckmark radioafter"></span>
                             </label>
                             <label class="container">Online API
-                                <input type="radio" name="multi_word_src" value="online" id="multi-src-online" onchange="document.querySelector('#custom-word-wrap').classList.add('unsee');">
-                                <span class="checkmark radiocheckmark radioafter"></span>
-                            </label>
-                            <label class="container">Custom Word
-                                <input type="radio" name="multi_word_src" value="custom" id="multi-src-custom" onchange="document.querySelector('#custom-word-wrap').classList.remove('unsee');">
+                                <input type="radio" name="bot_word_src" value="online" id="bot-src-online">
                                 <span class="checkmark radiocheckmark radioafter"></span>
                             </label>
                         </div>
                     </div>
-                    <div id="custom-word-wrap" class="unsee" style="margin-top: 10px;">
-                        <label class="rowlabel lbl">Challenge Word:</label>
-                        <div class="cnt user">
-                            <input type="text" id="multi-custom-word-input" class="chkswitch snd" placeholder="Enter word (hints auto-fetched)" maxlength="16">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="rowlabel lbl">Difficulty:</label>
-                        <div class="custom-select cnt">
-                            <select id="multi-difficulty-select">
-                                <option value="0">Magician</option>
-                                <option value="1">Viserion</option>
-                                <option value="2">Inferno</option>
-                                <option value="3">Immortal</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="lscont" style="margin-top: 20px;">
-                        <button id="btn-start-multi" class="btn" style="width: 100%;">Search Match</button>
+                    <div class="lscont" style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button id="btn-start-bot-match" class="btn" style="flex: 1;" type="button">Start Game</button>
+                        <button id="btn-cancel-bot-setup" class="btn-secondary" style="flex: 1;" type="button">Back to Lobby</button>
                     </div>
                 </div>
             </div>
 
-
-                </div>
-            </div>
-
-            <!-- Page 3: Matchmaking Queue Screen -->
-            <div class="multi-page multi-page-3 unsee">
-                <div style="text-align: center; padding: 25px 0;">
-                    <div class="matchmaking-spinner" style="font-size: 32px; margin-bottom: 15px;">⚔️</div>
-                    <p class="matchmaking-status-text" style="font-size: 16px; font-weight: bold; color: #00e1ff;">Searching for online challenger...</p>
-                    <p style="font-size: 13px; opacity: 0.7;">Matches with "Computer" bot if no player connects within 12s</p>
-                    <div style="margin-top: 20px;">
-                        <button onclick="window.app.cancelMatchmaking();" class="btn-secondary">Cancel</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -259,16 +339,15 @@
     <!-- Active In-Game Arena Canvas -->
     <div class="word unsee"></div>
     
-    <!-- Player's Gallows -->
+    <!-- Unified Gallows Stage (One Gallows, Player in foreground, Opponent Ghost at 45% opacity) -->
     <div class="penalty aspect unsee">
+        <div class="stage-gallows"></div>
+        <div class="opponent-ghost-hold unsee">
+            <div style="background-image: url(img/f1.png);"></div>
+        </div>
         <div class="phold">
             <div style="background-image: url(img/f1.png);"></div>
         </div>
-    </div>
-
-    <!-- Opponent Ghost Silhouette (Multiplayer) -->
-    <div class="opponent-ghost-hold unsee">
-        <div class="opponent-tag">OPPONENT</div>
     </div>
 
     <!-- Keyboard & Virtual Area -->
