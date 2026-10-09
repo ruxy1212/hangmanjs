@@ -127,10 +127,24 @@ class HangmanApp {
     }
 
     removePreloader() {
-        const preload = document.querySelector('.preload');
-        if (preload) {
-            preload.style.display = 'none';
+        if (typeof window !== 'undefined') {
+            window.rstate = false;
         }
+        const preload = document.querySelector('.preload');
+        const main = document.querySelector('.main');
+
+        let opacity = 1;
+        const fadeOut = setInterval(() => {
+            opacity -= 0.12;
+            if (preload) preload.style.opacity = opacity;
+            if (main) main.style.opacity = opacity;
+
+            if (opacity <= 0) {
+                clearInterval(fadeOut);
+                if (preload) preload.style.display = 'none';
+                if (main) main.style.display = 'none';
+            }
+        }, 40);
     }
 
     bindEvents() {
