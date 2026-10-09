@@ -124,13 +124,19 @@ class HangmanApp {
         const preload = document.querySelector('.preload');
         const main = document.querySelector('.main');
         if (preload) {
+            preload.style.pointerEvents = 'none';
             preload.style.opacity = '0';
-            setTimeout(() => {
-                preload.style.display = 'none';
-                if (main) main.style.display = 'none';
-            }, 300);
         }
+        if (main) {
+            main.style.pointerEvents = 'none';
+        }
+        setTimeout(() => {
+            if (preload) preload.style.display = 'none';
+            if (main) main.style.display = 'none';
+            if (typeof window.rstate !== 'undefined') window.rstate = false;
+        }, 350);
     }
+
 
     bindEvents() {
         // Sound Switch

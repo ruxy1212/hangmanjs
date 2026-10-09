@@ -56,7 +56,7 @@ export class LeaderboardManager {
     async updateScore({ hscore = 0, tpoints = 0, pwords = 0, tgames = 0 } = {}) {
         if (!this.db) return;
         try {
-            const playerRef = ref(this.db, `leaderboard/${this.deviceId}`);
+            const playerRef = ref(this.db, `games/leaderboard/${this.deviceId}`);
             const snapshot = await get(playerRef);
             const prev = snapshot.val() || {};
 
@@ -82,7 +82,7 @@ export class LeaderboardManager {
     async updateProfile() {
         if (!this.db) return;
         try {
-            const playerRef = ref(this.db, `leaderboard/${this.deviceId}/username`);
+            const playerRef = ref(this.db, `games/leaderboard/${this.deviceId}/username`);
             await set(playerRef, this.username);
         } catch (e) {
             console.warn("Failed to update profile username:", e);
@@ -92,22 +92,31 @@ export class LeaderboardManager {
     async getTopScores(limit = 25) {
         if (!this.db) return [];
         try {
-            const q = query(ref(this.db, 'leaderboard'), orderByChild('hscore'), limitToLast(limit));
+            const q = ref(this.db, 'games/leaderboard');
             const snapshot = await get(q);
             if (!snapshot.exists()) return [];
 
             const list = [];
             snapshot.forEach(child => {
-                list.push(child.val());
+                const val = child.val();
+                if (val && typeof val === 'object') {
+                    list.push(val);
+                }
             });
-            // Reverse so highest is first
+            // Sort by highest score descending
             list.sort((a, b) => (b.hscore || 0) - (a.hscore || 0));
-            return list;
+            return list.slice(0, limit);
         } catch (e) {
             console.warn("Failed to fetch leaderboard:", e);
-            return [];
+            // Graceful fallback to local device record
+            return [{
+                deviceId: this.deviceId,
+                username: this.username,
+                hscore: JSON.parse(localStorage.getItem('hngset') || '{}').hscore || 0
+            }];
         }
     }
+
 }
 
 export const leaderboardManager = new LeaderboardManager();
