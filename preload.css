@@ -88,16 +88,15 @@
 	height:100vh;
 	width:100vw;
 	background-color:rgb(44, 78, 44);
-	/* height: 600px;
-	width: 600px; */
 	position:absolute;
-	/* opacity: 0.4; */
 	top: 0;
 	left: 0;
 	z-index: 15;
 	display:grid;
 	place-items:center;
 	overflow:hidden;
+	pointer-events: none;
+
 	background: linear-gradient(45deg, #56325ebd, #4e3361bd, #31345cbd, #2a4350bd, #1e3a2bbd, #314624bd, #3f3721bd, #4e3629bd, #2e1818bd, #773d60bd);
 	background-size: 500% 100%;
 	animation: anim 10s linear alternate infinite;

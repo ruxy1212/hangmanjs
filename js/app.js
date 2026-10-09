@@ -37,10 +37,18 @@ class HangmanApp {
     }
 
     async init() {
-        await wordProvider.init();
-        soundManager.init(this.stats.soundEnabled);
+        // Bind UI events and remove preloader IMMEDIATELY so buttons are interactive instantly
+        this.bindEvents();
+        this.updateProfileDisplay();
+        this.removePreloader();
 
-        // Preload image assets
+        try {
+            await wordProvider.init();
+        } catch (e) {
+            console.warn("WordProvider init fallback", e);
+        }
+
+        soundManager.init(this.stats.soundEnabled);
         this.preloadAssets();
 
         // Initialize UI Views
@@ -65,11 +73,8 @@ class HangmanApp {
             onMatchFound: (session) => this.onMultiplayerMatchFound(session),
             onStatusUpdate: (text) => this.updateMatchmakingStatus(text)
         });
-
-        this.bindEvents();
-        this.updateProfileDisplay();
-        this.removePreloader();
     }
+
 
     preloadAssets() {
         const images = [
