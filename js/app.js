@@ -167,7 +167,42 @@ class HangmanApp {
         if (openLbBtn) {
             openLbBtn.addEventListener('click', () => this.showLeaderboard());
         }
+
+        // Single Player Start Button
+        const startSingleBtn = document.querySelector('#btn-start-single');
+        if (startSingleBtn) {
+            startSingleBtn.addEventListener('click', () => {
+                const isArcade = document.querySelector('#single-opt-arcadian')?.checked;
+                const diff = document.querySelector('#single-difficulty-select')?.value || 0;
+                const arena = document.querySelector('#single-arena-toggle')?.checked || false;
+                this.startSingleGame({ mode: isArcade ? 'arcadian' : 'slingshot', difficulty: diff, arena });
+            });
+        }
+
+        // Multiplayer Start Button
+        const startMultiBtn = document.querySelector('#btn-start-multi');
+        if (startMultiBtn) {
+            startMultiBtn.addEventListener('click', () => {
+                const isArcade = document.querySelector('#multi-opt-arcadian')?.checked;
+                const isOnline = document.querySelector('#multi-src-online')?.checked;
+                const isCustom = document.querySelector('#multi-src-custom')?.checked;
+                const customVal = document.querySelector('#multi-custom-word-input')?.value.trim();
+                const diff = document.querySelector('#multi-difficulty-select')?.value || 0;
+                if (isCustom && !customVal) {
+                    if (window.Swal) Swal.fire({ text: 'Please enter a custom word!', icon: 'warning' });
+                    else alert('Please enter a custom word!');
+                    return;
+                }
+                this.initiateMultiMatchmaking({
+                    mode: isArcade ? 'arcadian' : 'slingshot',
+                    wordMode: isCustom ? 'custom' : (isOnline ? 'online' : 'builtin'),
+                    difficulty: diff,
+                    customWord: isCustom ? customVal : null
+                });
+            });
+        }
     }
+
 
     promptEditUsername() {
         const current = leaderboardManager.getUsername();
@@ -582,7 +617,7 @@ class HangmanApp {
     }
 
     hideAllModals() {
-        document.querySelectorAll('.modal, .verdict-modal, .leaderboard-modal').forEach(m => {
+        document.querySelectorAll('.modal, .help, .verdict-modal, .leaderboard-modal').forEach(m => {
             m.classList.add('unsee');
         });
     }
@@ -632,6 +667,11 @@ function escapeHtml(str) {
 }
 
 window.app = new HangmanApp();
-window.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', () => {
+        window.app.init();
+    });
+} else {
     window.app.init();
-});
+}
+

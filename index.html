@@ -106,12 +106,7 @@
                     </div>
                 </div>
                 <div class="lscont" style="margin-top: 25px;">
-                    <button onclick="
-                        const isArcade = document.querySelector('#single-opt-arcadian').checked;
-                        const diff = document.querySelector('#single-difficulty-select').value;
-                        const arena = document.querySelector('#single-arena-toggle').checked;
-                        window.app.startSingleGame({ mode: isArcade ? 'arcadian' : 'slingshot', difficulty: diff, arena });
-                    " class="btn" style="width: 100%;">Start Game</button>
+                    <button id="btn-start-single" class="btn" style="width: 100%;">Start Game</button>
                 </div>
             </div>
         </div>
@@ -184,24 +179,11 @@
                         </div>
                     </div>
                     <div class="lscont" style="margin-top: 20px;">
-                        <button onclick="
-                            const isArcade = document.querySelector('#multi-opt-arcadian').checked;
-                            const isOnline = document.querySelector('#multi-src-online').checked;
-                            const isCustom = document.querySelector('#multi-src-custom').checked;
-                            const customVal = document.querySelector('#multi-custom-word-input').value.trim();
-                            const diff = document.querySelector('#multi-difficulty-select').value;
-                            if (isCustom && !customVal) {
-                                Swal.fire({ text: 'Please enter a custom word!', icon: 'warning' });
-                                return;
-                            }
-                            window.app.initiateMultiMatchmaking({
-                                mode: isArcade ? 'arcadian' : 'slingshot',
-                                wordMode: isCustom ? 'custom' : (isOnline ? 'online' : 'builtin'),
-                                difficulty: diff,
-                                customWord: isCustom ? customVal : null
-                            });
-                        " class="btn" style="width: 100%;">Search Match</button>
+                        <button id="btn-start-multi" class="btn" style="width: 100%;">Search Match</button>
                     </div>
+                </div>
+            </div>
+
 
                 </div>
             </div>
