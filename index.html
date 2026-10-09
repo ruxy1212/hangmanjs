@@ -113,55 +113,39 @@
         </div>
     </div>
 
-    <!-- Multiplayer Duel Lobby Modal -->
+    <!-- Multiplayer Modal -->
     <div class="modal multi-modal unsee">
-        <div class="lobby-card-box">
+        <div>
             <div class="close" onclick="window.app.hideAllModals();">&times;</div>
-            <h3>MULTIPLAYER DUEL LOBBY</h3>
-            
-            <!-- Top Profile & Lobby Controls -->
-            <div class="lobby-bar">
-                <div class="lobby-profile">
-                    <span>Player: <strong class="profile-name-tag">Player</strong></span>
-                    <button class="btn-sm-text" id="btn-lobby-edit-name" type="button">✏️ Edit</button>
-                </div>
-                <div class="lobby-controls">
-                    <button id="btn-show-host-form" class="btn-pill-action" type="button">+ Host Match</button>
-                    <button id="btn-refresh-matches" class="btn-refresh-icon" type="button" title="Refresh Open Matches">🔄</button>
-                </div>
-            </div>
+            <h3>MULTIPLAYER</h3>
 
-            <!-- Page 1: Open Matches List -->
+            <!-- Page 1: Matches List -->
             <div class="multi-page multi-page-lobby">
-                <div class="lobby-subtitle">Open Matches</div>
-                
-                <!-- Fixed Computer Bot Card (Always available at the top) -->
-                <div class="match-row bot-row">
-                    <div class="match-meta">
-                        <div class="match-name">🤖 Computer (AI Bot)</div>
-                        <div class="match-subtext">Instant match • Choose your rules & start right away</div>
+                <div class="multi-list">
+                    <!-- Computer Row -->
+                    <div class="multi-item">
+                        <span>🤖 Computer</span>
+                        <button id="btn-play-bot-direct" class="btn-play" type="button">Play</button>
                     </div>
-                    <button id="btn-lobby-play-bot" class="btn-match-action bot-btn" type="button">Play vs Computer</button>
-                </div>
-
-                <!-- Dynamic Human Open Matches List -->
-                <div id="open-matches-list" class="open-matches-scroll">
-                    <div class="no-matches-notice">
-                        No players hosting right now.<br>Host your own match or challenge the Computer!
+                    <!-- Open Matches from Other Players -->
+                    <div id="open-matches-list">
+                        <div class="multi-empty">No players waiting</div>
                     </div>
                 </div>
 
-                <div style="margin-top: 15px; text-align: center;">
-                    <button onclick="window.app.showModal('.mode-select-modal');" class="btn-secondary" style="width: 100%;" type="button">Back to Modes</button>
+                <div class="lscont" style="margin-top: 15px;">
+                    <button id="btn-open-host" class="btn" style="width: 100%;" type="button">+ Host Match</button>
+                </div>
+                <div class="lscont hp" style="margin-top: 10px;">
+                    <button onclick="window.app.showModal('.mode-select-modal');" class="btn" style="width: 100%;" type="button">Back</button>
                 </div>
             </div>
 
             <!-- Page 2: Host a Match Setup -->
             <div class="multi-page multi-page-host unsee">
-                <div class="lobby-subtitle">Host a Match (Set Game Rules)</div>
                 <div class="flexrow">
                     <div>
-                        <label class="rowlabel lbl">Format:</label>
+                        <label class="rowlabel lbl">Game Type:</label>
                         <div class="cnt flexst">
                             <label class="container">Slingshot
                                 <input type="radio" checked="checked" name="host_mode" value="slingshot" id="host-opt-slingshot">
@@ -184,7 +168,7 @@
                             </select>
                         </div>
                     </div>
-                    <div style="display: none;">
+                    <div>
                         <label class="rowlabel lbl">Word Source:</label>
                         <div class="cnt flexst">
                             <label class="container">Built-in
@@ -195,49 +179,35 @@
                                 <input type="radio" name="host_word_src" value="online" id="host-src-online">
                                 <span class="checkmark radiocheckmark radioafter"></span>
                             </label>
-                            <label class="container">Custom Word
-                                <input type="radio" name="host_word_src" value="custom" id="host-src-custom">
-                                <span class="checkmark radiocheckmark radioafter"></span>
-                            </label>
                         </div>
                     </div>
-                    <div id="host-custom-word-wrap" class="unsee" style="margin-top: 10px;">
-                        <label class="rowlabel lbl">Challenge Word:</label>
-                        <div class="cnt user">
-                            <input type="text" id="host-custom-word-input" class="chkswitch snd" placeholder="Enter word (hints auto-fetched)" maxlength="16">
-                        </div>
+                    <div class="lscont" style="margin-top: 20px;">
+                        <button id="btn-publish-host" class="btn" style="width: 100%;" type="button">Host Match</button>
                     </div>
-                    <div class="lscont" style="margin-top: 20px; display: flex; gap: 10px;">
-                        <button id="btn-publish-match" class="btn" style="flex: 1;" type="button">Broadcast Match</button>
-                        <button id="btn-cancel-host" class="btn-secondary" style="flex: 1;" type="button">Cancel</button>
+                    <div class="lscont hp" style="margin-top: 10px;">
+                        <button id="btn-cancel-host" class="btn" style="width: 100%;" type="button">Back</button>
                     </div>
                 </div>
             </div>
 
             <!-- Page 3: Waiting for Challenger Screen -->
             <div class="multi-page multi-page-waiting unsee">
-                <div style="text-align: center; padding: 20px 0;">
-                    <div class="matchmaking-spinner" style="font-size: 36px; margin-bottom: 15px;">⏳</div>
-                    <p style="font-size: 16px; font-weight: bold; color: #00e1ff;">Match Open in Lobby</p>
-                    <div id="waiting-rules-badge" class="waiting-tags" style="margin: 10px 0;">
-                        <span class="tag-pill">Slingshot</span>
-                        <span class="tag-pill">Magician</span>
-                        <span class="tag-pill">Built-in</span>
+                <div style="text-align: center; padding: 15px 0;">
+                    <p style="color: #ccc; font-size: 15px; margin-bottom: 20px;">Waiting for challenger...</p>
+                    <div class="lscont">
+                        <button id="btn-waiting-play-bot" class="btn" style="width: 100%;" type="button">Play vs Computer</button>
                     </div>
-                    <p style="font-size: 13px; opacity: 0.7; margin-bottom: 20px;">Waiting for a player to join...</p>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <button id="btn-waiting-play-bot" class="btn" type="button">Play vs Computer with these rules</button>
-                        <button id="btn-waiting-cancel" class="btn-secondary" type="button">Cancel & Unpublish</button>
+                    <div class="lscont hp" style="margin-top: 10px;">
+                        <button id="btn-cancel-waiting" class="btn" style="width: 100%;" type="button">Cancel</button>
                     </div>
                 </div>
             </div>
 
             <!-- Page 4: Play vs Computer Setup Screen -->
             <div class="multi-page multi-page-bot-setup unsee">
-                <div class="lobby-subtitle">Play vs Computer Bot</div>
                 <div class="flexrow">
                     <div>
-                        <label class="rowlabel lbl">Format:</label>
+                        <label class="rowlabel lbl">Game Type:</label>
                         <div class="cnt flexst">
                             <label class="container">Slingshot
                                 <input type="radio" checked="checked" name="bot_mode" value="slingshot" id="bot-opt-slingshot">
@@ -260,22 +230,11 @@
                             </select>
                         </div>
                     </div>
-                    <div>
-                        <label class="rowlabel lbl">Word Source:</label>
-                        <div class="cnt flexst">
-                            <label class="container">Built-in
-                                <input type="radio" checked="checked" name="bot_word_src" value="builtin" id="bot-src-builtin">
-                                <span class="checkmark radiocheckmark radioafter"></span>
-                            </label>
-                            <label class="container">Online API
-                                <input type="radio" name="bot_word_src" value="online" id="bot-src-online">
-                                <span class="checkmark radiocheckmark radioafter"></span>
-                            </label>
-                        </div>
+                    <div class="lscont" style="margin-top: 20px;">
+                        <button id="btn-start-bot-game" class="btn" style="width: 100%;" type="button">Start Game</button>
                     </div>
-                    <div class="lscont" style="margin-top: 20px; display: flex; gap: 10px;">
-                        <button id="btn-start-bot-match" class="btn" style="flex: 1;" type="button">Start Game</button>
-                        <button id="btn-cancel-bot-setup" class="btn-secondary" style="flex: 1;" type="button">Back to Lobby</button>
+                    <div class="lscont hp" style="margin-top: 10px;">
+                        <button id="btn-cancel-bot" class="btn" style="width: 100%;" type="button">Back</button>
                     </div>
                 </div>
             </div>

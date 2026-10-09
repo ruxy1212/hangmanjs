@@ -208,8 +208,9 @@ class HangmanApp {
             });
         });
 
+        // --- Lobby Event Wiring ---
         // Open Host Form
-        document.querySelector('#btn-show-host-form')?.addEventListener('click', () => {
+        document.querySelector('#btn-open-host')?.addEventListener('click', () => {
             this.showMultiPage('host');
         });
 
@@ -218,71 +219,47 @@ class HangmanApp {
             this.showMultiPage('lobby');
         });
 
-        // Refresh Open Matches List
-        document.querySelector('#btn-refresh-matches')?.addEventListener('click', () => {
-            this.matchmaking.queryOpenMatches();
-        });
-
         // Play vs Computer Button in Lobby List
-        document.querySelector('#btn-lobby-play-bot')?.addEventListener('click', () => {
+        document.querySelector('#btn-play-bot-direct')?.addEventListener('click', () => {
             this.showMultiPage('bot-setup');
         });
 
         // Cancel Bot Setup
-        document.querySelector('#btn-cancel-bot-setup')?.addEventListener('click', () => {
+        document.querySelector('#btn-cancel-bot')?.addEventListener('click', () => {
             this.showMultiPage('lobby');
         });
 
         // Start Bot Match
-        document.querySelector('#btn-start-bot-match')?.addEventListener('click', () => {
+        document.querySelector('#btn-start-bot-game')?.addEventListener('click', () => {
             const isArcade = document.querySelector('#bot-opt-arcadian')?.checked;
-            const isOnline = document.querySelector('#bot-src-online')?.checked;
             const diff = document.querySelector('#bot-difficulty-select')?.value || 0;
             this.matchmaking.playVsComputer({
                 mode: isArcade ? 'arcadian' : 'slingshot',
                 difficulty: diff,
-                wordMode: isOnline ? 'online' : 'builtin',
+                wordMode: 'builtin',
                 customWord: null
             });
         });
 
         // Publish Hosted Match
-        document.querySelector('#btn-publish-match')?.addEventListener('click', () => {
+        document.querySelector('#btn-publish-host')?.addEventListener('click', () => {
             const isArcade = document.querySelector('#host-opt-arcadian')?.checked;
             const hostSrc = document.querySelector('input[name="host_word_src"]:checked')?.value || 'builtin';
-            const customVal = document.querySelector('#host-custom-word-input')?.value.trim();
             const diff = document.querySelector('#host-difficulty-select')?.value || 0;
 
-            if (hostSrc === 'custom' && !customVal) {
-                if (window.Swal) Swal.fire({ text: 'Please enter a custom word!', icon: 'warning' });
-                else alert('Please enter a custom word!');
-                return;
-            }
-
-            const room = this.matchmaking.hostMatch({
+            this.matchmaking.hostMatch({
                 username: leaderboardManager.getUsername(),
                 mode: isArcade ? 'arcadian' : 'slingshot',
                 difficulty: diff,
                 wordMode: hostSrc,
-                customWord: hostSrc === 'custom' ? customVal : null
+                customWord: null
             });
-
-            // Update badge on Waiting screen
-            const badge = document.querySelector('#waiting-rules-badge');
-            if (badge) {
-                const diffNames = ['Magician', 'Viserion', 'Inferno', 'Immortal'];
-                badge.innerHTML = `
-                    <span class="tag-pill tag-mode">${room.mode.toUpperCase()}</span>
-                    <span class="tag-pill tag-diff">${diffNames[room.difficulty] || 'Standard'}</span>
-                    <span class="tag-pill tag-src">${room.wordMode.toUpperCase()}</span>
-                `;
-            }
 
             this.showMultiPage('waiting');
         });
 
         // Cancel Waiting / Unpublish Room
-        document.querySelector('#btn-waiting-cancel')?.addEventListener('click', () => {
+        document.querySelector('#btn-cancel-waiting')?.addEventListener('click', () => {
             this.matchmaking.cancelHosting();
             this.showMultiPage('lobby');
         });
@@ -296,7 +273,7 @@ class HangmanApp {
                     mode: hosted.mode,
                     difficulty: hosted.difficulty,
                     wordMode: hosted.wordMode,
-                    customWord: hosted.customWord
+                    customWord: null
                 });
             }
         });
@@ -407,38 +384,28 @@ class HangmanApp {
         if (!list) return;
 
         if (!rooms || rooms.length === 0) {
-            list.innerHTML = `
-                <div class="no-matches-notice">
-                    No players hosting right now.<br>Host your own match or challenge the Computer!
-                </div>
-            `;
+            list.innerHTML = `<div class="multi-empty">No players waiting</div>`;
             return;
         }
 
-        const diffNames = ['Magician', 'Viserion', 'Inferno', 'Immortal'];
+        const diffNames = ['Easy', 'Med', 'Hard', 'Immortal'];
+        const modeNames = { slingshot: 'Sling', arcadian: 'Arcade' };
         list.innerHTML = '';
 
         rooms.forEach(room => {
             const row = document.createElement('div');
-            row.className = 'match-row player-row';
-            const diffName = diffNames[room.difficulty] || 'Standard';
-            const srcName = room.wordMode === 'custom' ? 'Custom Word' : (room.wordMode === 'online' ? 'Online API' : 'Built-in');
+            row.className = 'multi-item';
+            const diffName = diffNames[room.difficulty] || 'Easy';
+            const modeName = modeNames[room.mode] || 'Sling';
 
             row.innerHTML = `
-                <div class="match-meta">
-                    <div class="match-name">👤 ${escapeHtml(room.hostName || 'Challenger')}</div>
-                    <div class="match-tags">
-                        <span class="tag-pill tag-mode">${escapeHtml(room.mode.toUpperCase())}</span>
-                        <span class="tag-pill tag-diff">${escapeHtml(diffName)}</span>
-                        <span class="tag-pill tag-src">${escapeHtml(srcName)}</span>
-                    </div>
-                </div>
-                <button class="btn-match-action join-btn" type="button">Join Match</button>
+                <span>👤 ${escapeHtml(room.hostName || 'Player')} <small>(${modeName} • ${diffName})</small></span>
+                <button class="btn-play" type="button">Join</button>
             `;
 
-            const joinBtn = row.querySelector('.join-btn');
+            const joinBtn = row.querySelector('.btn-play');
             joinBtn.addEventListener('click', () => {
-                joinBtn.innerText = 'Connecting...';
+                joinBtn.innerText = '...';
                 joinBtn.disabled = true;
                 this.joinHostedMatch(room);
             });
