@@ -168,6 +168,19 @@ class HangmanApp {
             openLbBtn.addEventListener('click', () => this.showLeaderboard());
         }
 
+        // Play Button
+        const openPlayBtn = document.querySelector('#btn-open-play');
+        if (openPlayBtn) {
+            openPlayBtn.addEventListener('click', () => this.showModal('.mode-select-modal'));
+        }
+
+        // About Button
+        const openAboutBtn = document.querySelector('#btn-open-about');
+        if (openAboutBtn) {
+            openAboutBtn.addEventListener('click', () => this.showModal('.help'));
+        }
+
+
         // Single Player Start Button
         const startSingleBtn = document.querySelector('#btn-start-single');
         if (startSingleBtn) {

@@ -186,8 +186,7 @@ body{
         opacity: 0.5;
     }
 }
-.verdict{
-    z-index: 9;
+$125;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
@@ -319,8 +318,7 @@ footer div, footer a, footer a:hover {
     text-decoration: none;
     color: #ddd;
 }
-.modal, .help {
-    z-index: 9;
+$125;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     background-color: rgb(27,27,27,0.8);
@@ -674,3 +672,4 @@ div#swal2-html-container{
     0% { transform: translateY(0) rotate(0deg); opacity: 1; }
     100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
 }
+
