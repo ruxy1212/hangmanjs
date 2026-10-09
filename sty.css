@@ -186,7 +186,8 @@ body{
         opacity: 0.5;
     }
 }
-$125;
+.verdict{
+    z-index: 25;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
@@ -318,7 +319,8 @@ footer div, footer a, footer a:hover {
     text-decoration: none;
     color: #ddd;
 }
-$125;
+.modal, .help {
+    z-index: 25;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     background-color: rgb(27,27,27,0.8);
