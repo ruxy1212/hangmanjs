@@ -1,5 +1,8 @@
 // js/multi/peer-sync.js
-// Lightweight WebRTC peer-to-peer data channel synchronization using free public MQTT/WebSocket signaling
+// Hybrid WebRTC peer-to-peer data channel synchronization using Firebase RTDB and local BroadcastChannel
+
+import { leaderboardManager } from '../engine/leaderboard.js';
+import { ref, set, onValue, remove, push, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 export class PeerSync {
     constructor({ onOpponentConnected, onOpponentMessage, onOpponentDisconnected }) {
@@ -11,7 +14,8 @@ export class PeerSync {
         this.dataChannel = null;
         this.isHost = false;
         this.roomId = null;
-        this.ws = null;
+        this.broadcastChannel = null;
+        this.firebaseUnsubs = [];
 
         this.iceConfig = {
             iceServers: [
@@ -22,20 +26,23 @@ export class PeerSync {
         };
     }
 
-    /**
-     * Connects to a public, zero-setup signaling broker (PieSocket public demo or HiveMQ WebSocket)
-     */
+    get db() {
+        return leaderboardManager.db;
+    }
+
     initSignaling(roomId, isHost = false) {
         this.roomId = roomId;
         this.isHost = isHost;
 
-        // Use public lightweight WebSocket echo / broker
-        const brokerUrl = `wss://broker.emqx.io:8084/mqtt`;
-        // Or simple broadcast channel for same-browser testing & cross-tab instantly
-        this.broadcastChannel = new BroadcastChannel(`hng_room_${roomId}`);
-        this.broadcastChannel.onmessage = (event) => {
-            this.handleSignalingMessage(event.data);
-        };
+        // Local BroadcastChannel for instant same-browser cross-tab
+        try {
+            this.broadcastChannel = new BroadcastChannel(`hng_room_${roomId}`);
+            this.broadcastChannel.onmessage = (event) => {
+                this.handleSignalingMessage(event.data);
+            };
+        } catch (e) {
+            console.warn("BroadcastChannel not supported:", e);
+        }
     }
 
     sendSignaling(data) {
@@ -57,21 +64,95 @@ export class PeerSync {
         const offer = await this.peerConnection.createOffer();
         await this.peerConnection.setLocalDescription(offer);
 
-        this.sendSignaling({
+        const offerData = {
             type: 'offer',
             sdp: {
                 type: this.peerConnection.localDescription.type,
                 sdp: this.peerConnection.localDescription.sdp
             }
-        });
+        };
+
+        // 1. Broadcast locally
+        this.sendSignaling(offerData);
+
+        // 2. Publish to Firebase RTDB for cross-browser signaling
+        if (this.db) {
+            const sigRef = ref(this.db, `games/signaling/${roomId}`);
+            const offerRef = ref(this.db, `games/signaling/${roomId}/offer`);
+            await set(offerRef, offerData.sdp);
+            onDisconnect(sigRef).remove();
+
+            // Listen for guest answer in Firebase
+            const answerRef = ref(this.db, `games/signaling/${roomId}/answer`);
+            const unsubAnswer = onValue(answerRef, async (snapshot) => {
+                const answer = snapshot.val();
+                if (answer && this.peerConnection && this.peerConnection.signalingState !== 'stable') {
+                    await this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+                }
+            });
+            this.firebaseUnsubs.push(unsubAnswer);
+
+            // Listen for guest ICE candidates in Firebase
+            const guestCandidatesRef = ref(this.db, `games/signaling/${roomId}/guestCandidates`);
+            const unsubCandidates = onValue(guestCandidatesRef, (snapshot) => {
+                const candidates = snapshot.val();
+                if (candidates && this.peerConnection) {
+                    for (const key in candidates) {
+                        try {
+                            this.peerConnection.addIceCandidate(new RTCIceCandidate(candidates[key]));
+                        } catch (e) {}
+                    }
+                }
+            });
+            this.firebaseUnsubs.push(unsubCandidates);
+        }
     }
 
     async joinRoom(roomId) {
         this.initSignaling(roomId, false);
         this.createPeerConnection();
 
-        // Notify host that guest is ready
+        // Broadcast ready locally
         this.sendSignaling({ type: 'guest-ready' });
+
+        // Check Firebase for offer
+        if (this.db) {
+            const sigRef = ref(this.db, `games/signaling/${roomId}`);
+            onDisconnect(ref(this.db, `games/signaling/${roomId}/answer`)).remove();
+
+            const offerRef = ref(this.db, `games/signaling/${roomId}/offer`);
+            const unsubOffer = onValue(offerRef, async (snapshot) => {
+                const offer = snapshot.val();
+                if (offer && this.peerConnection && !this.peerConnection.remoteDescription) {
+                    await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+                    const answer = await this.peerConnection.createAnswer();
+                    await this.peerConnection.setLocalDescription(answer);
+
+                    const answerData = {
+                        type: this.peerConnection.localDescription.type,
+                        sdp: this.peerConnection.localDescription.sdp
+                    };
+
+                    this.sendSignaling({ type: 'answer', sdp: answerData });
+                    await set(ref(this.db, `games/signaling/${roomId}/answer`), answerData);
+                }
+            });
+            this.firebaseUnsubs.push(unsubOffer);
+
+            // Listen for host ICE candidates in Firebase
+            const hostCandidatesRef = ref(this.db, `games/signaling/${roomId}/hostCandidates`);
+            const unsubCandidates = onValue(hostCandidatesRef, (snapshot) => {
+                const candidates = snapshot.val();
+                if (candidates && this.peerConnection) {
+                    for (const key in candidates) {
+                        try {
+                            this.peerConnection.addIceCandidate(new RTCIceCandidate(candidates[key]));
+                        } catch (e) {}
+                    }
+                }
+            });
+            this.firebaseUnsubs.push(unsubCandidates);
+        }
     }
 
     createPeerConnection() {
@@ -83,10 +164,18 @@ export class PeerSync {
 
         this.peerConnection.onicecandidate = (event) => {
             if (event.candidate) {
+                const candData = event.candidate.toJSON ? event.candidate.toJSON() : JSON.parse(JSON.stringify(event.candidate));
+                // Broadcast locally
                 this.sendSignaling({
                     type: 'candidate',
-                    candidate: event.candidate.toJSON ? event.candidate.toJSON() : JSON.parse(JSON.stringify(event.candidate))
+                    candidate: candData
                 });
+
+                // Write to Firebase
+                if (this.db && this.roomId) {
+                    const targetPath = this.isHost ? 'hostCandidates' : 'guestCandidates';
+                    push(ref(this.db, `games/signaling/${this.roomId}/${targetPath}`), candData).catch(() => {});
+                }
             }
         };
 
@@ -106,7 +195,6 @@ export class PeerSync {
         if (!msg || !this.peerConnection) return;
 
         if (msg.type === 'guest-ready' && this.isHost) {
-            // Re-broadcast offer when guest arrives
             if (this.peerConnection.localDescription) {
                 this.sendSignaling({
                     type: 'offer',
@@ -116,7 +204,7 @@ export class PeerSync {
                     }
                 });
             }
-        } else if (msg.type === 'offer' && !this.isHost) {
+        } else if (msg.type === 'offer' && !this.isHost && !this.peerConnection.remoteDescription) {
             await this.peerConnection.setRemoteDescription(new RTCSessionDescription(msg.sdp));
             const answer = await this.peerConnection.createAnswer();
             await this.peerConnection.setLocalDescription(answer);
@@ -134,17 +222,18 @@ export class PeerSync {
         } else if (msg.type === 'candidate') {
             try {
                 await this.peerConnection.addIceCandidate(new RTCIceCandidate(msg.candidate));
-            } catch (e) {
-                // Ignore duplicate candidates
-            }
+            } catch (e) {}
         }
     }
-
 
     setupDataChannel(channel) {
         this.dataChannel = channel;
 
         this.dataChannel.onopen = () => {
+            // Clean up signaling node once connected
+            if (this.db && this.roomId && this.isHost) {
+                remove(ref(this.db, `games/signaling/${this.roomId}`)).catch(() => {});
+            }
             if (this.onOpponentConnected) this.onOpponentConnected();
         };
 
@@ -172,6 +261,12 @@ export class PeerSync {
         if (this.broadcastChannel) {
             this.broadcastChannel.close();
             this.broadcastChannel = null;
+        }
+        if (this.firebaseUnsubs.length > 0) {
+            this.firebaseUnsubs.forEach(unsub => {
+                try { unsub(); } catch (e) {}
+            });
+            this.firebaseUnsubs = [];
         }
         if (this.dataChannel) {
             this.dataChannel.close();

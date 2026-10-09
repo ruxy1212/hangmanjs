@@ -438,6 +438,8 @@ class HangmanApp {
 
             const joinBtn = row.querySelector('.join-btn');
             joinBtn.addEventListener('click', () => {
+                joinBtn.innerText = 'Connecting...';
+                joinBtn.disabled = true;
                 this.joinHostedMatch(room);
             });
 

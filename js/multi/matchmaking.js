@@ -1,8 +1,10 @@
 // js/multi/matchmaking.js
-// Open Challenges Lobby & WebRTC Matchmaking Coordinator
+// Open Challenges Lobby & WebRTC Matchmaking Coordinator with Firebase RTDB cross-browser discovery
 
 import { BotPlayer } from './bot-player.js';
 import { PeerSync } from './peer-sync.js';
+import { leaderboardManager } from '../engine/leaderboard.js';
+import { ref, set, onValue, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 export class MatchmakingManager {
     constructor({ onMatchFound, onStatusUpdate, onRoomsUpdated }) {
@@ -17,42 +19,54 @@ export class MatchmakingManager {
         this.peerSync = null;
         this.bot = null;
         this.currentOpponentHandlers = null;
+        this.firebaseUnsubRooms = null;
 
         this.initDiscovery();
     }
 
+    get db() {
+        return leaderboardManager.db;
+    }
+
     initDiscovery() {
-        if (typeof BroadcastChannel === 'undefined') return;
+        // 1. Same-browser local discovery channel
+        if (typeof BroadcastChannel !== 'undefined') {
+            try {
+                this.discoveryChannel = new BroadcastChannel('hng_lobby_discovery');
+                this.discoveryChannel.onmessage = (event) => {
+                    const data = event.data;
+                    if (!data) return;
 
-        this.discoveryChannel = new BroadcastChannel('hng_lobby_discovery');
-        this.discoveryChannel.onmessage = (event) => {
-            const data = event.data;
-            if (!data) return;
-
-            if (data.type === 'announce_match' && data.room) {
-                // Ignore our own hosted room in the open list
-                if (this.hostedRoom && data.room.id === this.hostedRoom.id) return;
-                data.room.lastSeen = Date.now();
-                this.openRooms.set(data.room.id, data.room);
-                this.notifyRoomsUpdated();
-            } else if (data.type === 'query_matches') {
-                if (this.hostedRoom) {
-                    this.broadcastAnnouncement();
-                }
-            } else if (data.type === 'cancel_match' && data.roomId) {
-                if (this.openRooms.has(data.roomId)) {
-                    this.openRooms.delete(data.roomId);
-                    this.notifyRoomsUpdated();
-                }
+                    if (data.type === 'announce_match' && data.room) {
+                        if (this.hostedRoom && data.room.id === this.hostedRoom.id) return;
+                        data.room.lastSeen = Date.now();
+                        this.openRooms.set(data.room.id, data.room);
+                        this.notifyRoomsUpdated();
+                    } else if (data.type === 'query_matches') {
+                        if (this.hostedRoom) {
+                            this.broadcastAnnouncement();
+                        }
+                    } else if (data.type === 'cancel_match' && data.roomId) {
+                        if (this.openRooms.has(data.roomId)) {
+                            this.openRooms.delete(data.roomId);
+                            this.notifyRoomsUpdated();
+                        }
+                    }
+                };
+            } catch (e) {
+                console.warn("BroadcastChannel error:", e);
             }
-        };
+        }
 
-        // Periodically purge stale rooms older than 6 seconds
+        // 2. Cross-browser global Firebase Realtime Database rooms listener
+        this.initFirebaseRoomsListener();
+
+        // 3. Purge stale local broadcast rooms older than 10 seconds
         this.staleCheckerTimer = setInterval(() => {
             const now = Date.now();
             let changed = false;
             for (const [id, room] of this.openRooms.entries()) {
-                if (now - (room.lastSeen || 0) > 6000) {
+                if (room.isLocal && now - (room.lastSeen || 0) > 10000) {
                     this.openRooms.delete(id);
                     changed = true;
                 }
@@ -60,10 +74,53 @@ export class MatchmakingManager {
             if (changed) {
                 this.notifyRoomsUpdated();
             }
-        }, 2500);
+        }, 3000);
 
-        // Query immediately
         this.queryOpenMatches();
+    }
+
+    initFirebaseRoomsListener() {
+        if (!this.db) {
+            // If Firebase not ready yet, retry in 500ms
+            setTimeout(() => this.initFirebaseRoomsListener(), 500);
+            return;
+        }
+
+        const roomsRef = ref(this.db, 'games/rooms');
+        this.firebaseUnsubRooms = onValue(roomsRef, (snapshot) => {
+            const data = snapshot.val();
+            // Preserve local rooms, but sync all cloud rooms
+            const localRooms = new Map();
+            for (const [id, r] of this.openRooms.entries()) {
+                if (r.isLocal) localRooms.set(id, r);
+            }
+            this.openRooms.clear();
+
+            // Re-add local rooms
+            for (const [id, r] of localRooms.entries()) {
+                this.openRooms.set(id, r);
+            }
+
+            if (data) {
+                const now = Date.now();
+                for (const roomId in data) {
+                    const room = data[roomId];
+                    if (!room) continue;
+
+                    // Filter: must be waiting, not our own hosted room, and not expired (> 15 minutes)
+                    const isOurRoom = this.hostedRoom && this.hostedRoom.id === roomId;
+                    const isFresh = !room.createdAt || (now - room.createdAt < 900000);
+
+                    if (room.status === 'waiting' && !isOurRoom && isFresh) {
+                        this.openRooms.set(roomId, room);
+                    }
+                }
+            }
+
+            this.notifyRoomsUpdated();
+        }, (error) => {
+            console.warn("Firebase rooms listen error:", error);
+        });
     }
 
     queryOpenMatches() {
@@ -82,7 +139,7 @@ export class MatchmakingManager {
         if (this.discoveryChannel && this.hostedRoom) {
             this.discoveryChannel.postMessage({
                 type: 'announce_match',
-                room: this.hostedRoom
+                room: { ...this.hostedRoom, isLocal: true }
             });
         }
     }
@@ -98,6 +155,7 @@ export class MatchmakingManager {
             difficulty: parseInt(difficulty, 10),
             wordMode,
             customWord,
+            status: 'waiting',
             createdAt: Date.now(),
             lastSeen: Date.now()
         };
@@ -106,14 +164,26 @@ export class MatchmakingManager {
             this.onStatusUpdate(`Room created: ${roomId}. Waiting for challenger...`);
         }
 
-        // Setup WebRTC Host
+        // 1. Publish to Firebase RTDB for cross-browser discovery
+        if (this.db) {
+            const roomRef = ref(this.db, `games/rooms/${roomId}`);
+            set(roomRef, this.hostedRoom).catch(e => console.warn("Failed to set room in Firebase:", e));
+            onDisconnect(roomRef).remove().catch(() => {});
+        }
+
+        // 2. Setup WebRTC PeerSync
         this.peerSync = new PeerSync({
             onOpponentConnected: () => {
                 this.stopHeartbeat();
-                // Take room off the public lobby board
+
+                // Remove room from open list
+                if (this.db) {
+                    remove(ref(this.db, `games/rooms/${roomId}`)).catch(() => {});
+                }
                 if (this.discoveryChannel) {
                     this.discoveryChannel.postMessage({ type: 'cancel_match', roomId });
                 }
+
                 if (this.onMatchFound) {
                     this.onMatchFound({
                         isBot: false,
@@ -139,7 +209,7 @@ export class MatchmakingManager {
 
         this.peerSync.createRoom(roomId);
 
-        // Start heartbeat broadcasting
+        // 3. Local BroadcastChannel announcement heartbeat
         this.broadcastAnnouncement();
         this.heartbeatTimer = setInterval(() => {
             this.broadcastAnnouncement();
@@ -159,9 +229,17 @@ export class MatchmakingManager {
         if (this.hostedRoom) {
             const roomId = this.hostedRoom.id;
             this.stopHeartbeat();
+
+            // Remove from Firebase
+            if (this.db) {
+                remove(ref(this.db, `games/rooms/${roomId}`)).catch(() => {});
+            }
+
+            // Remove from local BroadcastChannel
             if (this.discoveryChannel) {
                 this.discoveryChannel.postMessage({ type: 'cancel_match', roomId });
             }
+
             this.hostedRoom = null;
         }
         if (this.peerSync) {
@@ -175,6 +253,11 @@ export class MatchmakingManager {
 
         if (this.onStatusUpdate) {
             this.onStatusUpdate(`Connecting to ${room.hostName}'s match...`);
+        }
+
+        // Mark room as playing in Firebase so others won't click it
+        if (this.db && room.id) {
+            set(ref(this.db, `games/rooms/${room.id}/status`), 'playing').catch(() => {});
         }
 
         this.peerSync = new PeerSync({
