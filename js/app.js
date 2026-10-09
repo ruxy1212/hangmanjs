@@ -345,7 +345,21 @@ class HangmanApp {
         } else {
             this.gallowsView.renderPlayerStage(this.engine.failCount, false);
         }
+
+        // Broadcast guess to opponent if in multiplayer
+        if (this.currentMode === 'multi' && this.activeMultiSession) {
+            this.activeMultiSession.sendToOpponent({
+                action: 'guess',
+                data: {
+                    letter,
+                    isCorrect: res.isCorrect,
+                    failCount: this.engine.failCount,
+                    solvedCount: this.engine.solvedLetters.size
+                }
+            });
+        }
     }
+
 
     handleHintClick() {
         const hint = this.engine.getHint();
@@ -403,7 +417,17 @@ class HangmanApp {
             this.activeMultiSession.botInstance.stop();
         }
 
+        // Notify peer if in multiplayer
+        if (this.currentMode === 'multi' && this.activeMultiSession) {
+            if (summary.won) {
+                this.activeMultiSession.sendToOpponent({ action: 'solve' });
+            } else if (summary.reason === 'HANGED') {
+                this.activeMultiSession.sendToOpponent({ action: 'hang' });
+            }
+        }
+
         // Update stats
+
         this.stats.tgames++;
         if (summary.won) {
             this.stats.nwords++;
