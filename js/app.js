@@ -258,6 +258,7 @@ class HangmanApp {
         this.currentSubMode = mode;
         this.difficulty = parseInt(difficulty, 10);
         this.wordSource = wordMode;
+        this.pendingCustomWord = customWord;
 
         this.showMultiPage(3);
         this.updateMatchmakingStatus("Finding an opponent for Word Rush...");
@@ -286,11 +287,13 @@ class HangmanApp {
         this.setInGameVisibility(true, true);
         this.gallowsView.renderOpponentStage(0, false);
 
-        // Fetch shared mystery word
+        // Fetch shared mystery word (or custom word with auto-fetched hints)
         const wordData = await wordProvider.getWord({
-            mode: this.wordSource === 'online' ? 'online' : 'builtin',
-            difficulty: this.difficulty
+            mode: this.wordSource,
+            difficulty: this.difficulty,
+            customWord: this.pendingCustomWord
         });
+
 
         // Register opponent bot or peer listeners
         this.matchmaking.registerOpponentHandlers({
@@ -342,8 +345,14 @@ class HangmanApp {
         // Visual update
         if (res.isCorrect) {
             this.gallowsView.renderPlayerStage(this.engine.failCount, true);
+            this.comboCount = (this.comboCount || 0) + 1;
+            if (this.comboCount >= 3) {
+                this.showComboBadge(`${this.comboCount}x COMBO! 🔥`);
+            }
         } else {
             this.gallowsView.renderPlayerStage(this.engine.failCount, false);
+            this.comboCount = 0;
+            this.triggerScreenShake();
         }
 
         // Broadcast guess to opponent if in multiplayer
@@ -359,6 +368,40 @@ class HangmanApp {
             });
         }
     }
+
+    triggerScreenShake() {
+        document.body.classList.remove('shake');
+        void document.body.offsetWidth; // reflow
+        document.body.classList.add('shake');
+        setTimeout(() => document.body.classList.remove('shake'), 400);
+    }
+
+    showComboBadge(text) {
+        const badge = document.createElement('div');
+        badge.className = 'combo-badge';
+        badge.innerText = text;
+        document.body.appendChild(badge);
+        setTimeout(() => badge.remove(), 850);
+    }
+
+    spawnConfetti() {
+        const container = document.createElement('div');
+        container.className = 'confetti-container';
+        document.body.appendChild(container);
+
+        const colors = ['#f44336', '#e91e63', '#9c27b0', '#2196f3', '#4caf50', '#ffeb3b', '#ff9800'];
+        for (let i = 0; i < 45; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + 'vw';
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDelay = Math.random() * 0.8 + 's';
+            piece.style.transform = `scale(${0.5 + Math.random() * 0.8})`;
+            container.appendChild(piece);
+        }
+        setTimeout(() => container.remove(), 3000);
+    }
+
 
 
     handleHintClick() {
@@ -427,9 +470,9 @@ class HangmanApp {
         }
 
         // Update stats
-
         this.stats.tgames++;
         if (summary.won) {
+            this.spawnConfetti();
             this.stats.nwords++;
             this.stats.tpoints += summary.totalRoundEarned;
             if (summary.failCount === 0) this.stats.pwords++;
